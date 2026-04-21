@@ -1,4 +1,29 @@
 import { useState, useEffect, useRef } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Avatar,
+  AvatarGroup,
+  styled,
+  alpha,
+  keyframes,
+  Fade,
+  Zoom,
+} from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+
+// ─── Animations ─────────────────────────────────────────────────────────────
+
+const pulseGlow = keyframes`
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+`;
+
+// ─── Data ────────────────────────────────────────────────────────────────────
 
 const avatars = [
   { bg: "#1a3a5c", initials: "PS", color: "#7fd0ff" },
@@ -9,7 +34,12 @@ const avatars = [
   { bg: "#1a2a3b", initials: "RV", color: "#60a5fa" },
 ];
 
-// (Removed unused stats array)
+const stats = [
+  { value: "350+", label: "Clients Served" },
+  { value: "98%", label: "Client Retention" },
+  { value: "12×", label: "Average ROI" },
+  { value: "8+", label: "Years Experience" },
+];
 
 const services = [
   {
@@ -17,21 +47,18 @@ const services = [
     title: "Lifecycle & Automation",
     desc: "Email automation, journey mapping, and multi-channel workflows that nurture leads and drive conversions.",
     accent: "#7fd0ff",
-    glow: "rgba(127,208,255,0.12)",
   },
   {
     icon: "⚙",
     title: "Technical Architecture",
     desc: "ESP migration, CRM sync, deliverability audits, and advanced templating for a robust technical foundation.",
     accent: "#a78bfa",
-    glow: "rgba(167,139,250,0.12)",
   },
   {
     icon: "✦",
     title: "Creative Production",
     desc: "Modular templates, UX/UI design, and white-label solutions that elevate your brand's visual impact.",
     accent: "#34d399",
-    glow: "rgba(52,211,153,0.12)",
   },
 ];
 
@@ -44,448 +71,426 @@ const features = [
   "On-demand strategy consultations",
 ];
 
+// ─── Styled Components ───────────────────────────────────────────────────────
+
+const PageWrapper = styled(Box)(({ theme }) => ({
+  background: "#060e1a",
+  color: theme.palette.common.white,
+  overflowX: "hidden",
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+}));
+
+const HeroChip = styled(Box)(({ theme }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  background: alpha("#7fd0ff", 0.1),
+  color: "#7fd0ff",
+  border: `1px solid ${alpha("#7fd0ff", 0.2)}`,
+  borderRadius: "100px",
+  padding: "6px 16px",
+  fontSize: "0.8rem",
+  fontWeight: 600,
+  letterSpacing: "0.04em",
+  textTransform: "uppercase",
+}));
+
+const ServiceCard = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "accent" && prop !== "hovered",
+})<{ accent: string; hovered: boolean }>(({ theme, accent, hovered }) => ({
+  background: alpha(theme.palette.common.white, 0.03),
+  border: `1px solid ${alpha(theme.palette.common.white, hovered ? 0.2 : 0.08)}`,
+  borderRadius: "24px",
+  padding: theme.spacing(4),
+  cursor: "pointer",
+  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  transform: hovered ? "translateY(-8px)" : "translateY(0)",
+  boxShadow: hovered ? `0 24px 64px ${alpha(accent, 0.12)}` : "none",
+  "&:hover": {
+    background: alpha(theme.palette.common.white, 0.06),
+  },
+}));
+
+const FeatureRow = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(2),
+  padding: theme.spacing(1.5, 2.5),
+  borderRadius: "16px",
+  transition: "all 0.2s ease",
+  "&:hover": {
+    background: alpha(theme.palette.common.white, 0.04),
+    transform: "translateX(8px)",
+  },
+}));
+
+const GradientText = styled(Box)(() => ({
+  background: "linear-gradient(90deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
+  display: "inline-block",
+}));
+
+// ─── Custom Hook ─────────────────────────────────────────────────────────────
+
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
     obs.observe(el);
     return () => obs.disconnect();
   }, [threshold]);
   return [ref, inView] as const;
 }
 
-// (Removed unused AnimatedNumber component)
+// ─── Main Component ─────────────────────────────────────────────────────────
 
-export default function HeroSection() {
+export default function LandingPage() {
   const [heroVisible, setHeroVisible] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  useInView(); // Original statsRef was here, but unused
+
+  const [, statsInView] = useInView(0.1);
   const [servicesRef, servicesInView] = useInView(0.1);
   const [whyRef, whyInView] = useInView(0.1);
   const [ctaRef, ctaInView] = useInView(0.2);
 
   useEffect(() => {
-    const t = setTimeout(() => setHeroVisible(true), 80);
+    const t = setTimeout(() => setHeroVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
 
-  const fadeUp = (delay = 0, visible = heroVisible) => ({
-    opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(32px)",
-    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
-  });
-
-// (Removed unused fadeIn function)
-
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", background: "#060e1a", color: "white", overflowX: "hidden" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    <PageWrapper>
+      {/* ── HERO SECTION ── */}
+      <Box
+        sx={{
+          minHeight: "100vh",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
+          background: "linear-gradient(145deg, #060e1a 0%, #0b1e35 40%, #1a0a3a 100%)",
+          pt: { xs: 12, md: 0 },
+        }}
+      >
+        {/* BG Grid Overlay */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "linear-gradient(rgba(127,208,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(127,208,255,0.03) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+            maskImage: "radial-gradient(ellipse at center, black, transparent 80%)",
+            pointerEvents: "none",
+          }}
+        />
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        {/* Ambient Glow Orbs */}
+        <Box
+          sx={{
+            position: "absolute",
+            width: "600px",
+            height: "600px",
+            background: "radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 65%)",
+            top: "-15%",
+            right: "-10%",
+            animation: `${pulseGlow} 4s infinite`,
+            pointerEvents: "none",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            width: "500px",
+            height: "500px",
+            background: "radial-gradient(circle, rgba(127,208,255,0.07) 0%, transparent 65%)",
+            bottom: "-10%",
+            left: "-8%",
+            animation: `${pulseGlow} 4s infinite`,
+            animationDelay: "1.5s",
+            pointerEvents: "none",
+          }}
+        />
 
-        .hero-btn-primary {
-          background: white; color: #0d2137;
-          padding: 14px 32px; border-radius: 12px;
-          font-weight: 800; font-size: 1rem;
-          border: none; cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit;
-        }
-        .hero-btn-primary:hover { background: #e8f4ff; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(127,208,255,0.25); }
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 4, maxWidth: 840 }}>
+            <Fade in={heroVisible} timeout={800}>
+              <Box>
+                <HeroChip>
+                  <AutoAwesomeIcon sx={{ fontSize: "0.9rem" }} />
+                  Scaling D2C Growth
+                </HeroChip>
+              </Box>
+            </Fade>
 
-        .hero-btn-secondary {
-          background: transparent; color: rgba(255,255,255,0.85);
-          padding: 14px 32px; border-radius: 12px;
-          font-weight: 600; font-size: 1rem;
-          border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit;
-        }
-        .hero-btn-secondary:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+            <Fade in={heroVisible} timeout={1000}>
+              <Typography
+                variant="h1"
+                sx={{
+                  fontSize: { xs: "3rem", sm: "4.5rem", md: "5.5rem" },
+                  fontWeight: 900,
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                Scaling D2C Brands{" "}
+                <br />
+                <GradientText>Through Data-Driven</GradientText>
+                <br />
+                Communication.
+              </Typography>
+            </Fade>
 
-        .service-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 32px;
-          cursor: pointer;
-          transition: all 0.35s ease;
-        }
-        .service-card:hover {
-          background: rgba(255,255,255,0.06);
-          border-color: rgba(255,255,255,0.18);
-          transform: translateY(-8px);
-        }
+            <Fade in={heroVisible} timeout={1200}>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 400,
+                  color: alpha("#fff", 0.6),
+                  lineHeight: 1.7,
+                  maxWidth: 680,
+                  fontSize: { xs: "1.1rem", md: "1.25rem" },
+                }}
+              >
+                We build automated revenue engines across{" "}
+                <Box component="span" sx={{ color: "#fff", fontWeight: 700 }}>
+                  Email, SMS, and WhatsApp
+                </Box>{" "}
+                using{" "}
+                <Box component="span" sx={{ color: "#fff", fontWeight: 600 }}>
+                  12 years of technical architecture experience
+                </Box>
+                . Expert support for leading ESP and CRM platforms.
+              </Typography>
+            </Fade>
 
-        .feature-row {
-          display: flex; align-items: center; gap: 14px;
-          padding: 14px 18px;
-          border-radius: 12px;
-          transition: background 0.2s ease;
-        }
-        .feature-row:hover { background: rgba(255,255,255,0.04); }
+            <Fade in={heroVisible} timeout={1400}>
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForwardIcon />}
+                  sx={{
+                    bgcolor: "#fff",
+                    color: "#060e1a",
+                    px: 4, py: 2,
+                    borderRadius: "14px",
+                    fontWeight: 800,
+                    textTransform: "none",
+                    "&:hover": { bgcolor: "#e8f4ff", transform: "translateY(-2px)" },
+                  }}
+                >
+                  Get Started Free
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#fff",
+                    borderColor: alpha("#fff", 0.2),
+                    px: 4, py: 2,
+                    borderRadius: "14px",
+                    fontWeight: 600,
+                    textTransform: "none",
+                    "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.05), transform: "translateY(-2px)" },
+                  }}
+                >
+                  Learn More
+                </Button>
+              </Box>
+            </Fade>
 
-        .cta-btn-dark {
-          background: #060e1a; color: white;
-          padding: 16px 40px; border-radius: 12px;
-          font-weight: 800; font-size: 1.05rem;
-          border: none; cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit;
-        }
-        .cta-btn-dark:hover { background: #0d2137; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(6,14,26,0.4); }
+            <Fade in={heroVisible} timeout={1600}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, pt: 2 }}>
+                <AvatarGroup max={6} sx={{ "& .MuiAvatar-root": { width: 36, height: 36, border: "2px solid #060e1a" } }}>
+                  {avatars.map((a, i) => (
+                    <Avatar key={i} sx={{ bgcolor: a.bg, color: a.color, fontSize: "0.7rem", fontWeight: 800 }}>{a.initials}</Avatar>
+                  ))}
+                </AvatarGroup>
+                <Typography variant="body2" sx={{ color: alpha("#fff", 0.5), fontWeight: 600 }}>
+                  TRUSTED BY <GradientText sx={{ ml: 0.5 }}>350+ GLOBAL BRANDS</GradientText>
+                </Typography>
+              </Box>
+            </Fade>
+          </Box>
+        </Container>
+      </Box>
 
-        .cta-btn-outline {
-          background: transparent; color: #0d2137;
-          padding: 16px 40px; border-radius: 12px;
-          font-weight: 700; font-size: 1.05rem;
-          border: 1.5px solid rgba(13,33,55,0.35); cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit;
-        }
-        .cta-btn-outline:hover { border-color: #0d2137; background: rgba(13,33,55,0.07); transform: translateY(-2px); }
+      <Box ref={servicesRef} sx={{ py: 15 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, textAlign: "center", mb: 8 }}>
+            <Fade in={servicesInView} timeout={600}>
+              <Box>
+                <HeroChip sx={{ mb: 2 }}>Our Services</HeroChip>
+                <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: "2.2rem", md: "3.5rem" } }}>
+                  The Science of <GradientText>Conversion.</GradientText>
+                </Typography>
+              </Box>
+            </Fade>
+          </Box>
 
-        .avatar-ring { border: 2px solid #060e1a; }
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+            {services.map((svc, i) => (
+              <Box
+                key={svc.title}
+                sx={{ flex: { xs: "0 0 100%", md: "1 1 calc(33.333% - 32px)" } }}
+              >
+                <Fade in={servicesInView} timeout={800 + i * 200}>
+                  <ServiceCard
+                    accent={svc.accent}
+                    hovered={hoveredCard === i}
+                    onMouseEnter={() => setHoveredCard(i)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
+                    <Box
+                      sx={{
+                        width: 56, height: 56,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        bgcolor: alpha(svc.accent, 0.1),
+                        color: svc.accent,
+                        borderRadius: "16px",
+                        fontSize: "1.5rem",
+                        mb: 4,
+                        transition: "transform 0.3s ease",
+                        transform: hoveredCard === i ? "scale(1.1) rotate(5deg)" : "none",
+                      }}
+                    >
+                      {svc.icon}
+                    </Box>
+                    <Typography variant="h5" sx={{ fontWeight: 800, mb: 2 }}>{svc.title}</Typography>
+                    <Typography variant="body2" sx={{ color: alpha("#fff", 0.5), lineHeight: 1.8, mb: 4 }}>
+                      {svc.desc}
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: svc.accent, fontWeight: 700, fontSize: "0.9rem" }}>
+                      <span>Discover more</span>
+                      <ArrowForwardIcon sx={{ fontSize: "1rem" }} />
+                    </Box>
+                  </ServiceCard>
+                </Fade>
+              </Box>
+            ))}
+          </Box>
+        </Container>
+      </Box>
 
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
-        }
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.7; }
-        }
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(800%); }
-        }
-        .float-anim { animation: float 6s ease-in-out infinite; }
-        .float-anim-delay { animation: float 6s ease-in-out infinite 2s; }
-        .float-anim-slow { animation: float 9s ease-in-out infinite 1s; }
-        .glow-pulse { animation: pulse-glow 3s ease-in-out infinite; }
-
-        .stat-card {
-          text-align: center; padding: 20px 12px;
-          border-right: 1px solid rgba(255,255,255,0.07);
-        }
-        .stat-card:last-child { border-right: none; }
-
-        .chip {
-          display: inline-block;
-          background: rgba(127,208,255,0.1);
-          color: #7fd0ff;
-          border: 1px solid rgba(127,208,255,0.2);
-          border-radius: 100px;
-          padding: 6px 16px;
-          font-size: 0.8rem;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-      `}</style>
-
-      {/* ── HERO ── */}
-      <div style={{
-        minHeight: "100vh",
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        background: "linear-gradient(145deg, #060e1a 0%, #0b1e35 40%, #1a0a3a 100%)",
-      }}>
-        {/* BG Grid */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(127,208,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(127,208,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-          pointerEvents: "none",
-        }} />
-
-        {/* Orbs */}
-        <div className="glow-pulse" style={{
-          position: "absolute", width: 600, height: 600, borderRadius: "50%",
-          top: "-15%", right: "-10%",
-          background: "radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 65%)",
-          pointerEvents: "none",
-        }} />
-        <div className="glow-pulse" style={{
-          position: "absolute", width: 500, height: 500, borderRadius: "50%",
-          bottom: "-10%", left: "-8%",
-          background: "radial-gradient(circle, rgba(127,208,255,0.07) 0%, transparent 65%)",
-          pointerEvents: "none",
-          animationDelay: "1.5s",
-        }} />
-
-        {/* Floating accent dots */}
-        <div className="float-anim" style={{ position: "absolute", width: 6, height: 6, borderRadius: "50%", background: "#7fd0ff", top: "20%", right: "15%", opacity: 0.6 }} />
-        <div className="float-anim-delay" style={{ position: "absolute", width: 4, height: 4, borderRadius: "50%", background: "#a78bfa", top: "60%", right: "8%", opacity: 0.5 }} />
-        <div className="float-anim-slow" style={{ position: "absolute", width: 5, height: 5, borderRadius: "50%", background: "#34d399", top: "35%", left: "5%", opacity: 0.5 }} />
-
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 40px", position: "relative", zIndex: 1, width: "100%" }}>
-          {/* Chip */}
-          <div style={{ ...fadeUp(0), marginBottom: 28 }}>
-            <span className="chip">✦ The Email Marketing Experts</span>
-          </div>
-
-          {/* Headline */}
-          <div style={{ ...fadeUp(120), maxWidth: 820, marginBottom: 24 }}>
-            <h1 style={{
-              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-              fontSize: "clamp(2.4rem, 5vw, 4.8rem)",
-              fontWeight: 800,
-              lineHeight: 1.08,
-              letterSpacing: "-0.02em",
-              color: "white",
-            }}>
-              Scaling D2C Brands{" "}
-              <br />
-              <span style={{
-                background: "linear-gradient(90deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>
-                Through Data-Driven
-              </span>
-              <br />
-              Communication.
-            </h1>
-          </div>
-
-          {/* Sub */}
-          <div style={{ ...fadeUp(240), maxWidth: 580, marginBottom: 44 }}>
-            <p style={{ fontSize: "1.15rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.75, fontWeight: 400 }}>
-              We build automated revenue engines across{" "}
-              <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Email, SMS, and WhatsApp</span>
-              {" "}using 12 years of technical architecture experience. Expert support for leading ESP and CRM platforms.
-            </p>
-          </div>
-
-          {/* Avatars + social proof */}
-          <div style={{ ...fadeUp(360), display: "flex", alignItems: "center", gap: 16, marginBottom: 40, flexWrap: "wrap" }}>
-            <div style={{ display: "flex" }}>
-              {avatars.map((a, i) => (
-                <div key={i} className="avatar-ring" style={{
-                  width: 40, height: 40, borderRadius: "50%",
-                  background: a.bg,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "0.72rem", fontWeight: 700, color: a.color,
-                  marginLeft: i === 0 ? 0 : -10,
-                  position: "relative", zIndex: avatars.length - i,
-                }}>
-                  {a.initials}
-                </div>
-              ))}
-            </div>
-            <div>
-              <div style={{ display: "flex", gap: 2, marginBottom: 2 }}>
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ color: "#fbbf24", fontSize: "0.85rem" }}>★</span>
+      {/* ── WHY US SECTION ── */}
+      <Box
+        ref={whyRef}
+        sx={{
+          py: 15,
+          background: "linear-gradient(135deg, rgba(6, 14, 26, 0.4) 0%, rgba(13, 59, 102, 0.2) 100%)",
+          borderTop: `1px solid ${alpha("#fff", 0.06)}`,
+          borderBottom: `1px solid ${alpha("#fff", 0.06)}`,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+            <Box sx={{ flex: { xs: "0 0 100%", md: "1 1 calc(50% - 40px)" } }}>
+              <Fade in={whyInView} timeout={800}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  <HeroChip sx={{ alignSelf: "flex-start" }}>Why Choose Us</HeroChip>
+                  <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: "2.2rem", md: "3rem" } }}>
+                    One Agency. <br />
+                    <GradientText>Total Synchronization.</GradientText>
+                  </Typography>
+                  <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "1.1rem", lineHeight: 1.8 }}>
+                    We stop the fragmentation. Our team aligns every communication channel
+                    into a single, high-performing revenue engine.
+                  </Typography>
+                </Box>
+              </Fade>
+            </Box>
+            <Box sx={{ flex: { xs: "0 0 100%", md: "1 1 calc(50% - 40px)" } }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                {features.map((f, i) => (
+                  <Fade in={whyInView} timeout={600 + i * 150} key={f}>
+                    <FeatureRow>
+                      <CheckCircleOutlinedIcon sx={{ color: "#34d399", fontSize: "1.4rem" }} />
+                      <Typography sx={{ fontWeight: 600, color: alpha("#fff", 0.8) }}>{f}</Typography>
+                    </FeatureRow>
+                  </Fade>
                 ))}
-              </div>
-              <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
-                Trusted by <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>350+ D2C brands</span>
-              </p>
-            </div>
-          </div>
-
-          {/* CTAs */}
-          <div style={{ ...fadeUp(460), display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <button className="hero-btn-primary">
-              Get Your Free Consultation
-              <span style={{ fontSize: "1.1rem" }}>→</span>
-            </button>
-            <button className="hero-btn-secondary">
-              Explore Services
-              <span style={{ fontSize: "1rem", opacity: 0.7 }}>↗</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── STATS BAND ── */}
-      {/* <div ref={statsRef} style={{
-        background: "rgba(255,255,255,0.02)",
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-      }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
-            {stats.map((s, i) => (
-              <div key={s.label} className="stat-card" style={{ ...fadeIn(i * 120, statsInView), padding: "40px 20px" }}>
-                <div style={{
-                  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                  fontSize: "2.6rem", fontWeight: 800,
-                  background: "linear-gradient(90deg, #7fd0ff, #a78bfa)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                  marginBottom: 6,
-                }}>
-                  <AnimatedNumber
-                    target={parseFloat(s.value)}
-                    suffix={s.value.replace(/[0-9.]/g, "")}
-                    inView={statsInView}
-                  />
-                </div>
-                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
-
-      {/* ── SERVICES ── */}
-      <div ref={servicesRef} style={{ padding: "100px 40px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ ...fadeUp(0, servicesInView), textAlign: "center", marginBottom: 64 }}>
-          <span className="chip" style={{ marginBottom: 20, display: "inline-block" }}>Our Services</span>
-          <h2 style={{
-            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-            fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-            fontWeight: 800, lineHeight: 1.15,
-            color: "white", marginBottom: 16,
-          }}>
-            Everything Your Digital{" "}
-            <span style={{ color: "#7fd0ff" }}>Presence Needs</span>
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto" }}>
-            Three powerful service pillars, perfectly synced into one seamless strategy for your growth.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-          {services.map((svc, i) => (
-            <div
-              key={svc.title}
-              className="service-card"
-              style={{
-                ...fadeUp(i * 120, servicesInView),
-                borderColor: hoveredCard === i ? svc.accent + "44" : "rgba(255,255,255,0.08)",
-                boxShadow: hoveredCard === i ? `0 24px 60px ${svc.glow}` : "none",
-              }}
-              onMouseEnter={() => setHoveredCard(i)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div style={{
-                width: 56, height: 56, borderRadius: 14,
-                background: svc.glow,
-                border: `1px solid ${svc.accent}22`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "1.5rem", color: svc.accent,
-                marginBottom: 24,
-                transition: "transform 0.3s ease",
-                transform: hoveredCard === i ? "scale(1.1)" : "scale(1)",
-              }}>
-                {svc.icon}
-              </div>
-              <h3 style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: "1.15rem", fontWeight: 700, color: "white", marginBottom: 12 }}>
-                {svc.title}
-              </h3>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.92rem", lineHeight: 1.75, marginBottom: 24 }}>
-                {svc.desc}
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, color: svc.accent, fontSize: "0.88rem", fontWeight: 600 }}>
-                Learn more <span>→</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── WHY US ── */}
-      <div ref={whyRef} style={{
-        background: "linear-gradient(135deg, rgba(13,33,55,0.8) 0%, rgba(30,10,60,0.7) 100%)",
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        padding: "100px 40px",
-      }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
-          <div style={fadeUp(0, whyInView)}>
-            <span className="chip" style={{ marginBottom: 24, display: "inline-block" }}>Why Choose Us</span>
-            <h2 style={{
-              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-              fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
-              fontWeight: 800, lineHeight: 1.15,
-              color: "white", marginBottom: 20,
-            }}>
-              One Agency.<br />
-              <span style={{ color: "#7fd0ff" }}>Total Sync.</span>
-            </h2>
-            <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.05rem", lineHeight: 1.8 }}>
-              Unlike fragmented agencies, we align every channel — SEO, content, ads,
-              and dev — into a single synchronized strategy so nothing is ever out of step.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {features.map((f, i) => (
-              <div key={f} className="feature-row" style={fadeUp(i * 80, whyInView)}>
-                <div style={{
-                  width: 22, height: 22, borderRadius: "50%",
-                  background: "rgba(52,211,153,0.15)",
-                  border: "1px solid rgba(52,211,153,0.3)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  flexShrink: 0, fontSize: "0.7rem", color: "#34d399",
-                }}>
-                  ✓
-                </div>
-                <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.97rem" }}>{f}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
 
       {/* ── CTA BANNER ── */}
-      <div ref={ctaRef} style={{ padding: "100px 40px", textAlign: "center" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <div style={fadeUp(0, ctaInView)}>
-            <div style={{
-              display: "inline-block",
-              padding: "80px 60px",
-              background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
-              borderRadius: 32,
-              position: "relative",
-              overflow: "hidden",
-            }}>
-              {/* Scan line */}
-              <div style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: "30%",
-                background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
-                pointerEvents: "none",
-              }} />
+      <Box ref={ctaRef} sx={{ py: 15 }}>
+        <Container maxWidth="md">
+          <Zoom in={ctaInView} timeout={800}>
+            <Box
+              sx={{
+                background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
+                borderRadius: "32px",
+                p: { xs: 6, md: 10 },
+                textAlign: "center",
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: "0 32px 80px rgba(127,208,255,0.25)",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "40%",
+                  background: "linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%)",
+                  pointerEvents: "none",
+                }}
+              />
 
-              <h2 style={{
-                fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-                fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-                fontWeight: 800, color: "#060e1a",
-                marginBottom: 14, lineHeight: 1.15,
-              }}>
+              <Typography variant="h2" sx={{ color: "#060e1a", fontWeight: 900, mb: 2, fontSize: { xs: "2.2rem", md: "3.5rem" }, lineHeight: 1.1 }}>
                 Ready to Sync Your Growth?
-              </h2>
-              <p style={{ color: "rgba(6,14,26,0.65)", fontSize: "1.1rem", marginBottom: 36 }}>
+              </Typography>
+              <Typography variant="h6" sx={{ color: alpha("#060e1a", 0.7), mb: 6, fontWeight: 600, maxWidth: 500, mx: "auto" }}>
                 Let's build something powerful together. Start with a free strategy call.
-              </p>
-              <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-                <button className="cta-btn-dark">
+              </Typography>
+
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#060e1a",
+                    color: "#fff",
+                    px: 6, py: 2,
+                    borderRadius: "14px",
+                    fontWeight: 800,
+                    textTransform: "none",
+                    "&:hover": { bgcolor: "#0d2137", transform: "translateY(-4px)" },
+                    transition: "all 0.3s ease",
+                  }}
+                >
                   Get Started Free →
-                </button>
-                <button className="cta-btn-outline">
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#060e1a",
+                    borderColor: alpha("#060e1a", 0.3),
+                    px: 6, py: 2,
+                    borderRadius: "14px",
+                    fontWeight: 700,
+                    textTransform: "none",
+                    "&:hover": { borderColor: "#060e1a", bgcolor: alpha("#060e1a", 0.08), transform: "translateY(-4px)" },
+                    transition: "all 0.3s ease",
+                  }}
+                >
                   Learn More
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                </Button>
+              </Box>
+            </Box>
+          </Zoom>
+        </Container>
+      </Box>
+    </PageWrapper>
   );
 }
