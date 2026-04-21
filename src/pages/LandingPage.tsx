@@ -1,52 +1,12 @@
-import AutorenewIcon from "@mui/icons-material/Autorenew";
-import BrushIcon from "@mui/icons-material/Brush";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import EastIcon from "@mui/icons-material/East";
-import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import SettingsIcon from "@mui/icons-material/Settings";
-import StarIcon from "@mui/icons-material/Star";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { Link } from "react-router-dom";
-import { ROUTE_PATHS } from "../routes/paths";
+import { useState, useEffect, useRef } from "react";
 
-/* ─────────────────────────── data ─────────────────────────── */
-
-const services = [
-  {
-    icon: <AutorenewIcon sx={{ fontSize: 36 }} />,
-    title: "Lifecycle & Automation",
-    desc: "Email automation, journey mapping, and multi-channel workflows that nurture leads and drive conversions.",
-    color: "#7fd0ff",
-    bg: "rgba(127,208,255,0.08)",
-    to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS,
-  },
-  {
-    icon: <SettingsIcon sx={{ fontSize: 36 }} />,
-    title: "Technical Architecture",
-    desc: "ESP migration, CRM sync, deliverability audits, and advanced templating for a robust technical foundation.",
-    color: "#a78bfa",
-    bg: "rgba(167,139,250,0.08)",
-    to: ROUTE_PATHS.SERVICE_ESP_MIGRATION,
-  },
-  {
-    icon: <BrushIcon sx={{ fontSize: 36 }} />,
-    title: "Creative Production",
-    desc: "Modular templates, UX/UI design, and white-label solutions that elevate your brand's visual impact.",
-    color: "#34d399",
-    bg: "rgba(52,211,153,0.08)",
-    to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES,
-  },
+const avatars = [
+  { bg: "#1a3a5c", initials: "PS", color: "#7fd0ff" },
+  { bg: "#2d1b5e", initials: "RM", color: "#a78bfa" },
+  { bg: "#0d3b2e", initials: "AK", color: "#34d399" },
+  { bg: "#3b1a1a", initials: "JD", color: "#f87171" },
+  { bg: "#3b2a0d", initials: "MK", color: "#fbbf24" },
+  { bg: "#1a2a3b", initials: "RV", color: "#60a5fa" },
 ];
 
 const stats = [
@@ -54,6 +14,30 @@ const stats = [
   { value: "98%", label: "Client Retention" },
   { value: "12×", label: "Average ROI" },
   { value: "8+", label: "Years Experience" },
+];
+
+const services = [
+  {
+    icon: "⟳",
+    title: "Lifecycle & Automation",
+    desc: "Email automation, journey mapping, and multi-channel workflows that nurture leads and drive conversions.",
+    accent: "#7fd0ff",
+    glow: "rgba(127,208,255,0.12)",
+  },
+  {
+    icon: "⚙",
+    title: "Technical Architecture",
+    desc: "ESP migration, CRM sync, deliverability audits, and advanced templating for a robust technical foundation.",
+    accent: "#a78bfa",
+    glow: "rgba(167,139,250,0.12)",
+  },
+  {
+    icon: "✦",
+    title: "Creative Production",
+    desc: "Modular templates, UX/UI design, and white-label solutions that elevate your brand's visual impact.",
+    accent: "#34d399",
+    glow: "rgba(52,211,153,0.12)",
+  },
 ];
 
 const features = [
@@ -65,348 +49,469 @@ const features = [
   "On-demand strategy consultations",
 ];
 
-const testimonials = [
-  {
-    name: "Priya Sharma",
-    role: "CEO, BrightLeaf Organics",
-    avatar: "PS",
-    text: "AksharSync transformed our online presence completely. Our organic traffic tripled within 3 months — results we never thought possible.",
-    rating: 5,
-  },
-  {
-    name: "Rahul Mehta",
-    role: "Founder, TechBridge Solutions",
-    avatar: "RM",
-    text: "The team's strategic approach and flawless execution set them apart. Our ROI has been consistently 10x since partnering with them.",
-    rating: 5,
-  },
-  {
-    name: "Ananya Kapoor",
-    role: "Marketing Head, StyleCraft",
-    avatar: "AK",
-    text: "From content to campaigns — everything is perfectly synced. It feels like having a world-class marketing team in-house.",
-    rating: 5,
-  },
-];
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, inView];
+}
 
-/* ─────────────────────────── component ────────────────────── */
+function AnimatedNumber({ target, suffix = "", inView }) {
+  const [display, setDisplay] = useState(0);
+  const numericTarget = parseFloat(target);
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const duration = 1600;
+    const step = 16;
+    const inc = (numericTarget / duration) * step;
+    const timer = setInterval(() => {
+      start += inc;
+      if (start >= numericTarget) { setDisplay(numericTarget); clearInterval(timer); }
+      else setDisplay(start);
+    }, step);
+    return () => clearInterval(timer);
+  }, [inView, numericTarget]);
+  const formatted = Number.isInteger(numericTarget) ? Math.round(display) : display.toFixed(0);
+  return <>{formatted}{suffix}</>;
+}
 
-export default function LandingPage() {
+export default function HeroSection() {
+  const [heroVisible, setHeroVisible] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [statsRef, statsInView] = useInView();
+  const [servicesRef, servicesInView] = useInView(0.1);
+  const [whyRef, whyInView] = useInView(0.1);
+  const [ctaRef, ctaInView] = useInView(0.2);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeroVisible(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
+  const fadeUp = (delay = 0, visible = heroVisible) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(32px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
+
+  const fadeIn = (delay = 0, visible = true) => ({
+    opacity: visible ? 1 : 0,
+    transition: `opacity 0.6s ease ${delay}ms`,
+  });
+
   return (
-    <Box>
-      {/* ══════ HERO ══════ */}
-      <Box
-        sx={{
-          minHeight: "92vh",
-          background: "linear-gradient(135deg, #06101e 0%, #0D3B66 45%, #472187 100%)",
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Blobs */}
-        <Box sx={{
-          position: "absolute", width: 500, height: 500, borderRadius: "50%",
-          top: -100, right: -120,
-          background: "radial-gradient(circle, rgba(71,33,135,0.15) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-        <Box sx={{
-          position: "absolute", width: 400, height: 400, borderRadius: "50%",
-          bottom: -80, left: -80,
-          background: "radial-gradient(circle, rgba(13,59,102,0.15) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
+    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", background: "#060e1a", color: "white", overflowX: "hidden" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-        <Container maxWidth="md" sx={{ py: { xs: 10, md: 6 }, position: "relative", zIndex: 1, textAlign: "center" }}>
-          <Stack spacing={4} sx={{ alignItems: "center" }}>
-            {/* <Chip
-              label="🚀 Trusted Agency Backbone"
-              sx={{
-                width: "fit-content",
-                bgcolor: "rgba(255,255,255,0.1)",
-                color: "white",
-                fontWeight: 600,
-                border: "1px solid rgba(255,255,255,0.2)",
-                fontSize: "0.85rem",
-              }}
-            /> */}
-            <Box>
-              <Typography
-                variant="h1"
-                sx={{
-                  fontWeight: 900,
-                  color: "white",
-                  lineHeight: 1.1,
-                  fontSize: { xs: "2.6rem", md: "4.5rem" },
-                  maxWidth: "900px",
-                  mx: "auto",
-                }}
-              >
-                Scaling D2C Brands Through <br />
-                <Box component="span" sx={{
-                  background: "linear-gradient(90deg, #ffffff 0%, #a78bfa 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>
-                  Data-Driven Communication.
-                </Box>
-              </Typography>
-            </Box>
-            <Typography sx={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: { xs: "1.1rem", md: "1.35rem" },
-              maxWidth: 800,
-              lineHeight: 1.6,
-              fontWeight: 400,
-            }}>
-              We build automated revenue engines across Email, SMS, and WhatsApp using 12 years of technical architecture experience. Expert support for leading ESP and CRM platforms.
-            </Typography>
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <Button
-                component={Link}
-                to={ROUTE_PATHS.SERVICES}
-                variant="contained"
-                size="large"
-                endIcon={<EastIcon />}
-                sx={{
-                  bgcolor: "white", color: "#0D3B66",
-                  fontWeight: 800, fontSize: "1rem",
-                  px: 4, py: 1.6, borderRadius: "10px", textTransform: "none",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                  "&:hover": { bgcolor: "#f0f0f0", boxShadow: "0 12px 40px rgba(0,0,0,0.3)" },
-                }}
-              >
-                Explore Services
-              </Button>
-              <Button
-                component={Link}
-                to={ROUTE_PATHS.ABOUT}
-                variant="outlined"
-                size="large"
-                sx={{
-                  color: "white", borderColor: "rgba(255,255,255,0.4)",
-                  fontSize: "1rem", px: 4, py: 1.6,
-                  borderRadius: "10px", textTransform: "none",
-                  "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.1)" },
-                }}
-              >
-                About Us
-              </Button>
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      {/* ══════ STATS BAND ══════ */}
-      <Box sx={{ bgcolor: "#0f2c4d", py: 5, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={2}>
-            {stats.map((s) => (
-              <Grid key={s.label} size={{ xs: 6, md: 3 }}>
-                <Box sx={{ textAlign: "center", py: 1 }}>
-                  <Typography sx={{
-                    fontSize: { xs: "2rem", md: "2.8rem" }, fontWeight: 900,
-                    background: "linear-gradient(90deg, #7fd0ff, #a78bfa)",
-                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                  }}>
-                    {s.value}
-                  </Typography>
-                  <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", fontWeight: 500, mt: 0.5 }}>
-                    {s.label}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+        .hero-btn-primary {
+          background: white; color: #0d2137;
+          padding: 14px 32px; border-radius: 12px;
+          font-weight: 800; font-size: 1rem;
+          border: none; cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex; align-items: center; gap: 8px;
+          font-family: inherit;
+        }
+        .hero-btn-primary:hover { background: #e8f4ff; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(127,208,255,0.25); }
 
-      {/* ══════ SERVICES ══════ */}
-      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#f8fafc" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Chip label="Our Services" sx={{ bgcolor: "rgba(15,44,77,0.08)", color: "#0f2c4d", fontWeight: 600, mb: 2 }} />
-            <Typography variant="h3" sx={{ fontWeight: 900, color: "#0d2137", mb: 2, fontSize: { xs: "2rem", md: "2.8rem" } }}>
-              Everything Your Digital
-              <Box component="span" sx={{ color: "#123457" }}> Presence Needs</Box>
-            </Typography>
-            <Typography sx={{ color: "#64748b", fontSize: "1.1rem", maxWidth: 520, mx: "auto" }}>
-              Three powerful service pillars, perfectly synced into one seamless strategy for your growth.
-            </Typography>
-          </Box>
+        .hero-btn-secondary {
+          background: transparent; color: rgba(255,255,255,0.85);
+          padding: 14px 32px; border-radius: 12px;
+          font-weight: 600; font-size: 1rem;
+          border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex; align-items: center; gap: 8px;
+          font-family: inherit;
+        }
+        .hero-btn-secondary:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); transform: translateY(-2px); }
 
-          <Grid container spacing={3}>
-            {services.map((svc) => (
-              <Grid key={svc.title} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card
-                  component={Link}
-                  to={svc.to}
-                  sx={{
-                    height: "100%", borderRadius: 3,
-                    border: "1px solid #e2e8f0",
-                    textDecoration: "none",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                    transition: "all 0.3s ease",
-                    display: "block",
-                    "&:hover": {
-                      transform: "translateY(-6px)",
-                      boxShadow: "0 16px 48px rgba(0,0,0,0.12)",
-                      borderColor: svc.color,
-                    },
-                  }}
-                >
-                  <CardContent sx={{ p: 3.5 }}>
-                    <Box sx={{
-                      width: 64, height: 64, borderRadius: 2.5,
-                      bgcolor: svc.bg, color: svc.color,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      mb: 2.5,
-                    }}>
-                      {svc.icon}
-                    </Box>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: "#0d2137", mb: 1 }}>
-                      {svc.title}
-                    </Typography>
-                    <Typography sx={{ color: "#64748b", fontSize: "0.92rem", lineHeight: 1.7 }}>
-                      {svc.desc}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 2.5, color: svc.color }}>
-                      <Typography sx={{ fontSize: "0.88rem", fontWeight: 600 }}>Learn more</Typography>
-                      <EastIcon sx={{ fontSize: 16 }} />
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+        .service-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 20px;
+          padding: 32px;
+          cursor: pointer;
+          transition: all 0.35s ease;
+        }
+        .service-card:hover {
+          background: rgba(255,255,255,0.06);
+          border-color: rgba(255,255,255,0.18);
+          transform: translateY(-8px);
+        }
 
-      {/* ══════ WHY US ══════ */}
-      <Box sx={{ py: { xs: 8, md: 12 }, background: "linear-gradient(135deg, #0d2137 0%, #123457 100%)" }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={6} sx={{ alignItems: "center" }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={2}>
-                <Chip label="Why Choose Us" sx={{ width: "fit-content", bgcolor: "rgba(127,208,255,0.12)", color: "#7fd0ff", fontWeight: 600 }} />
-                <Typography variant="h3" sx={{ fontWeight: 900, color: "white", fontSize: { xs: "2rem", md: "2.6rem" } }}>
-                  One Agency. <br />
-                  <Box component="span" sx={{ color: "#7fd0ff" }}>Total Sync.</Box>
-                </Typography>
-                <Typography sx={{ color: "rgba(255,255,255,0.7)", fontSize: "1.05rem", lineHeight: 1.8 }}>
-                  Unlike fragmented agencies, we align every channel — SEO, content, ads,
-                  and dev — into a single synchronized strategy so nothing is ever out of step.
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={2}>
-                {features.map((f) => (
-                  <Box key={f} sx={{ display: "flex", gap: 1.5, alignItems: "flex-start" }}>
-                    <CheckCircleOutlinedIcon sx={{ color: "#34d399", mt: 0.3, flexShrink: 0 }} />
-                    <Typography sx={{ color: "rgba(255,255,255,0.85)", fontSize: "1rem" }}>{f}</Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+        .feature-row {
+          display: flex; align-items: center; gap: 14px;
+          padding: 14px 18px;
+          border-radius: 12px;
+          transition: background 0.2s ease;
+        }
+        .feature-row:hover { background: rgba(255,255,255,0.04); }
 
-      {/* ══════ TESTIMONIALS ══════ */}
-      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#f8fafc" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 8 }}>
-            <Chip label="Client Stories" sx={{ bgcolor: "rgba(15,44,77,0.08)", color: "#0f2c4d", fontWeight: 600, mb: 2 }} />
-            <Typography variant="h3" sx={{ fontWeight: 900, color: "#0d2137", fontSize: { xs: "2rem", md: "2.6rem" } }}>
-              Real Results. Real Words.
-            </Typography>
-          </Box>
-          <Grid container spacing={3}>
-            {testimonials.map((t) => (
-              <Grid key={t.name} size={{ xs: 12, md: 4 }}>
-                <Card sx={{
-                  height: "100%", borderRadius: 3,
-                  border: "1px solid #e2e8f0",
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                }}>
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: "flex", gap: 0.3, mb: 2 }}>
-                      {Array.from({ length: t.rating }).map((_, i) => (
-                        <StarIcon key={i} sx={{ color: "#fbbf24", fontSize: 18 }} />
-                      ))}
-                    </Box>
-                    <FormatQuoteIcon sx={{ color: "#0f2c4d", opacity: 0.15, fontSize: 48, mb: 1 }} />
-                    <Typography sx={{ color: "#334155", lineHeight: 1.75, fontSize: "0.97rem", mb: 3 }}>
-                      {t.text}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
-                      <Avatar sx={{ bgcolor: "#0f2c4d", color: "#7fd0ff", fontWeight: 700, width: 44, height: 44 }}>
-                        {t.avatar}
-                      </Avatar>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "#0d2137", fontSize: "0.95rem" }}>{t.name}</Typography>
-                        <Typography sx={{ color: "#64748b", fontSize: "0.82rem" }}>{t.role}</Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+        .cta-btn-dark {
+          background: #060e1a; color: white;
+          padding: 16px 40px; border-radius: 12px;
+          font-weight: 800; font-size: 1.05rem;
+          border: none; cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex; align-items: center; gap: 8px;
+          font-family: inherit;
+        }
+        .cta-btn-dark:hover { background: #0d2137; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(6,14,26,0.4); }
 
-      {/* ══════ CTA BANNER ══════ */}
-      <Box sx={{
-        py: { xs: 8, md: 10 },
-        background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
-        textAlign: "center",
+        .cta-btn-outline {
+          background: transparent; color: #0d2137;
+          padding: 16px 40px; border-radius: 12px;
+          font-weight: 700; font-size: 1.05rem;
+          border: 1.5px solid rgba(13,33,55,0.35); cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex; align-items: center; gap: 8px;
+          font-family: inherit;
+        }
+        .cta-btn-outline:hover { border-color: #0d2137; background: rgba(13,33,55,0.07); transform: translateY(-2px); }
+
+        .avatar-ring { border: 2px solid #060e1a; }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.7; }
+        }
+        @keyframes scan {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(800%); }
+        }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        .float-anim-delay { animation: float 6s ease-in-out infinite 2s; }
+        .float-anim-slow { animation: float 9s ease-in-out infinite 1s; }
+        .glow-pulse { animation: pulse-glow 3s ease-in-out infinite; }
+
+        .stat-card {
+          text-align: center; padding: 20px 12px;
+          border-right: 1px solid rgba(255,255,255,0.07);
+        }
+        .stat-card:last-child { border-right: none; }
+
+        .chip {
+          display: inline-block;
+          background: rgba(127,208,255,0.1);
+          color: #7fd0ff;
+          border: 1px solid rgba(127,208,255,0.2);
+          border-radius: 100px;
+          padding: 6px 16px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+      `}</style>
+
+      {/* ── HERO ── */}
+      <div style={{
+        minHeight: "100vh",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        background: "linear-gradient(145deg, #060e1a 0%, #0b1e35 40%, #1a0a3a 100%)",
       }}>
-        <Container maxWidth="md">
-          <Typography variant="h3" sx={{ fontWeight: 900, color: "#0d2137", mb: 2, fontSize: { xs: "2rem", md: "2.8rem" } }}>
-            Ready to Sync Your Growth?
-          </Typography>
-          <Typography sx={{ color: "rgba(13,33,55,0.75)", fontSize: "1.15rem", mb: 5 }}>
-            Let's build something powerful together. Start with a free strategy call.
-          </Typography>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ justifyContent: "center" }}>
-            <Button
-              component={Link}
-              to={ROUTE_PATHS.SERVICES}
-              variant="contained"
-              size="large"
-              endIcon={<EastIcon />}
-              sx={{
-                bgcolor: "#0d2137", color: "white",
-                fontWeight: 800, fontSize: "1.05rem",
-                px: 5, py: 1.8, borderRadius: "10px", textTransform: "none",
-                boxShadow: "0 8px 32px rgba(13,33,55,0.35)",
-                "&:hover": { bgcolor: "#0f2c4d" },
+        {/* BG Grid */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: "linear-gradient(rgba(127,208,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(127,208,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+          pointerEvents: "none",
+        }} />
+
+        {/* Orbs */}
+        <div className="glow-pulse" style={{
+          position: "absolute", width: 600, height: 600, borderRadius: "50%",
+          top: "-15%", right: "-10%",
+          background: "radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }} />
+        <div className="glow-pulse" style={{
+          position: "absolute", width: 500, height: 500, borderRadius: "50%",
+          bottom: "-10%", left: "-8%",
+          background: "radial-gradient(circle, rgba(127,208,255,0.07) 0%, transparent 65%)",
+          pointerEvents: "none",
+          animationDelay: "1.5s",
+        }} />
+
+        {/* Floating accent dots */}
+        <div className="float-anim" style={{ position: "absolute", width: 6, height: 6, borderRadius: "50%", background: "#7fd0ff", top: "20%", right: "15%", opacity: 0.6 }} />
+        <div className="float-anim-delay" style={{ position: "absolute", width: 4, height: 4, borderRadius: "50%", background: "#a78bfa", top: "60%", right: "8%", opacity: 0.5 }} />
+        <div className="float-anim-slow" style={{ position: "absolute", width: 5, height: 5, borderRadius: "50%", background: "#34d399", top: "35%", left: "5%", opacity: 0.5 }} />
+
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 40px", position: "relative", zIndex: 1, width: "100%" }}>
+          {/* Chip */}
+          <div style={{ ...fadeUp(0), marginBottom: 28 }}>
+            <span className="chip">✦ The Email Marketing Experts</span>
+          </div>
+
+          {/* Headline */}
+          <div style={{ ...fadeUp(120), maxWidth: 820, marginBottom: 24 }}>
+            <h1 style={{
+              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+              fontSize: "clamp(2.4rem, 5vw, 4.8rem)",
+              fontWeight: 800,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
+              color: "white",
+            }}>
+              Scaling D2C Brands{" "}
+              <br />
+              <span style={{
+                background: "linear-gradient(90deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                Through Data-Driven
+              </span>
+              <br />
+              Communication.
+            </h1>
+          </div>
+
+          {/* Sub */}
+          <div style={{ ...fadeUp(240), maxWidth: 580, marginBottom: 44 }}>
+            <p style={{ fontSize: "1.15rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.75, fontWeight: 400 }}>
+              We build automated revenue engines across{" "}
+              <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Email, SMS, and WhatsApp</span>
+              {" "}using 12 years of technical architecture experience. Expert support for leading ESP and CRM platforms.
+            </p>
+          </div>
+
+          {/* Avatars + social proof */}
+          <div style={{ ...fadeUp(360), display: "flex", alignItems: "center", gap: 16, marginBottom: 40, flexWrap: "wrap" }}>
+            <div style={{ display: "flex" }}>
+              {avatars.map((a, i) => (
+                <div key={i} className="avatar-ring" style={{
+                  width: 40, height: 40, borderRadius: "50%",
+                  background: a.bg,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "0.72rem", fontWeight: 700, color: a.color,
+                  marginLeft: i === 0 ? 0 : -10,
+                  position: "relative", zIndex: avatars.length - i,
+                }}>
+                  {a.initials}
+                </div>
+              ))}
+            </div>
+            <div>
+              <div style={{ display: "flex", gap: 2, marginBottom: 2 }}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={{ color: "#fbbf24", fontSize: "0.85rem" }}>★</span>
+                ))}
+              </div>
+              <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
+                Trusted by <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>350+ D2C brands</span>
+              </p>
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div style={{ ...fadeUp(460), display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <button className="hero-btn-primary">
+              Get Your Free Consultation
+              <span style={{ fontSize: "1.1rem" }}>→</span>
+            </button>
+            <button className="hero-btn-secondary">
+              Explore Services
+              <span style={{ fontSize: "1rem", opacity: 0.7 }}>↗</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── STATS BAND ── */}
+      {/* <div ref={statsRef} style={{
+        background: "rgba(255,255,255,0.02)",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+      }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+            {stats.map((s, i) => (
+              <div key={s.label} className="stat-card" style={{ ...fadeIn(i * 120, statsInView), padding: "40px 20px" }}>
+                <div style={{
+                  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                  fontSize: "2.6rem", fontWeight: 800,
+                  background: "linear-gradient(90deg, #7fd0ff, #a78bfa)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                  marginBottom: 6,
+                }}>
+                  <AnimatedNumber
+                    target={parseFloat(s.value)}
+                    suffix={s.value.replace(/[0-9.]/g, "")}
+                    inView={statsInView}
+                  />
+                </div>
+                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div> */}
+
+      {/* ── SERVICES ── */}
+      <div ref={servicesRef} style={{ padding: "100px 40px", maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ ...fadeUp(0, servicesInView), textAlign: "center", marginBottom: 64 }}>
+          <span className="chip" style={{ marginBottom: 20, display: "inline-block" }}>Our Services</span>
+          <h2 style={{
+            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+            fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+            fontWeight: 800, lineHeight: 1.15,
+            color: "white", marginBottom: 16,
+          }}>
+            Everything Your Digital{" "}
+            <span style={{ color: "#7fd0ff" }}>Presence Needs</span>
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto" }}>
+            Three powerful service pillars, perfectly synced into one seamless strategy for your growth.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          {services.map((svc, i) => (
+            <div
+              key={svc.title}
+              className="service-card"
+              style={{
+                ...fadeUp(i * 120, servicesInView),
+                borderColor: hoveredCard === i ? svc.accent + "44" : "rgba(255,255,255,0.08)",
+                boxShadow: hoveredCard === i ? `0 24px 60px ${svc.glow}` : "none",
               }}
+              onMouseEnter={() => setHoveredCard(i)}
+              onMouseLeave={() => setHoveredCard(null)}
             >
-              Get Started Free
-            </Button>
-            <Button
-              component={Link}
-              to={ROUTE_PATHS.ABOUT}
-              variant="outlined"
-              size="large"
-              sx={{
-                color: "#0d2137", borderColor: "rgba(13,33,55,0.4)",
-                fontWeight: 700, fontSize: "1.05rem",
-                px: 5, py: 1.8, borderRadius: "10px", textTransform: "none",
-                "&:hover": { borderColor: "#0d2137", bgcolor: "rgba(13,33,55,0.06)" },
-              }}
-            >
-              Learn More
-            </Button>
-          </Stack>
-        </Container>
-      </Box>
-    </Box>
+              <div style={{
+                width: 56, height: 56, borderRadius: 14,
+                background: svc.glow,
+                border: `1px solid ${svc.accent}22`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "1.5rem", color: svc.accent,
+                marginBottom: 24,
+                transition: "transform 0.3s ease",
+                transform: hoveredCard === i ? "scale(1.1)" : "scale(1)",
+              }}>
+                {svc.icon}
+              </div>
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: "1.15rem", fontWeight: 700, color: "white", marginBottom: 12 }}>
+                {svc.title}
+              </h3>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.92rem", lineHeight: 1.75, marginBottom: 24 }}>
+                {svc.desc}
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, color: svc.accent, fontSize: "0.88rem", fontWeight: 600 }}>
+                Learn more <span>→</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── WHY US ── */}
+      <div ref={whyRef} style={{
+        background: "linear-gradient(135deg, rgba(13,33,55,0.8) 0%, rgba(30,10,60,0.7) 100%)",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        padding: "100px 40px",
+      }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
+          <div style={fadeUp(0, whyInView)}>
+            <span className="chip" style={{ marginBottom: 24, display: "inline-block" }}>Why Choose Us</span>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+              fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
+              fontWeight: 800, lineHeight: 1.15,
+              color: "white", marginBottom: 20,
+            }}>
+              One Agency.<br />
+              <span style={{ color: "#7fd0ff" }}>Total Sync.</span>
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.05rem", lineHeight: 1.8 }}>
+              Unlike fragmented agencies, we align every channel — SEO, content, ads,
+              and dev — into a single synchronized strategy so nothing is ever out of step.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {features.map((f, i) => (
+              <div key={f} className="feature-row" style={fadeUp(i * 80, whyInView)}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: "rgba(52,211,153,0.15)",
+                  border: "1px solid rgba(52,211,153,0.3)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0, fontSize: "0.7rem", color: "#34d399",
+                }}>
+                  ✓
+                </div>
+                <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.97rem" }}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── CTA BANNER ── */}
+      <div ref={ctaRef} style={{ padding: "100px 40px", textAlign: "center" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          <div style={fadeUp(0, ctaInView)}>
+            <div style={{
+              display: "inline-block",
+              padding: "80px 60px",
+              background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 50%, #34d399 100%)",
+              borderRadius: 32,
+              position: "relative",
+              overflow: "hidden",
+            }}>
+              {/* Scan line */}
+              <div style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: "30%",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
+                pointerEvents: "none",
+              }} />
+
+              <h2 style={{
+                fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+                fontWeight: 800, color: "#060e1a",
+                marginBottom: 14, lineHeight: 1.15,
+              }}>
+                Ready to Sync Your Growth?
+              </h2>
+              <p style={{ color: "rgba(6,14,26,0.65)", fontSize: "1.1rem", marginBottom: 36 }}>
+                Let's build something powerful together. Start with a free strategy call.
+              </p>
+              <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+                <button className="cta-btn-dark">
+                  Get Started Free →
+                </button>
+                <button className="cta-btn-outline">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
