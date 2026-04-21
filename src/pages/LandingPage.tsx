@@ -1,11 +1,10 @@
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import BrushIcon from "@mui/icons-material/Brush";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import CodeIcon from "@mui/icons-material/Code";
-import CreateIcon from "@mui/icons-material/Create";
 import EastIcon from "@mui/icons-material/East";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import SearchIcon from "@mui/icons-material/Search";
+import SettingsIcon from "@mui/icons-material/Settings";
 import StarIcon from "@mui/icons-material/Star";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import {
   Avatar,
   Box,
@@ -25,44 +24,36 @@ import { ROUTE_PATHS } from "../routes/paths";
 
 const services = [
   {
-    icon: <TrendingUpIcon sx={{ fontSize: 36 }} />,
-    title: "Digital Strategy",
-    desc: "Data-driven roadmaps tailored to your brand goals — from awareness to conversion.",
+    icon: <AutorenewIcon sx={{ fontSize: 36 }} />,
+    title: "Lifecycle & Automation",
+    desc: "Email automation, journey mapping, and multi-channel workflows that nurture leads and drive conversions.",
     color: "#7fd0ff",
     bg: "rgba(127,208,255,0.08)",
-    to: ROUTE_PATHS.SERVICE_DIGITAL_STRATEGY,
+    to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS,
   },
   {
-    icon: <SearchIcon sx={{ fontSize: 36 }} />,
-    title: "SEO Optimization",
-    desc: "Rank higher, drive organic traffic, and dominate your niche with precision SEO.",
+    icon: <SettingsIcon sx={{ fontSize: 36 }} />,
+    title: "Technical Architecture",
+    desc: "ESP migration, CRM sync, deliverability audits, and advanced templating for a robust technical foundation.",
     color: "#a78bfa",
     bg: "rgba(167,139,250,0.08)",
-    to: ROUTE_PATHS.SERVICE_SEO,
+    to: ROUTE_PATHS.SERVICE_ESP_MIGRATION,
   },
   {
-    icon: <CreateIcon sx={{ fontSize: 36 }} />,
-    title: "Content Creation",
-    desc: "Compelling stories and visuals that connect, engage, and convert your audience.",
+    icon: <BrushIcon sx={{ fontSize: 36 }} />,
+    title: "Creative Production",
+    desc: "Modular templates, UX/UI design, and white-label solutions that elevate your brand's visual impact.",
     color: "#34d399",
     bg: "rgba(52,211,153,0.08)",
-    to: ROUTE_PATHS.SERVICE_CONTENT,
-  },
-  {
-    icon: <CodeIcon sx={{ fontSize: 36 }} />,
-    title: "Web Development",
-    desc: "Fast, responsive, and beautiful web experiences that leave a lasting impression.",
-    color: "#fbbf24",
-    bg: "rgba(251,191,36,0.08)",
-    to: ROUTE_PATHS.SERVICE_WEB_DEV,
+    to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES,
   },
 ];
 
 const stats = [
   { value: "350+", label: "Clients Served" },
-  { value: "98%",  label: "Client Retention" },
-  { value: "12×",  label: "Average ROI" },
-  { value: "8+",   label: "Years Experience" },
+  { value: "98%", label: "Client Retention" },
+  { value: "12×", label: "Average ROI" },
+  { value: "8+", label: "Years Experience" },
 ];
 
 const features = [
@@ -107,7 +98,7 @@ export default function LandingPage() {
       <Box
         sx={{
           minHeight: "92vh",
-          background: "linear-gradient(135deg, #06101e 0%, #0d2137 45%, #123457 100%)",
+          background: "linear-gradient(135deg, #06101e 0%, #0D3B66 45%, #472187 100%)",
           display: "flex",
           alignItems: "center",
           position: "relative",
@@ -118,64 +109,60 @@ export default function LandingPage() {
         <Box sx={{
           position: "absolute", width: 500, height: 500, borderRadius: "50%",
           top: -100, right: -120,
-          background: "radial-gradient(circle, rgba(127,208,255,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(71,33,135,0.15) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
         <Box sx={{
           position: "absolute", width: 400, height: 400, borderRadius: "50%",
           bottom: -80, left: -80,
-          background: "radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(13,59,102,0.15) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
         <Container maxWidth="md" sx={{ py: { xs: 10, md: 6 }, position: "relative", zIndex: 1, textAlign: "center" }}>
           <Stack spacing={4} sx={{ alignItems: "center" }}>
-            <Chip
-              label="🚀 Trusted by 350+ Brands"
+            {/* <Chip
+              label="🚀 Trusted Agency Backbone"
               sx={{
                 width: "fit-content",
-                bgcolor: "rgba(127,208,255,0.12)",
-                color: "#7fd0ff",
+                bgcolor: "rgba(255,255,255,0.1)",
+                color: "white",
                 fontWeight: 600,
-                border: "1px solid rgba(127,208,255,0.25)",
+                border: "1px solid rgba(255,255,255,0.2)",
                 fontSize: "0.85rem",
               }}
-            />
+            /> */}
             <Box>
               <Typography
-                variant="h2"
+                variant="h1"
                 sx={{
                   fontWeight: 900,
                   color: "white",
                   lineHeight: 1.1,
-                  fontSize: { xs: "2.6rem", md: "4rem" },
+                  fontSize: { xs: "2.6rem", md: "4.5rem" },
+                  maxWidth: "900px",
+                  mx: "auto",
                 }}
               >
-                Sync Your Brand
-              </Typography>
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 900,
-                  lineHeight: 1.1,
-                  fontSize: { xs: "2.6rem", md: "4rem" },
-                  background: "linear-gradient(90deg, #7fd0ff 0%, #a78bfa 100%)",
+                Scaling D2C Brands Through <br />
+                <Box component="span" sx={{
+                  background: "linear-gradient(90deg, #ffffff 0%, #a78bfa 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                }}
-              >
-                With the Future.
+                }}>
+                  Data-Driven Communication.
+                </Box>
               </Typography>
             </Box>
             <Typography sx={{
-              color: "rgba(255,255,255,0.7)",
-              fontSize: { xs: "1.05rem", md: "1.2rem" },
-              maxWidth: 560,
-              lineHeight: 1.8,
+              color: "rgba(255,255,255,0.85)",
+              fontSize: { xs: "1.1rem", md: "1.35rem" },
+              maxWidth: 800,
+              lineHeight: 1.6,
+              fontWeight: 400,
             }}>
-              AksharSync is your all-in-one digital growth partner — strategy, content,
-              SEO, and development perfectly synced into one powerful ecosystem.
+              We build automated revenue engines across Email, SMS, and WhatsApp using 12 years of technical architecture experience. Expert support for leading ESP and CRM platforms.
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <Button
@@ -185,11 +172,11 @@ export default function LandingPage() {
                 size="large"
                 endIcon={<EastIcon />}
                 sx={{
-                  bgcolor: "#7fd0ff", color: "#0d2137",
+                  bgcolor: "white", color: "#0D3B66",
                   fontWeight: 800, fontSize: "1rem",
                   px: 4, py: 1.6, borderRadius: "10px", textTransform: "none",
-                  boxShadow: "0 8px 32px rgba(127,208,255,0.3)",
-                  "&:hover": { bgcolor: "#a5deff", boxShadow: "0 12px 40px rgba(127,208,255,0.45)" },
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+                  "&:hover": { bgcolor: "#f0f0f0", boxShadow: "0 12px 40px rgba(0,0,0,0.3)" },
                 }}
               >
                 Explore Services
@@ -200,10 +187,10 @@ export default function LandingPage() {
                 variant="outlined"
                 size="large"
                 sx={{
-                  color: "white", borderColor: "rgba(255,255,255,0.35)",
+                  color: "white", borderColor: "rgba(255,255,255,0.4)",
                   fontSize: "1rem", px: 4, py: 1.6,
                   borderRadius: "10px", textTransform: "none",
-                  "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.06)" },
+                  "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.1)" },
                 }}
               >
                 About Us
@@ -247,13 +234,13 @@ export default function LandingPage() {
               <Box component="span" sx={{ color: "#123457" }}> Presence Needs</Box>
             </Typography>
             <Typography sx={{ color: "#64748b", fontSize: "1.1rem", maxWidth: 520, mx: "auto" }}>
-              Four powerful pillars, perfectly synced into one seamless strategy for your growth.
+              Three powerful service pillars, perfectly synced into one seamless strategy for your growth.
             </Typography>
           </Box>
 
           <Grid container spacing={3}>
             {services.map((svc) => (
-              <Grid key={svc.title} size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid key={svc.title} size={{ xs: 12, sm: 6, md: 4 }}>
                 <Card
                   component={Link}
                   to={svc.to}

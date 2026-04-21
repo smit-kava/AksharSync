@@ -1,22 +1,19 @@
 import CampaignIcon from "@mui/icons-material/Campaign";
-import CodeIcon from "@mui/icons-material/Code";
-import CreateIcon from "@mui/icons-material/Create";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import {
   AppBar,
   Box,
   Button,
+  Collapse,
   Container,
   Drawer,
   Fade,
   IconButton,
   List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Paper,
   Stack,
@@ -27,23 +24,68 @@ import { useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { ROUTE_PATHS } from "../routes/paths";
 
-const serviceItems = [
-  { label: "Digital Strategy", to: ROUTE_PATHS.SERVICE_DIGITAL_STRATEGY, icon: <TrendingUpIcon fontSize="small" /> },
-  { label: "SEO Optimization", to: ROUTE_PATHS.SERVICE_SEO, icon: <SearchIcon fontSize="small" /> },
-  { label: "Content Creation", to: ROUTE_PATHS.SERVICE_CONTENT, icon: <CreateIcon fontSize="small" /> },
-  { label: "Web Development", to: ROUTE_PATHS.SERVICE_WEB_DEV, icon: <CodeIcon fontSize="small" /> },
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+interface SubService {
+  label: string;
+  to: string;
+}
+
+interface MainService {
+  label: string;
+  to: string;
+  sub: SubService[];
+}
+
+const mainServices: MainService[] = [
+  {
+    label: "Lifecycle & Automation",
+    to: ROUTE_PATHS.SERVICES,
+    sub: [
+      { label: "Email flows",               to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS },
+      { label: "Customer journeys",          to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS },
+      { label: "Multi-channel automation",   to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION },
+    ],
+  },
+  {
+    label: "Technical Architecture",
+    to: ROUTE_PATHS.SERVICES,
+    sub: [
+      { label: "ESP Migration & Integration",    to: ROUTE_PATHS.SERVICE_ESP_MIGRATION },
+      { label: "CRM Data Sync",                  to: ROUTE_PATHS.SERVICE_CRM_DATA_SYNC },
+      { label: "Deliverability Audits",          to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS },
+      { label: "Liquid & Ampscript Templating", to: ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT },
+    ],
+  },
+  {
+    label: "Creative Production",
+    to: ROUTE_PATHS.SERVICES,
+    sub: [
+      { label: "Modular Template Production",    to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES },
+      { label: "UX/UI Design",                   to: ROUTE_PATHS.SERVICE_UX_UI_DESIGN },
+      { label: "White Label Solutions",          to: ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS },
+    ],
+  },
 ];
 
-const navItems = [
-  { label: "Home",      to: ROUTE_PATHS.HOME,      children: undefined as typeof serviceItems | undefined },
-  { label: "Solutions", to: ROUTE_PATHS.SOLUTIONS,  children: undefined as typeof serviceItems | undefined },
-  { label: "Services",  to: ROUTE_PATHS.SERVICES,   children: serviceItems },
-  { label: "About Us",  to: ROUTE_PATHS.ABOUT,      children: undefined as typeof serviceItems | undefined },
-  { label: "Why?",      to: ROUTE_PATHS.WHY,        children: undefined as typeof serviceItems | undefined },
+interface NavItem {
+  label: string;
+  to: string;
+  hasServices?: boolean;
+}
+
+const navItems: NavItem[] = [
+  { label: "Home",      to: ROUTE_PATHS.HOME },
+  { label: "Solutions", to: ROUTE_PATHS.SOLUTIONS },
+  { label: "Services",  to: ROUTE_PATHS.SERVICES, hasServices: true },
+  { label: "About Us",  to: ROUTE_PATHS.ABOUT },
+  { label: "Why?",      to: ROUTE_PATHS.WHY },
 ];
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const linkStyles = ({ isActive }: { isActive: boolean }) => ({
-  color: isActive ? "#7fd0ff" : "rgba(255,255,255,0.92)",
+  color: isActive ? "#ffffff" : "rgba(255,255,255,0.85)",
   textDecoration: "none",
   fontWeight: isActive ? 600 : 500,
   display: "flex",
@@ -53,18 +95,55 @@ const linkStyles = ({ isActive }: { isActive: boolean }) => ({
   transition: "color 0.2s",
 });
 
-export function Header() {
-  const [openMenu, setOpenMenu] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const timeoutRef = useRef<number | null>(null);
+const popoverPaperSx = {
+  bgcolor: "#0D3B66",
+  border: "1px solid rgba(255,255,255,0.1)",
+  borderRadius: 2,
+  // overflow: "hidden", // Removed to allow nested popovers as side-popovers
+  boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+};
 
-  const handleMouseEnter = (label: string) => {
-    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    setActiveMenu(label);
+// ─── Component ───────────────────────────────────────────────────────────────
+
+export function Header() {
+  // Mobile drawer
+  const [openMenu, setOpenMenu] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState<string | null>(null);
+
+  // Level-1: Services popover
+  const [showServices, setShowServices] = useState(false);
+  const servicesTimeout = useRef<number | null>(null);
+
+  // Level-2: sub-service popover
+  const [activeMain, setActiveMain] = useState<string | null>(null);
+  const subTimeout = useRef<number | null>(null);
+
+  // ── Level-1 handlers ──
+  const onServicesEnter = () => {
+    if (servicesTimeout.current) window.clearTimeout(servicesTimeout.current);
+    setShowServices(true);
+  };
+  const onServicesLeave = () => {
+    servicesTimeout.current = window.setTimeout(() => {
+      setShowServices(false);
+      setActiveMain(null);
+    }, 180);
   };
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = window.setTimeout(() => setActiveMenu(null), 150);
+  // ── Level-2 handlers ──
+  const onMainEnter = (label: string) => {
+    if (subTimeout.current) window.clearTimeout(subTimeout.current);
+    // Keep level-1 alive when moving into level-2
+    if (servicesTimeout.current) window.clearTimeout(servicesTimeout.current);
+    setActiveMain(label);
+  };
+  const onMainLeave = () => {
+    subTimeout.current = window.setTimeout(() => setActiveMain(null), 180);
+  };
+
+  const closeAll = () => {
+    setShowServices(false);
+    setActiveMain(null);
   };
 
   return (
@@ -75,8 +154,8 @@ export function Header() {
         color="primary"
         elevation={0}
         sx={{
-          backgroundColor: "#0f2c4d",
-          background: "linear-gradient(90deg, #0f2c4d 0%, #123457 100%)",
+          backgroundColor: "#0D3B66",
+          background: "linear-gradient(90deg, #0D3B66 0%, #472187 100%)",
           borderBottom: "1px solid rgba(255,255,255,0.10)",
           zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
@@ -84,7 +163,7 @@ export function Header() {
         <Container maxWidth="lg">
           <Toolbar disableGutters sx={{ minHeight: 80 }}>
 
-            {/* ── Logo (far left) ── */}
+            {/* ── Logo ── */}
             <Stack
               component={Link}
               to={ROUTE_PATHS.HOME}
@@ -101,7 +180,7 @@ export function Header() {
               </Typography>
             </Stack>
 
-            {/* ── Desktop nav (center) ── */}
+            {/* ── Desktop nav ── */}
             <Stack
               direction="row"
               spacing={3}
@@ -112,82 +191,124 @@ export function Header() {
                 justifyContent: "center",
               }}
             >
-              {navItems.map((item) => (
-                <Box
-                  key={item.label}
-                  sx={{ position: "relative" }}
-                  onMouseEnter={() => item.children && handleMouseEnter(item.label)}
-                  onMouseLeave={() => item.children && handleMouseLeave()}
-                >
-                  <NavLink style={linkStyles} to={item.to}>
-                    {item.label}
-                    {item.children && (
+              {navItems.map((item) =>
+                item.hasServices ? (
+                  /* ── Services trigger ── */
+                  <Box
+                    key={item.label}
+                    sx={{ position: "relative" }}
+                    onMouseEnter={onServicesEnter}
+                    onMouseLeave={onServicesLeave}
+                  >
+                    <NavLink style={linkStyles} to={item.to}>
+                      {item.label}
                       <KeyboardArrowDownIcon
                         sx={{
                           fontSize: 18,
                           opacity: 0.75,
                           transition: "transform 0.2s",
-                          transform: activeMenu === item.label ? "rotate(180deg)" : "rotate(0deg)",
+                          transform: showServices ? "rotate(180deg)" : "rotate(0deg)",
                         }}
                       />
-                    )}
-                  </NavLink>
+                    </NavLink>
 
-                  {/* Hover dropdown */}
-                  {item.children && (
-                    <Fade in={activeMenu === item.label}>
+                    {/* ── Level-1 popover: main categories ── */}
+                    <Fade in={showServices}>
                       <Paper
                         elevation={12}
                         sx={{
+                          ...popoverPaperSx,
                           position: "absolute",
                           top: "calc(100% + 10px)",
                           left: "50%",
                           transform: "translateX(-50%)",
-                          minWidth: 230,
-                          bgcolor: "#0f2c4d",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                          borderRadius: 2,
-                          overflow: "hidden",
-                          boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+                          minWidth: 240,
                         }}
                       >
                         <List disablePadding sx={{ p: 1 }}>
-                          {item.children.map((sub) => (
-                            <ListItemButton
-                              key={sub.to}
-                              component={Link}
-                              to={sub.to}
-                              onClick={() => setActiveMenu(null)}
-                              sx={{
-                                borderRadius: 1,
-                                mb: 0.5,
-                                "&:hover": {
-                                  bgcolor: "rgba(127,208,255,0.12)",
-                                  "& .MuiListItemIcon-root": { color: "#7fd0ff" },
-                                },
-                              }}
+                          {mainServices.map((main) => (
+                            <Box
+                              key={main.label}
+                              sx={{ position: "relative" }}
+                              onMouseEnter={() => onMainEnter(main.label)}
+                              onMouseLeave={onMainLeave}
                             >
-                              <ListItemIcon sx={{ minWidth: 36, color: "rgba(255,255,255,0.65)", transition: "color 0.2s" }}>
-                                {sub.icon}
-                              </ListItemIcon>
-                              <ListItemText
-                                primary={
-                                  <Typography sx={{ fontSize: "0.88rem", fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>
-                                    {sub.label}
-                                  </Typography>
-                                }
-                              />
-                            </ListItemButton>
+                              <ListItemButton
+                                sx={{
+                                  borderRadius: 1,
+                                  mb: 0.5,
+                                  justifyContent: "space-between",
+                                  "&:hover": { bgcolor: "rgba(127,208,255,0.12)" },
+                                }}
+                              >
+                                <ListItemText
+                                  primary={
+                                    <Typography sx={{ fontSize: "0.88rem", fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>
+                                      {main.label}
+                                    </Typography>
+                                  }
+                                />
+                                <KeyboardArrowRightIcon sx={{ fontSize: 16, color: "rgba(255,255,255,0.5)" }} />
+                              </ListItemButton>
+
+                              {/* ── Level-2 popover: sub-services ── */}
+                              <Fade in={activeMain === main.label}>
+                                <Paper
+                                  elevation={16}
+                                  sx={{
+                                    ...popoverPaperSx,
+                                    position: "absolute",
+                                    top: 0,
+                                    left: "calc(100% + 4px)",
+                                    minWidth: 220,
+                                    zIndex: 10,
+                                    overflow: "hidden",
+                                    pointerEvents: activeMain === main.label ? "auto" : "none",
+                                  }}
+                                  onMouseEnter={() => onMainEnter(main.label)}
+                                  onMouseLeave={onMainLeave}
+                                >
+                                  <List disablePadding sx={{ p: 1 }}>
+                                    {main.sub.map((sub) => (
+                                      <ListItemButton
+                                        key={sub.to}
+                                        component={Link}
+                                        to={sub.to}
+                                        onClick={closeAll}
+                                        sx={{
+                                          borderRadius: 1,
+                                          mb: 0.5,
+                                          "&:hover": { bgcolor: "rgba(127,208,255,0.12)" },
+                                        }}
+                                      >
+                                        <ListItemText
+                                          primary={
+                                            <Typography sx={{ fontSize: "0.86rem", fontWeight: 400, color: "rgba(255,255,255,0.88)" }}>
+                                              {sub.label}
+                                            </Typography>
+                                          }
+                                        />
+                                      </ListItemButton>
+                                    ))}
+                                  </List>
+                                </Paper>
+                              </Fade>
+                            </Box>
                           ))}
                         </List>
                       </Paper>
                     </Fade>
-                  )}
-                </Box>
-              ))}
+                  </Box>
+                ) : (
+                  /* ── Regular nav item ── */
+                  <NavLink key={item.label} style={linkStyles} to={item.to}>
+                    {item.label}
+                  </NavLink>
+                )
+              )}
             </Stack>
 
-            {/* ── Contact Us (far right) ── */}
+            {/* ── Contact Us ── */}
             <Button
               variant="contained"
               startIcon={<LocalPhoneOutlinedIcon />}
@@ -223,7 +344,7 @@ export function Header() {
         anchor="right"
         open={openMenu}
         onClose={() => setOpenMenu(false)}
-        sx={{ "& .MuiDrawer-paper": { width: 270, bgcolor: "#0f2c4d", color: "white" } }}
+        sx={{ "& .MuiDrawer-paper": { width: 280, bgcolor: "#0f2c4d", color: "white" } }}
       >
         <Box sx={{ p: 3 }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: "center", mb: 3 }}>
@@ -234,12 +355,85 @@ export function Header() {
           </Stack>
 
           <List disablePadding>
-            {navItems.map((item) => (
-              <Box key={item.label}>
+            {navItems.map((item) =>
+              item.hasServices ? (
+                <Box key={item.label}>
+                  <ListItemButton
+                    onClick={() => setMobileOpen(mobileOpen === item.label ? null : item.label)}
+                    sx={{ borderRadius: 1, mb: 0.5 }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography sx={{ fontWeight: 600, color: "rgba(255,255,255,0.92)" }}>
+                          {item.label}
+                        </Typography>
+                      }
+                    />
+                    <KeyboardArrowDownIcon
+                      sx={{
+                        fontSize: 18,
+                        color: "rgba(255,255,255,0.6)",
+                        transition: "transform 0.2s",
+                        transform: mobileOpen === item.label ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    />
+                  </ListItemButton>
+
+                  <Collapse in={mobileOpen === item.label} timeout="auto" unmountOnExit>
+                    {mainServices.map((main) => (
+                      <Box key={main.label} sx={{ pl: 2 }}>
+                        <ListItemButton
+                          onClick={() => setMobileOpen(mobileOpen === main.label ? item.label : main.label)}
+                          sx={{ borderRadius: 1, mb: 0.25 }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Typography sx={{ fontSize: "0.88rem", fontWeight: 600, color: "rgba(255,255,255,0.85)" }}>
+                                {main.label}
+                              </Typography>
+                            }
+                          />
+                          <KeyboardArrowDownIcon
+                            sx={{
+                              fontSize: 16,
+                              color: "rgba(255,255,255,0.5)",
+                              transition: "transform 0.2s",
+                              transform: mobileOpen === main.label ? "rotate(180deg)" : "rotate(0deg)",
+                            }}
+                          />
+                        </ListItemButton>
+
+                        <Collapse in={mobileOpen === main.label} timeout="auto" unmountOnExit>
+                          <List disablePadding sx={{ pl: 2, mb: 1 }}>
+                            {main.sub.map((sub) => (
+                              <ListItemButton
+                                key={sub.to}
+                                component={Link}
+                                to={sub.to}
+                                onClick={() => setOpenMenu(false)}
+                                sx={{ borderRadius: 1, mb: 0.25 }}
+                              >
+                                <ListItemText
+                                  primary={
+                                    <Typography sx={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.75)" }}>
+                                      {sub.label}
+                                    </Typography>
+                                  }
+                                />
+                              </ListItemButton>
+                            ))}
+                          </List>
+                        </Collapse>
+                      </Box>
+                    ))}
+                  </Collapse>
+                </Box>
+              ) : (
                 <ListItemButton
+                  key={item.label}
                   component={Link}
                   to={item.to}
-                  onClick={() => !item.children && setOpenMenu(false)}
+                  onClick={() => setOpenMenu(false)}
                   sx={{ borderRadius: 1, mb: 0.5 }}
                 >
                   <ListItemText
@@ -250,33 +444,8 @@ export function Header() {
                     }
                   />
                 </ListItemButton>
-
-                {item.children && (
-                  <List component="div" disablePadding sx={{ pl: 2, mb: 1 }}>
-                    {item.children.map((sub) => (
-                      <ListItemButton
-                        key={sub.to}
-                        component={Link}
-                        to={sub.to}
-                        onClick={() => setOpenMenu(false)}
-                        sx={{ borderRadius: 1, mb: 0.25 }}
-                      >
-                        <ListItemIcon sx={{ minWidth: 32, color: "#7fd0ff" }}>
-                          {sub.icon}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography sx={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.8)" }}>
-                              {sub.label}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                )}
-              </Box>
-            ))}
+              )
+            )}
           </List>
         </Box>
       </Drawer>

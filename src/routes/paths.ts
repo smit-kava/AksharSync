@@ -9,15 +9,15 @@ export const ROUTE_PATHS = {
   SERVICE_MULTICHANNEL_AUTOMATION: "/services/multi-channel-automation",
 
   // Technical Architecture
-  SERVICE_ESP_MIGRATION: "/services/esp-migration",
-  SERVICE_CRM_INTEGRATION: "/services/crm-integration",
-  SERVICE_DATA_SYNC: "/services/data-sync",
-  SERVICE_DELIVERABILITY_SETUP: "/services/deliverability-setup",
+  SERVICE_ESP_MIGRATION: "/services/esp-migration-integration",
+  SERVICE_CRM_DATA_SYNC: "/services/crm-data-sync",
+  SERVICE_DELIVERABILITY_AUDITS: "/services/deliverability-audits",
+  SERVICE_LIQUID_AMPSCRIPT: "/services/liquid-ampscript-templating",
 
   // Creative Production
-  SERVICE_EMAIL_TEMPLATES: "/services/email-templates",
-  SERVICE_UI_UX_DESIGN: "/services/ui-ux-design",
-  SERVICE_WHITE_LABEL: "/services/white-label-work",
+  SERVICE_MODULAR_TEMPLATES: "/services/modular-template-production",
+  SERVICE_UX_UI_DESIGN: "/services/ux-ui-design",
+  SERVICE_WHITE_LABEL_SOLUTIONS: "/services/white-label-solutions",
 
   ABOUT: "/about",
   WHY: "/why",
