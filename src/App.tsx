@@ -3,7 +3,7 @@ import { AppRoutes } from "./routes";
 
 const theme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
     primary: {
       main: "#1976d2",
     },

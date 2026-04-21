@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const serviceLinks = [
@@ -67,17 +68,15 @@ const socialLinks = [
   },
 ];
 
-// ─── Link component (swap with react-router Link) ─────────────────────────────
-function A({ to, children, style, className }) {
-  return <a href={to} style={style} className={className}>{children}</a>;
-}
+// ─── Link component (swap with react-router Link if needed) ─────────────────────────────
+// (Removed unused 'A' component)
 
 // ─── Newsletter ───────────────────────────────────────────────────────────────
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (email) { setSubmitted(true); setEmail(""); }
   };

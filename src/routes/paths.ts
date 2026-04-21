@@ -19,6 +19,12 @@ export const ROUTE_PATHS = {
   SERVICE_UX_UI_DESIGN: "/services/ux-ui-design",
   SERVICE_WHITE_LABEL_SOLUTIONS: "/services/white-label-solutions",
 
+  // Additional Services
+  SERVICE_DIGITAL_STRATEGY: "/services/digital-strategy",
+  SERVICE_SEO: "/services/seo-optimization",
+  SERVICE_CONTENT: "/services/content-creation",
+  SERVICE_WEB_DEV: "/services/web-development",
+
   ABOUT: "/about",
   WHY: "/why",
 } as const;

@@ -9,12 +9,7 @@ const avatars = [
   { bg: "#1a2a3b", initials: "RV", color: "#60a5fa" },
 ];
 
-const stats = [
-  { value: "350+", label: "Clients Served" },
-  { value: "98%", label: "Client Retention" },
-  { value: "12×", label: "Average ROI" },
-  { value: "8+", label: "Years Experience" },
-];
+// (Removed unused stats array)
 
 const services = [
   {
@@ -50,7 +45,7 @@ const features = [
 ];
 
 function useInView(threshold = 0.15) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -59,33 +54,15 @@ function useInView(threshold = 0.15) {
     obs.observe(el);
     return () => obs.disconnect();
   }, [threshold]);
-  return [ref, inView];
+  return [ref, inView] as const;
 }
 
-function AnimatedNumber({ target, suffix = "", inView }) {
-  const [display, setDisplay] = useState(0);
-  const numericTarget = parseFloat(target);
-  useEffect(() => {
-    if (!inView) return;
-    let start = 0;
-    const duration = 1600;
-    const step = 16;
-    const inc = (numericTarget / duration) * step;
-    const timer = setInterval(() => {
-      start += inc;
-      if (start >= numericTarget) { setDisplay(numericTarget); clearInterval(timer); }
-      else setDisplay(start);
-    }, step);
-    return () => clearInterval(timer);
-  }, [inView, numericTarget]);
-  const formatted = Number.isInteger(numericTarget) ? Math.round(display) : display.toFixed(0);
-  return <>{formatted}{suffix}</>;
-}
+// (Removed unused AnimatedNumber component)
 
 export default function HeroSection() {
   const [heroVisible, setHeroVisible] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState(null);
-  const [statsRef, statsInView] = useInView();
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  useInView(); // Original statsRef was here, but unused
   const [servicesRef, servicesInView] = useInView(0.1);
   const [whyRef, whyInView] = useInView(0.1);
   const [ctaRef, ctaInView] = useInView(0.2);
@@ -101,10 +78,7 @@ export default function HeroSection() {
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
-  const fadeIn = (delay = 0, visible = true) => ({
-    opacity: visible ? 1 : 0,
-    transition: `opacity 0.6s ease ${delay}ms`,
-  });
+// (Removed unused fadeIn function)
 
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", background: "#060e1a", color: "white", overflowX: "hidden" }}>
