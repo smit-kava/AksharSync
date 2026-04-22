@@ -4,24 +4,24 @@ export const marketingTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#123457",
-      dark: "#0c2743",
-      light: "#2f5d8a",
+      main: "#0D3B66", // Deep Blue
+      dark: "#0a2d4d",
+      light: "#3d6285",
     },
     secondary: {
-      main: "#1aa7ff",
+      main: "#472187", // Rich Purple
     },
     background: {
-      default: "#eef4fb",
+      default: "#f4f7fa",
       paper: "#ffffff",
     },
     text: {
-      primary: "#11243b",
-      secondary: "#4f647d",
+      primary: "#0D3B66",
+      secondary: "#472187",
     },
   },
   typography: {
-    fontFamily: '"Poppins", "Segoe UI", sans-serif',
+    fontFamily: '"Anta", sans-serif',
     h1: { fontWeight: 700 },
     h2: { fontWeight: 700 },
     h3: { fontWeight: 700 },
