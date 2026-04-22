@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -39,6 +39,7 @@ interface ServiceCategory {
 interface NavItem {
   label: string;
   to: string;
+  anchor?: string;
   hasServices?: boolean;
 }
 
@@ -48,18 +49,18 @@ const mainServices: ServiceCategory[] = [
     label: "Lifecycle & Automation",
     icon: "⟳",
     accent: "#7fd0ff",
-    desc: "Automated journeys that convert",
+    desc: "Behavioral journeys that maximize LTV",
     sub: [
-      { label: "Email Flows", to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS, icon: "✉" },
-      { label: "Customer Journeys", to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS, icon: "→" },
-      { label: "Multi-channel Automation", to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION, icon: "⟡" },
+      { label: "Email Automation Management", to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS, icon: "✉" },
+      { label: "Cross-Platform Journey Mapping", to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS, icon: "→" },
+      { label: "Multi-Channel Workflows", to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION, icon: "⟡" },
     ],
   },
   {
     label: "Technical Architecture",
     icon: "⚙",
     accent: "#a78bfa",
-    desc: "Robust infrastructure & integrations",
+    desc: "Robust technical infrastructure & sync",
     sub: [
       { label: "ESP Migration & Integration", to: ROUTE_PATHS.SERVICE_ESP_MIGRATION, icon: "⇄" },
       { label: "CRM Data Sync", to: ROUTE_PATHS.SERVICE_CRM_DATA_SYNC, icon: "⬡" },
@@ -71,7 +72,7 @@ const mainServices: ServiceCategory[] = [
     label: "Creative Production",
     icon: "✦",
     accent: "#34d399",
-    desc: "Design that elevates your brand",
+    desc: "Web & digital systems designed for growth",
     sub: [
       { label: "Modular Template Production", to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES, icon: "▦" },
       { label: "UX/UI Design", to: ROUTE_PATHS.SERVICE_UX_UI_DESIGN, icon: "◈" },
@@ -82,10 +83,9 @@ const mainServices: ServiceCategory[] = [
 
 const navItems: NavItem[] = [
   { label: "Home", to: ROUTE_PATHS.HOME },
-  { label: "Solutions", to: ROUTE_PATHS.SOLUTIONS },
-  { label: "Services", to: ROUTE_PATHS.SERVICES, hasServices: true },
+  { label: "Services", to: ROUTE_PATHS.SERVICES, anchor: "services", hasServices: true },
   { label: "About Us", to: ROUTE_PATHS.ABOUT },
-  { label: "Why?", to: ROUTE_PATHS.WHY },
+  { label: "Why?", to: ROUTE_PATHS.WHY, anchor: "why-us" },
 ];
 
 // ─── Styled Components ───────────────────────────────────────────────────────
@@ -160,6 +160,8 @@ export function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [hoveredService, setHoveredService] = useState(mainServices[0].label);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const megaTimeout = useRef<number | null>(null);
 
@@ -181,6 +183,33 @@ export function Header() {
     }, 180);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  const handleNavClick = (item: NavItem) => {
+    setMobileOpen(false);
+    
+    if (item.anchor && location.pathname === ROUTE_PATHS.HOME) {
+      scrollToSection(item.anchor);
+    } else if (item.anchor) {
+      navigate(ROUTE_PATHS.HOME);
+      setTimeout(() => scrollToSection(item.anchor!), 100);
+    } else {
+      navigate(item.to);
+    }
+  };
+
   const activeService = mainServices.find((s) => s.label === hoveredService) || mainServices[0];
 
   return (
@@ -189,14 +218,14 @@ export function Header() {
         <PillContainer scrolled={scrolled}>
           {/* Logo */}
           <Box
-            component={RouterLink}
-            to={ROUTE_PATHS.HOME}
+            onClick={() => handleNavClick({ label: "Home", to: ROUTE_PATHS.HOME })}
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1.5,
               textDecoration: "none",
               color: "inherit",
+              cursor: "pointer",
               "&:hover .logo-icon": {
                 transform: "rotate(-10deg) scale(1.1)",
                 borderColor: "primary.light",
@@ -243,8 +272,7 @@ export function Header() {
             {navItems.map((item) => (
               <Button
                 key={item.label}
-                component={RouterLink as any}
-                to={item.to}
+                onClick={() => handleNavClick(item)}
                 onMouseEnter={item.hasServices ? handleOpenMega : undefined}
                 onMouseLeave={item.hasServices ? handleCloseMega : undefined}
                 endIcon={
@@ -464,9 +492,8 @@ export function Header() {
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Box
-              component={RouterLink as any}
-              to={ROUTE_PATHS.HOME}
-              sx={{ display: "flex", alignItems: "center", gap: 1.5, textDecoration: "none" }}
+              onClick={() => handleNavClick({ label: "Home", to: ROUTE_PATHS.HOME })}
+              sx={{ display: "flex", alignItems: "center", gap: 1.5, textDecoration: "none", cursor: "pointer" }}
             >
               <Box
                 sx={{
@@ -544,9 +571,10 @@ export function Header() {
                             {svc.sub.map((sub) => (
                               <ListItemButton
                                 key={sub.to}
-                                component={RouterLink as any}
-                                to={sub.to}
-                                onClick={() => setMobileOpen(false)}
+                                onClick={() => {
+                                  setMobileOpen(false);
+                                  navigate(sub.to);
+                                }}
                                 sx={{ borderRadius: 1 }}
                               >
                                 <ListItemText
@@ -564,9 +592,7 @@ export function Header() {
                   </>
                 ) : (
                   <ListItemButton
-                    component={RouterLink as any}
-                    to={item.to}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={() => handleNavClick(item)}
                     sx={{
                       py: 2,
                       color: "common.white",
