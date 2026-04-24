@@ -353,9 +353,8 @@ export default function Services() {
             mb: { xs: 6, md: 14 },
           }}
         >
-          <Fade in={servicesInView} timeout={600}>
+          <Fade in={servicesInView} timeout={500}>
             <Box>
-              <HeroChip sx={{ mb: 2 }}>Strategic Services</HeroChip>
               <Typography
                 variant="h2"
                 sx={{

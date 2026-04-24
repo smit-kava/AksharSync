@@ -4,6 +4,8 @@ import { keyframes } from "@mui/system";
 import { HeroChip, GradientText } from "../../components/Landing/Shared";
 import { SmsIcon, BroadcastIcon, PackageIcon, TargetIcon, WinBackIcon, TrendUpIcon, BoltIcon } from "../../components/icons";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RevealOnScroll from "../../components/RevealOnScroll";
+import { SMSProcessTimeline } from "../../components/SMSProcessTimeline";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 
@@ -400,232 +402,234 @@ const SMSService = () => {
                     pointerEvents: "none",
                 },
             }}>
-                <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-                    <Box sx={{
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", md: "1fr 1.1fr" },
-                        gap: { xs: 8, md: 10 },
-                        alignItems: "center",
-                    }}>
-                        {/* ── Left: SMS Campaign Hub Visual ──────────────────── */}
-                        <Box sx={{ position: "relative", height: { xs: "auto", md: 540 }, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Box sx={{
-                                position: "absolute",
-                                width: 380, height: 380,
-                                borderRadius: "50%",
-                                background: "radial-gradient(circle, rgba(127,208,255,0.07) 0%, rgba(167,139,250,0.05) 40%, transparent 70%)",
-                                animation: `${pulseGlow} 5s ease-in-out infinite`,
-                                zIndex: 0,
-                            }} />
-                            <Box sx={{
-                                position: "absolute",
-                                width: 320, height: 320,
-                                borderRadius: "50%",
-                                border: "1px dashed rgba(127,208,255,0.08)",
-                                animation: `${floatY} 12s linear infinite`,
-                            }} />
-                            <Box sx={{
-                                position: "absolute",
-                                width: 460, height: 460,
-                                borderRadius: "50%",
-                                border: "1px dashed rgba(167,139,250,0.06)",
-                            }} />
-                            <Box sx={{
-                                position: "relative",
-                                width: 120, height: 120,
-                                borderRadius: "50%",
-                                background: "linear-gradient(135deg, rgba(127,208,255,0.15) 0%, rgba(167,139,250,0.15) 100%)",
-                                border: "1px solid rgba(127,208,255,0.3)",
-                                backdropFilter: "blur(20px)",
-                                display: "flex", flexDirection: "column",
-                                alignItems: "center", justifyContent: "center",
-                                boxShadow: "0 0 60px rgba(127,208,255,0.2), 0 0 120px rgba(127,208,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
-                                zIndex: 10,
-                            }}>
-                                {[1, 2, 3].map(n => (
-                                    <Box key={n} sx={{
-                                        position: "absolute",
-                                        inset: -(n * 16),
-                                        borderRadius: "50%",
-                                        border: `1px solid ${alpha("#7fd0ff", 0.15 / n)}`,
-                                        animation: `${pulseGlow} ${3 + n}s ease-in-out infinite ${n * 0.6}s`,
-                                    }} />
-                                ))}
-                                <BroadcastIcon sx={{ fontSize: 32, color: "#7fd0ff" }} />
-                                <Typography sx={{ color: "#34d399", fontSize: "0.55rem", fontWeight: 900, letterSpacing: "0.12em", mt: 0.5 }}>LIVE</Typography>
-                                <Typography sx={{ color: alpha("#fff", 0.5), fontSize: "0.5rem", fontWeight: 600, letterSpacing: "0.08em" }}>BROADCASTING</Typography>
-                            </Box>
-
-                            <Box sx={{
-                                position: "absolute", top: "4%", left: "0%",
-                                maxWidth: 200,
-                                px: 2, py: 1.5, borderRadius: "16px 16px 16px 4px",
-                                background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
-                                border: "1px solid rgba(127,208,255,0.2)",
-                                backdropFilter: "blur(16px)",
-                                boxShadow: "0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(127,208,255,0.05)",
-                                animation: `${floatY} 5.5s ease-in-out infinite`,
-                                zIndex: 8,
-                            }}>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
-                                    <PackageIcon sx={{ fontSize: 14, color: "#7fd0ff" }} />
-                                    <Typography sx={{ color: "#7fd0ff", fontSize: "0.68rem", fontWeight: 800 }}>Order Shipped!</Typography>
-                                </Box>
-                                <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>Your order #4821 is on its way. Track here →</Typography>
-                            </Box>
-
-                            <Box sx={{
-                                position: "absolute", bottom: "6%", left: "2%",
-                                maxWidth: 195,
-                                px: 2, py: 1.5, borderRadius: "16px 16px 16px 4px",
-                                background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
-                                border: "1px solid rgba(167,139,250,0.25)",
-                                backdropFilter: "blur(16px)",
-                                boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
-                                animation: `${floatY} 6.5s ease-in-out infinite 1s`,
-                                zIndex: 8,
-                            }}>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
-                                    <TargetIcon sx={{ fontSize: 14, color: "#a78bfa" }} />
-                                    <Typography sx={{ color: "#a78bfa", fontSize: "0.68rem", fontWeight: 800 }}>Flash Sale — 4hrs Left</Typography>
-                                </Box>
-                                <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>Use code SYNC25 for 25% off everything.</Typography>
-                            </Box>
-
-                            <Box sx={{
-                                position: "absolute", top: "30%", right: "-4%",
-                                maxWidth: 190,
-                                px: 2, py: 1.5, borderRadius: "16px 16px 4px 16px",
-                                background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
-                                border: "1px solid rgba(52,211,153,0.25)",
-                                backdropFilter: "blur(16px)",
-                                boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
-                                animation: `${floatY} 4.8s ease-in-out infinite 0.4s`,
-                                zIndex: 8,
-                            }}>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
-                                    <WinBackIcon sx={{ fontSize: 14, color: "#34d399" }} />
-                                    <Typography sx={{ color: "#34d399", fontSize: "0.68rem", fontWeight: 800 }}>Win-Back Campaign</Typography>
-                                </Box>
-                                <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>We miss you! Here's 30% off to come back.</Typography>
-                            </Box>
-
-                            {/* ── Floating Metric Chip — top-right ── */}
-                            <Box sx={{
-                                position: "absolute", top: "2%", right: "5%",
-                                px: 2, py: 1.2, borderRadius: "50px",
-                                background: "rgba(13,31,56,0.9)",
-                                border: "1px solid rgba(52,211,153,0.3)",
-                                backdropFilter: "blur(16px)",
-                                display: "flex", alignItems: "center", gap: 1.5,
-                                boxShadow: "0 12px 30px rgba(0,0,0,0.4)",
-                                animation: `${floatY} 4s ease-in-out infinite reverse`,
-                                zIndex: 9,
-                            }}>
+                <RevealOnScroll>
+                    <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+                        <Box sx={{
+                            display: "grid",
+                            gridTemplateColumns: { xs: "1fr", md: "1fr 1.1fr" },
+                            gap: { xs: 8, md: 10 },
+                            alignItems: "center",
+                        }}>
+                            {/* ── Left: SMS Campaign Hub Visual ──────────────────── */}
+                            <Box sx={{ position: "relative", height: { xs: "auto", md: 540 }, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <Box sx={{
-                                    width: 28, height: 28, borderRadius: "8px",
-                                    background: "linear-gradient(135deg, rgba(52,211,153,0.2), rgba(52,211,153,0.05))",
-                                    border: "1px solid rgba(52,211,153,0.3)",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    color: "#34d399",
-                                }}>
-                                    <TrendUpIcon sx={{ fontSize: 16 }} />
-                                </Box>
-                                <Box>
-                                    <Typography sx={{ color: "#34d399", fontSize: "0.8rem", fontWeight: 900, lineHeight: 1 }}>+320%</Typography>
-                                    <Typography sx={{ color: alpha("#fff", 0.35), fontSize: "0.55rem" }}>Growth</Typography>
-                                </Box>
-                            </Box>
-
-                            {/* ── Floating Metric Chip — bottom-right ── */}
-                            <Box sx={{
-                                position: "absolute", bottom: "2%", right: "12%",
-                                px: 2, py: 1.2, borderRadius: "50px",
-                                background: "rgba(13,31,56,0.9)",
-                                border: "1px solid rgba(251,191,36,0.3)",
-                                backdropFilter: "blur(16px)",
-                                display: "flex", alignItems: "center", gap: 1.5,
-                                boxShadow: "0 12px 30px rgba(0,0,0,0.4)",
-                                animation: `${floatY} 5.2s ease-in-out infinite 0.8s`,
-                                zIndex: 9,
-                            }}>
+                                    position: "absolute",
+                                    width: 380, height: 380,
+                                    borderRadius: "50%",
+                                    background: "radial-gradient(circle, rgba(127,208,255,0.07) 0%, rgba(167,139,250,0.05) 40%, transparent 70%)",
+                                    animation: `${pulseGlow} 5s ease-in-out infinite`,
+                                    zIndex: 0,
+                                }} />
                                 <Box sx={{
-                                    width: 28, height: 28, borderRadius: "8px",
-                                    background: "linear-gradient(135deg, rgba(251,191,36,0.2), rgba(251,191,36,0.05))",
-                                    border: "1px solid rgba(251,191,36,0.3)",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    color: "#fbbf24",
+                                    position: "absolute",
+                                    width: 320, height: 320,
+                                    borderRadius: "50%",
+                                    border: "1px dashed rgba(127,208,255,0.08)",
+                                    animation: `${floatY} 12s linear infinite`,
+                                }} />
+                                <Box sx={{
+                                    position: "absolute",
+                                    width: 460, height: 460,
+                                    borderRadius: "50%",
+                                    border: "1px dashed rgba(167,139,250,0.06)",
+                                }} />
+                                <Box sx={{
+                                    position: "relative",
+                                    width: 120, height: 120,
+                                    borderRadius: "50%",
+                                    background: "linear-gradient(135deg, rgba(127,208,255,0.15) 0%, rgba(167,139,250,0.15) 100%)",
+                                    border: "1px solid rgba(127,208,255,0.3)",
+                                    backdropFilter: "blur(20px)",
+                                    display: "flex", flexDirection: "column",
+                                    alignItems: "center", justifyContent: "center",
+                                    boxShadow: "0 0 60px rgba(127,208,255,0.2), 0 0 120px rgba(127,208,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
+                                    zIndex: 10,
                                 }}>
-                                    <BoltIcon sx={{ fontSize: 16 }} />
+                                    {[1, 2, 3].map(n => (
+                                        <Box key={n} sx={{
+                                            position: "absolute",
+                                            inset: -(n * 16),
+                                            borderRadius: "50%",
+                                            border: `1px solid ${alpha("#7fd0ff", 0.15 / n)}`,
+                                            animation: `${pulseGlow} ${3 + n}s ease-in-out infinite ${n * 0.6}s`,
+                                        }} />
+                                    ))}
+                                    <BroadcastIcon sx={{ fontSize: 32, color: "#7fd0ff" }} />
+                                    <Typography sx={{ color: "#34d399", fontSize: "0.55rem", fontWeight: 900, letterSpacing: "0.12em", mt: 0.5 }}>LIVE</Typography>
+                                    <Typography sx={{ color: alpha("#fff", 0.5), fontSize: "0.5rem", fontWeight: 600, letterSpacing: "0.08em" }}>BROADCASTING</Typography>
                                 </Box>
-                                <Box>
-                                    <Typography sx={{ color: "#fbbf24", fontSize: "0.8rem", fontWeight: 900, lineHeight: 1 }}>1k+ Brands</Typography>
-                                </Box>
-                            </Box>
-                        </Box>
 
-                        {/* ── Right: Content ─────────────────────────────────── */}
-                        <Box>
-                            <HeroChip sx={{ mb: 3.5 }}>Professional SMS Marketing Company</HeroChip>
-                            <Typography variant="h2" sx={{
-                                fontWeight: 900,
-                                fontSize: { xs: "2.4rem", sm: "3rem", md: "3.6rem" },
-                                lineHeight: 1.08, letterSpacing: "-0.025em",
-                                color: "#fff", mb: 2,
-                            }}>
-                                AksharSync is a <br />
-                                <GradientText>Professional SMS</GradientText> <br />
-                                Marketing Company
-                            </Typography>
-                            <Box sx={{
-                                display: "inline-flex", alignItems: "center", gap: 1.5,
-                                px: 2.5, py: 1.2, borderRadius: "50px",
-                                background: "rgba(127,208,255,0.05)",
-                                border: "1px solid rgba(127,208,255,0.1)",
-                                mb: 4.5,
-                            }}>
-                                {[...Array(5)].map((_, i) => (
-                                    <Typography key={i} sx={{ fontSize: "0.9rem", color: "#fbbf24" }}>★</Typography>
-                                ))}
-                                <Typography sx={{ color: alpha("#fff", 0.5), fontSize: "0.82rem", ml: 0.5 }}>
-                                    Trusted by <strong style={{ color: "#fff" }}>1,000+</strong> eCommerce Brands
-                                </Typography>
-                            </Box>
-                            <Typography sx={{ color: alpha("#fff", 0.58), fontSize: { xs: "1.05rem", md: "1.18rem" }, lineHeight: 1.9, mb: 3.5 }}>
-                                It's crucial to have a solid plan and carefully craft each message you send.
-                                For this, you need an expert in the field like AksharSync. You can entrust our
-                                SMS marketing company to completely manage it for you, so you don't have to
-                                add more hours to your workload.
-                            </Typography>
-                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5, mb: 6 }}>
-                                {[
-                                    { text: "Full-service SMS campaign strategy & execution", color: "#7fd0ff" },
-                                    { text: "List growth, segmentation & audience targeting", color: "#34d399" },
-                                    { text: "A/B testing & performance optimization", color: "#a78bfa" },
-                                    { text: "Compliance-first approach — TCPA & GDPR ready", color: "#fbbf24" },
-                                ].map((item, i) => (
-                                    <Box key={i} sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                                        <Box sx={{
-                                            width: 22, height: 22, borderRadius: "50%",
-                                            background: alpha(item.color, 0.12),
-                                            border: `1px solid ${alpha(item.color, 0.3)}`,
-                                            display: "flex", alignItems: "center", justifyContent: "center",
-                                            flexShrink: 0, mt: 0.2,
-                                        }}>
-                                            <Typography sx={{ fontSize: "0.65rem", color: item.color, fontWeight: 900 }}>✓</Typography>
-                                        </Box>
-                                        <Typography sx={{ color: alpha("#fff", 0.7), fontSize: "0.98rem", lineHeight: 1.6, fontWeight: 500 }}>{item.text}</Typography>
+                                <Box sx={{
+                                    position: "absolute", top: "4%", left: "0%",
+                                    maxWidth: 200,
+                                    px: 2, py: 1.5, borderRadius: "16px 16px 16px 4px",
+                                    background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
+                                    border: "1px solid rgba(127,208,255,0.2)",
+                                    backdropFilter: "blur(16px)",
+                                    boxShadow: "0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(127,208,255,0.05)",
+                                    animation: `${floatY} 5.5s ease-in-out infinite`,
+                                    zIndex: 8,
+                                }}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
+                                        <PackageIcon sx={{ fontSize: 14, color: "#7fd0ff" }} />
+                                        <Typography sx={{ color: "#7fd0ff", fontSize: "0.68rem", fontWeight: 800 }}>Order Shipped!</Typography>
                                     </Box>
-                                ))}
+                                    <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>Your order #4821 is on its way. Track here →</Typography>
+                                </Box>
+
+                                <Box sx={{
+                                    position: "absolute", bottom: "6%", left: "2%",
+                                    maxWidth: 195,
+                                    px: 2, py: 1.5, borderRadius: "16px 16px 16px 4px",
+                                    background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
+                                    border: "1px solid rgba(167,139,250,0.25)",
+                                    backdropFilter: "blur(16px)",
+                                    boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
+                                    animation: `${floatY} 6.5s ease-in-out infinite 1s`,
+                                    zIndex: 8,
+                                }}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
+                                        <TargetIcon sx={{ fontSize: 14, color: "#a78bfa" }} />
+                                        <Typography sx={{ color: "#a78bfa", fontSize: "0.68rem", fontWeight: 800 }}>Flash Sale — 4hrs Left</Typography>
+                                    </Box>
+                                    <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>Use code SYNC25 for 25% off everything.</Typography>
+                                </Box>
+
+                                <Box sx={{
+                                    position: "absolute", top: "30%", right: "-4%",
+                                    maxWidth: 190,
+                                    px: 2, py: 1.5, borderRadius: "16px 16px 4px 16px",
+                                    background: "linear-gradient(135deg, rgba(13,31,56,0.95), rgba(8,20,42,0.98))",
+                                    border: "1px solid rgba(52,211,153,0.25)",
+                                    backdropFilter: "blur(16px)",
+                                    boxShadow: "0 16px 40px rgba(0,0,0,0.4)",
+                                    animation: `${floatY} 4.8s ease-in-out infinite 0.4s`,
+                                    zIndex: 8,
+                                }}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 0.5 }}>
+                                        <WinBackIcon sx={{ fontSize: 14, color: "#34d399" }} />
+                                        <Typography sx={{ color: "#34d399", fontSize: "0.68rem", fontWeight: 800 }}>Win-Back Campaign</Typography>
+                                    </Box>
+                                    <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "0.62rem", lineHeight: 1.4 }}>We miss you! Here's 30% off to come back.</Typography>
+                                </Box>
+
+                                {/* ── Floating Metric Chip — top-right ── */}
+                                <Box sx={{
+                                    position: "absolute", top: "2%", right: "5%",
+                                    px: 2, py: 1.2, borderRadius: "50px",
+                                    background: "rgba(13,31,56,0.9)",
+                                    border: "1px solid rgba(52,211,153,0.3)",
+                                    backdropFilter: "blur(16px)",
+                                    display: "flex", alignItems: "center", gap: 1.5,
+                                    boxShadow: "0 12px 30px rgba(0,0,0,0.4)",
+                                    animation: `${floatY} 4s ease-in-out infinite reverse`,
+                                    zIndex: 9,
+                                }}>
+                                    <Box sx={{
+                                        width: 28, height: 28, borderRadius: "8px",
+                                        background: "linear-gradient(135deg, rgba(52,211,153,0.2), rgba(52,211,153,0.05))",
+                                        border: "1px solid rgba(52,211,153,0.3)",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        color: "#34d399",
+                                    }}>
+                                        <TrendUpIcon sx={{ fontSize: 16 }} />
+                                    </Box>
+                                    <Box>
+                                        <Typography sx={{ color: "#34d399", fontSize: "0.8rem", fontWeight: 900, lineHeight: 1 }}>+320%</Typography>
+                                        <Typography sx={{ color: alpha("#fff", 0.35), fontSize: "0.55rem" }}>Growth</Typography>
+                                    </Box>
+                                </Box>
+
+                                {/* ── Floating Metric Chip — bottom-right ── */}
+                                <Box sx={{
+                                    position: "absolute", bottom: "2%", right: "12%",
+                                    px: 2, py: 1.2, borderRadius: "50px",
+                                    background: "rgba(13,31,56,0.9)",
+                                    border: "1px solid rgba(251,191,36,0.3)",
+                                    backdropFilter: "blur(16px)",
+                                    display: "flex", alignItems: "center", gap: 1.5,
+                                    boxShadow: "0 12px 30px rgba(0,0,0,0.4)",
+                                    animation: `${floatY} 5.2s ease-in-out infinite 0.8s`,
+                                    zIndex: 9,
+                                }}>
+                                    <Box sx={{
+                                        width: 28, height: 28, borderRadius: "8px",
+                                        background: "linear-gradient(135deg, rgba(251,191,36,0.2), rgba(251,191,36,0.05))",
+                                        border: "1px solid rgba(251,191,36,0.3)",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        color: "#fbbf24",
+                                    }}>
+                                        <BoltIcon sx={{ fontSize: 16 }} />
+                                    </Box>
+                                    <Box>
+                                        <Typography sx={{ color: "#fbbf24", fontSize: "0.8rem", fontWeight: 900, lineHeight: 1 }}>1k+ Brands</Typography>
+                                    </Box>
+                                </Box>
                             </Box>
-                            <Button variant="contained" endIcon={<ArrowForwardIcon />} sx={{
-                                background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
-                                color: "#060e1a", px: 5, py: 2, borderRadius: "14px", fontWeight: 800, textTransform: "none", fontSize: "1rem", boxShadow: "0 16px 36px rgba(127,208,255,0.25)",
-                                "&:hover": { transform: "translateY(-4px)", boxShadow: "0 24px 48px rgba(127,208,255,0.35)", background: "linear-gradient(135deg, #99ddff 0%, #b8a2ff 100%)" }, transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-                            }}>Work With Our Team</Button>
+
+                            {/* ── Right: Content ─────────────────────────────────── */}
+                            <Box>
+                                <HeroChip sx={{ mb: 3.5 }}>Professional SMS Marketing Company</HeroChip>
+                                <Typography variant="h2" sx={{
+                                    fontWeight: 900,
+                                    fontSize: { xs: "2.4rem", sm: "3rem", md: "3.6rem" },
+                                    lineHeight: 1.08, letterSpacing: "-0.025em",
+                                    color: "#fff", mb: 2,
+                                }}>
+                                    AksharSync is a <br />
+                                    <GradientText>Professional SMS</GradientText> <br />
+                                    Marketing Company
+                                </Typography>
+                                <Box sx={{
+                                    display: "inline-flex", alignItems: "center", gap: 1.5,
+                                    px: 2.5, py: 1.2, borderRadius: "50px",
+                                    background: "rgba(127,208,255,0.05)",
+                                    border: "1px solid rgba(127,208,255,0.1)",
+                                    mb: 4.5,
+                                }}>
+                                    {[...Array(5)].map((_, i) => (
+                                        <Typography key={i} sx={{ fontSize: "0.9rem", color: "#fbbf24" }}>★</Typography>
+                                    ))}
+                                    <Typography sx={{ color: alpha("#fff", 0.5), fontSize: "0.82rem", ml: 0.5 }}>
+                                        Trusted by <strong style={{ color: "#fff" }}>1,000+</strong> eCommerce Brands
+                                    </Typography>
+                                </Box>
+                                <Typography sx={{ color: alpha("#fff", 0.58), fontSize: { xs: "1.05rem", md: "1.18rem" }, lineHeight: 1.9, mb: 3.5 }}>
+                                    It's crucial to have a solid plan and carefully craft each message you send.
+                                    For this, you need an expert in the field like AksharSync. You can entrust our
+                                    SMS marketing company to completely manage it for you, so you don't have to
+                                    add more hours to your workload.
+                                </Typography>
+                                <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5, mb: 6 }}>
+                                    {[
+                                        { text: "Full-service SMS campaign strategy & execution", color: "#7fd0ff" },
+                                        { text: "List growth, segmentation & audience targeting", color: "#34d399" },
+                                        { text: "A/B testing & performance optimization", color: "#a78bfa" },
+                                        { text: "Compliance-first approach — TCPA & GDPR ready", color: "#fbbf24" },
+                                    ].map((item, i) => (
+                                        <Box key={i} sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+                                            <Box sx={{
+                                                width: 22, height: 22, borderRadius: "50%",
+                                                background: alpha(item.color, 0.12),
+                                                border: `1px solid ${alpha(item.color, 0.3)}`,
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                                flexShrink: 0, mt: 0.2,
+                                            }}>
+                                                <Typography sx={{ fontSize: "0.65rem", color: item.color, fontWeight: 900 }}>✓</Typography>
+                                            </Box>
+                                            <Typography sx={{ color: alpha("#fff", 0.7), fontSize: "0.98rem", lineHeight: 1.6, fontWeight: 500 }}>{item.text}</Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                                <Button variant="contained" endIcon={<ArrowForwardIcon />} sx={{
+                                    background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
+                                    color: "#060e1a", px: 5, py: 2, borderRadius: "14px", fontWeight: 800, textTransform: "none", fontSize: "1rem", boxShadow: "0 16px 36px rgba(127,208,255,0.25)",
+                                    "&:hover": { transform: "translateY(-4px)", boxShadow: "0 24px 48px rgba(127,208,255,0.35)", background: "linear-gradient(135deg, #99ddff 0%, #b8a2ff 100%)" }, transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                                }}>Work With Our Team</Button>
+                            </Box>
                         </Box>
-                    </Box>
-                </Container>
+                    </Container>
+                </RevealOnScroll>
             </Box>
 
             {/* ══════════════════════════════════════════════════════════════════
@@ -641,128 +645,130 @@ const SMSService = () => {
                     background: "linear-gradient(90deg, transparent, rgba(127,208,255,0.15), transparent)",
                 }
             }}>
-                <Container maxWidth="lg">
-                    <Box sx={{ textAlign: "center", mb: { xs: 10, md: 14 } }}>
+                <RevealOnScroll>
+                    <Container maxWidth="lg">
+                        <Box sx={{ textAlign: "center", mb: { xs: 10, md: 14 } }}>
 
-                        <Typography variant="h2" sx={{
-                            fontWeight: 900,
-                            fontSize: { xs: "2.2rem", sm: "3rem", md: "3.8rem" },
-                            lineHeight: 1.1, mb: 3,
-                            color: "#fff",
-                        }}>
-                            SMS Marketing Services by <GradientText>AksharSync</GradientText>
-                        </Typography>
-                        <Typography sx={{
-                            color: alpha("#fff", 0.5),
-                            fontSize: { xs: "1.1rem", md: "1.25rem" },
-                            lineHeight: 1.8, maxWidth: 800, mx: "auto",
-                        }}>
-                            Our SMS marketing agency manages every aspect of your text promotions.
-                            Spend minimum time providing feedback and enjoy the results.
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
-                        gap: 4,
-                    }}>
-                        {[
-                            {
-                                title: "Hassle-Free SMS Migration",
-                                desc: "We will handle the entire migration process, ensuring a smooth and secure transfer of all SMS assets.",
-                                icon: <PackageIcon sx={{ fontSize: 28 }} />,
-                                color: "#7fd0ff"
-                            },
-                            {
-                                title: "Seamless SMS Integration",
-                                desc: "We will optimize the performance of your key email automations with strategically placed SMS messages.",
-                                icon: <BoltIcon sx={{ fontSize: 28 }} />,
-                                color: "#a78bfa"
-                            },
-                            {
-                                title: "Legally Compliant Opt-ins",
-                                desc: "We will collect SMS consent across multiple touchpoints to ensure legal compliance.",
-                                icon: <TargetIcon sx={{ fontSize: 28 }} />,
-                                color: "#34d399"
-                            },
-                            {
-                                title: "Comprehensive Campaign Management",
-                                desc: "We will manage your SMS content calendar, integrating it into your email and social strategies.",
-                                icon: <BroadcastIcon sx={{ fontSize: 28 }} />,
-                                color: "#fbbf24"
-                            },
-                            {
-                                title: "Ongoing Optimization",
-                                desc: "We will continuously test your campaigns to ensure healthy deliverability and maximum performance.",
-                                icon: <TrendUpIcon sx={{ fontSize: 28 }} />,
-                                color: "#f43f5e"
-                            },
-                            {
-                                title: "Detailed Reporting",
-                                desc: "We will prepare monthly performance reports to keep you informed about the impact of our strategies.",
-                                icon: <SmsIcon sx={{ fontSize: 28 }} />,
-                                color: "#0ea5e9"
-                            }
-                        ].map((item, i) => (
-                            <Box key={i} sx={{
-                                p: 5, borderRadius: "24px",
-                                background: "rgba(255,255,255,0.02)",
-                                border: "1px solid rgba(255,255,255,0.05)",
-                                transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                                "&:hover": {
-                                    transform: "translateY(-10px)",
-                                    background: "rgba(255,255,255,0.04)",
-                                    borderColor: alpha(item.color, 0.3),
-                                    boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${alpha(item.color, 0.1)}`,
-                                    "& .icon-box": {
-                                        transform: "rotateY(180deg)",
-                                        background: alpha(item.color, 0.2),
-                                    }
-                                }
+                            <Typography variant="h2" sx={{
+                                fontWeight: 900,
+                                fontSize: { xs: "2.2rem", sm: "3rem", md: "3.8rem" },
+                                lineHeight: 1.1, mb: 3,
+                                color: "#fff",
                             }}>
-                                <Box className="icon-box" sx={{
-                                    width: 60, height: 60, borderRadius: "16px",
-                                    background: alpha(item.color, 0.1),
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    mb: 4, color: item.color,
-                                    transition: "all 0.6s ease",
-                                    border: `1px solid ${alpha(item.color, 0.2)}`,
-                                }}>
-                                    {item.icon}
-                                </Box>
-                                <Typography sx={{ fontSize: "1.4rem", fontWeight: 800, color: "#fff", mb: 2 }}>
-                                    {item.title}
-                                </Typography>
-                                <Typography sx={{ color: alpha("#fff", 0.45), fontSize: "0.95rem", lineHeight: 1.7 }}>
-                                    {item.desc}
-                                </Typography>
-                            </Box>
-                        ))}
-                    </Box>
+                                SMS Marketing Services by <GradientText>AksharSync</GradientText>
+                            </Typography>
+                            <Typography sx={{
+                                color: alpha("#fff", 0.5),
+                                fontSize: { xs: "1.1rem", md: "1.25rem" },
+                                lineHeight: 1.8, maxWidth: 800, mx: "auto",
+                            }}>
+                                Our SMS marketing agency manages every aspect of your text promotions.
+                                Spend minimum time providing feedback and enjoy the results.
+                            </Typography>
+                        </Box>
 
-                    <Box sx={{ mt: 10, textAlign: "center" }}>
-                        <Button
-                            variant="contained"
-                            endIcon={<ArrowForwardIcon />}
-                            sx={{
-                                background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
-                                color: "#060e1a", px: 6, py: 2.5,
-                                borderRadius: "16px", fontWeight: 900,
-                                textTransform: "none", fontSize: "1.1rem",
-                                boxShadow: "0 20px 40px rgba(127,208,255,0.25)",
-                                "&:hover": {
-                                    transform: "translateY(-5px)",
-                                    boxShadow: "0 25px 50px rgba(127,208,255,0.35)",
-                                    background: "linear-gradient(135deg, #99ddff 0%, #b8a2ff 100%)",
+                        <Box sx={{
+                            display: "grid",
+                            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
+                            gap: 4,
+                        }}>
+                            {[
+                                {
+                                    title: "Hassle-Free SMS Migration",
+                                    desc: "We will handle the entire migration process, ensuring a smooth and secure transfer of all SMS assets.",
+                                    icon: <PackageIcon sx={{ fontSize: 28 }} />,
+                                    color: "#7fd0ff"
                                 },
-                                transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                            }}
-                        >
-                            Schedule A Call
-                        </Button>
-                    </Box>
-                </Container>
+                                {
+                                    title: "Seamless SMS Integration",
+                                    desc: "We will optimize the performance of your key email automations with strategically placed SMS messages.",
+                                    icon: <BoltIcon sx={{ fontSize: 28 }} />,
+                                    color: "#a78bfa"
+                                },
+                                {
+                                    title: "Legally Compliant Opt-ins",
+                                    desc: "We will collect SMS consent across multiple touchpoints to ensure legal compliance.",
+                                    icon: <TargetIcon sx={{ fontSize: 28 }} />,
+                                    color: "#34d399"
+                                },
+                                {
+                                    title: "Comprehensive Campaign Management",
+                                    desc: "We will manage your SMS content calendar, integrating it into your email and social strategies.",
+                                    icon: <BroadcastIcon sx={{ fontSize: 28 }} />,
+                                    color: "#fbbf24"
+                                },
+                                {
+                                    title: "Ongoing Optimization",
+                                    desc: "We will continuously test your campaigns to ensure healthy deliverability and maximum performance.",
+                                    icon: <TrendUpIcon sx={{ fontSize: 28 }} />,
+                                    color: "#f43f5e"
+                                },
+                                {
+                                    title: "Detailed Reporting",
+                                    desc: "We will prepare monthly performance reports to keep you informed about the impact of our strategies.",
+                                    icon: <SmsIcon sx={{ fontSize: 28 }} />,
+                                    color: "#0ea5e9"
+                                }
+                            ].map((item, i) => (
+                                <Box key={i} sx={{
+                                    p: 5, borderRadius: "24px",
+                                    background: "rgba(255,255,255,0.02)",
+                                    border: "1px solid rgba(255,255,255,0.05)",
+                                    transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                    "&:hover": {
+                                        transform: "translateY(-10px)",
+                                        background: "rgba(255,255,255,0.04)",
+                                        borderColor: alpha(item.color, 0.3),
+                                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${alpha(item.color, 0.1)}`,
+                                        "& .icon-box": {
+                                            transform: "rotateY(180deg)",
+                                            background: alpha(item.color, 0.2),
+                                        }
+                                    }
+                                }}>
+                                    <Box className="icon-box" sx={{
+                                        width: 60, height: 60, borderRadius: "16px",
+                                        background: alpha(item.color, 0.1),
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        mb: 4, color: item.color,
+                                        transition: "all 0.6s ease",
+                                        border: `1px solid ${alpha(item.color, 0.2)}`,
+                                    }}>
+                                        {item.icon}
+                                    </Box>
+                                    <Typography sx={{ fontSize: "1.4rem", fontWeight: 800, color: "#fff", mb: 2 }}>
+                                        {item.title}
+                                    </Typography>
+                                    <Typography sx={{ color: alpha("#fff", 0.45), fontSize: "0.95rem", lineHeight: 1.7 }}>
+                                        {item.desc}
+                                    </Typography>
+                                </Box>
+                            ))}
+                        </Box>
+
+                        <Box sx={{ mt: 10, textAlign: "center" }}>
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForwardIcon />}
+                                sx={{
+                                    background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
+                                    color: "#060e1a", px: 6, py: 2.5,
+                                    borderRadius: "16px", fontWeight: 900,
+                                    textTransform: "none", fontSize: "1.1rem",
+                                    boxShadow: "0 20px 40px rgba(127,208,255,0.25)",
+                                    "&:hover": {
+                                        transform: "translateY(-5px)",
+                                        boxShadow: "0 25px 50px rgba(127,208,255,0.35)",
+                                        background: "linear-gradient(135deg, #99ddff 0%, #b8a2ff 100%)",
+                                    },
+                                    transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                }}
+                            >
+                                Schedule A Call
+                            </Button>
+                        </Box>
+                    </Container>
+                </RevealOnScroll>
             </Box>
 
             {/* ══════════════════════════════════════════════════════════════════
@@ -780,147 +786,226 @@ const SMSService = () => {
                     pointerEvents: "none",
                 }
             }}>
-                <Container maxWidth="lg">
-                    {/* Header */}
-                    <Box sx={{ mb: { xs: 8, md: 10 } }}>
-                        <Typography variant="h2" sx={{
-                            fontWeight: 900,
-                            fontSize: { xs: "2.4rem", sm: "3.2rem", md: "3.8rem" },
-                            lineHeight: 1.1, mb: 3, color: "#fff",
-                        }}>
-                            Why Hire a Professional SMS Agency?
-                        </Typography>
-                        <Typography sx={{
-                            color: alpha("#fff", 0.6),
-                            fontSize: { xs: "1.1rem", md: "1.2rem" },
-                            lineHeight: 1.8, maxWidth: 850,
-                        }}>
-                            When you have an ecommerce business to run, a DIY project is not an option when it comes to marketing.
-                            Only with the help of an expert SMS marketing agency, you’ll be able to achieve desired results.
-                        </Typography>
-                    </Box>
+                <RevealOnScroll>
+                    <Container maxWidth="lg">
+                        {/* Header */}
+                        <Box sx={{ mb: { xs: 8, md: 10 } }}>
+                            <Typography variant="h2" sx={{
+                                fontWeight: 900,
+                                fontSize: { xs: "2.4rem", sm: "3.2rem", md: "3.8rem" },
+                                lineHeight: 1.1, mb: 3, color: "#fff",
+                            }}>
+                                Why Hire a Professional SMS Agency?
+                            </Typography>
+                            <Typography sx={{
+                                color: alpha("#fff", 0.6),
+                                fontSize: { xs: "1.1rem", md: "1.2rem" },
+                                lineHeight: 1.8, maxWidth: 850,
+                            }}>
+                                When you have an ecommerce business to run, a DIY project is not an option when it comes to marketing.
+                                Only with the help of an expert SMS marketing agency, you’ll be able to achieve desired results.
+                            </Typography>
+                        </Box>
 
-                    <Box sx={{
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                        gap: { xs: 10, md: 4 },
-                        alignItems: "center",
-                    }}>
-                        {/* ── Left: Checklist Grid ────────────────────────── */}
                         <Box sx={{
                             display: "grid",
-                            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                            gap: { xs: 4, md: 6 },
+                            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                            gap: { xs: 10, md: 4 },
+                            alignItems: "center",
                         }}>
-                            {[
-                                {
-                                    title: "Efficient Use of Time & Resources",
-                                    desc: "Enjoy the impact of expert SMS marketing services without adding more to your plate."
-                                },
-                                {
-                                    title: "Guaranteed Results",
-                                    desc: "We have the expertise and experience you need to ensure a positive ROI."
-                                },
-                                {
-                                    title: "Technical Competence",
-                                    desc: "We set up your text messages for maximum performance."
-                                },
-                                {
-                                    title: "Avoiding Costly Errors",
-                                    desc: "Marketing via SMS can be complex, but we ensure smooth, error-free operations."
-                                },
-                                {
-                                    title: "Strategy Optimization",
-                                    desc: "We will monitor your SMS performance beyond the initial setup for best results."
-                                }
-                            ].map((item, i) => (
-                                <Box key={i} sx={{ display: "flex", gap: 2.5 }}>
-                                    <Box sx={{ color: "#7fd0ff", mt: 0.5 }}>
-                                        <Typography sx={{ fontWeight: 900, fontSize: "1.3rem" }}>✓</Typography>
-                                    </Box>
-                                    <Box>
-                                        <Typography sx={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", mb: 1, lineHeight: 1.3 }}>
-                                            {item.title}
-                                        </Typography>
-                                        <Typography sx={{ color: alpha("#fff", 0.45), fontSize: "0.9rem", lineHeight: 1.6 }}>
-                                            {item.desc}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            ))}
-                        </Box>
-
-                        {/* ── Right: Image Composition (SMS Bubbles) ──────── */}
-                        <Box sx={{ position: "relative", height: { xs: 350, md: 450 }, display: "flex", alignItems: "center", justifyContent: "center" }}>
-
-                            {/* Orbital Rings */}
+                            {/* ── Left: Checklist Grid ────────────────────────── */}
                             <Box sx={{
-                                position: "absolute", width: 380, height: 380,
-                                borderRadius: "50%", border: "1px dashed rgba(255,255,255,0.1)",
-                                animation: `${floatY} 15s linear infinite`,
-                            }} />
-                            <Box sx={{
-                                position: "absolute", width: 280, height: 280,
-                                borderRadius: "50%", border: "1px dashed rgba(127,208,255,0.15)",
-                                animation: `${floatY} 10s linear infinite reverse`,
-                            }} />
-
-                            {/* White/Gray SMS Bubble */}
-                            <Box sx={{
-                                position: "absolute", top: "10%", right: "10%",
-                                animation: `${ofloat} 5s ease-in-out infinite`,
-                                zIndex: 5,
+                                display: "grid",
+                                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                                gap: { xs: 4, md: 6 },
                             }}>
-                                <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), mb: 0.5, ml: 1, fontWeight: 600 }}>Company Name</Typography>
-                                <Box sx={{
-                                    bgcolor: "#f1f5f9", p: "14px 20px", borderRadius: "20px 20px 4px 20px",
-                                    maxWidth: 240, boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-                                    border: "1px solid #fff",
-                                }}>
-                                    <Typography sx={{ color: "#1e293b", fontSize: "0.85rem", fontWeight: 600, lineHeight: 1.5 }}>
-                                        Hey you! 👋 We've got new products dropping every week for you and your family. Shop now: <Box component="span" sx={{ fontWeight: 800 }}>FAMILY5</Box>
-                                    </Typography>
-                                </Box>
+                                {[
+                                    {
+                                        title: "Efficient Use of Time & Resources",
+                                        desc: "Enjoy the impact of expert SMS marketing services without adding more to your plate."
+                                    },
+                                    {
+                                        title: "Guaranteed Results",
+                                        desc: "We have the expertise and experience you need to ensure a positive ROI."
+                                    },
+                                    {
+                                        title: "Technical Competence",
+                                        desc: "We set up your text messages for maximum performance."
+                                    },
+                                    {
+                                        title: "Avoiding Costly Errors",
+                                        desc: "Marketing via SMS can be complex, but we ensure smooth, error-free operations."
+                                    },
+                                    {
+                                        title: "Strategy Optimization",
+                                        desc: "We will monitor your SMS performance beyond the initial setup for best results."
+                                    }
+                                ].map((item, i) => (
+                                    <Box key={i} sx={{ display: "flex", gap: 2.5 }}>
+                                        <Box sx={{ color: "#7fd0ff", mt: 0.5 }}>
+                                            <Typography sx={{ fontWeight: 900, fontSize: "1.3rem" }}>✓</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography sx={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", mb: 1, lineHeight: 1.3 }}>
+                                                {item.title}
+                                            </Typography>
+                                            <Typography sx={{ color: alpha("#fff", 0.45), fontSize: "0.9rem", lineHeight: 1.6 }}>
+                                                {item.desc}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                ))}
                             </Box>
 
-                            {/* Green SMS Bubble */}
-                            <Box sx={{
-                                position: "absolute", bottom: "15%", left: "5%",
-                                animation: `${ofloat} 6s ease-in-out infinite 0.5s`,
-                                zIndex: 10,
-                            }}>
-                                <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), mb: 0.5, ml: 1, fontWeight: 600 }}>Company Name</Typography>
-                                <Box sx={{
-                                    background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                                    p: "14px 22px", borderRadius: "20px 20px 20px 4px",
-                                    maxWidth: 220, boxShadow: "0 20px 40px rgba(34,197,94,0.2)",
-                                    border: "1px solid rgba(255,255,255,0.1)",
-                                }}>
-                                    <Typography sx={{ color: "#fff", fontSize: "1rem", fontWeight: 700, lineHeight: 1.4 }}>
-                                        We miss you! 🥹 <br />
-                                        Have you seen our new items?
-                                    </Typography>
-                                </Box>
-                            </Box>
+                            {/* ── Right: Image Composition (SMS Bubbles) ──────── */}
+                            <Box sx={{ position: "relative", height: { xs: 350, md: 450 }, display: "flex", alignItems: "center", justifyContent: "center" }}>
 
-                            {/* Center Icon/Glow */}
-                            <Box sx={{
-                                position: "relative", width: 80, height: 80,
-                                borderRadius: "50%", background: "rgba(127,208,255,0.05)",
-                                border: "1px solid rgba(127,208,255,0.2)",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                zIndex: 1,
-                            }}>
-                                <SmsIcon sx={{ fontSize: 32, color: alpha("#fff", 0.1) }} />
+                                {/* Orbital Rings */}
                                 <Box sx={{
-                                    position: "absolute", inset: -20,
-                                    background: "radial-gradient(circle, rgba(127,208,255,0.1) 0%, transparent 70%)",
-                                    animation: `${pulseGlow} 4s ease-in-out infinite`,
+                                    position: "absolute", width: 380, height: 380,
+                                    borderRadius: "50%", border: "1px dashed rgba(255,255,255,0.1)",
+                                    animation: `${floatY} 15s linear infinite`,
                                 }} />
+                                <Box sx={{
+                                    position: "absolute", width: 280, height: 280,
+                                    borderRadius: "50%", border: "1px dashed rgba(127,208,255,0.15)",
+                                    animation: `${floatY} 10s linear infinite reverse`,
+                                }} />
+
+                                {/* White/Gray SMS Bubble */}
+                                <Box sx={{
+                                    position: "absolute", top: "10%", right: "10%",
+                                    animation: `${ofloat} 5s ease-in-out infinite`,
+                                    zIndex: 5,
+                                }}>
+                                    <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), mb: 0.5, ml: 1, fontWeight: 600 }}>Company Name</Typography>
+                                    <Box sx={{
+                                        bgcolor: "#f1f5f9", p: "14px 20px", borderRadius: "20px 20px 4px 20px",
+                                        maxWidth: 240, boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                                        border: "1px solid #fff",
+                                    }}>
+                                        <Typography sx={{ color: "#1e293b", fontSize: "0.85rem", fontWeight: 600, lineHeight: 1.5 }}>
+                                            Hey you! 👋 We've got new products dropping every week for you and your family. Shop now: <Box component="span" sx={{ fontWeight: 800 }}>FAMILY5</Box>
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                {/* Green SMS Bubble */}
+                                <Box sx={{
+                                    position: "absolute", bottom: "15%", left: "5%",
+                                    animation: `${ofloat} 6s ease-in-out infinite 0.5s`,
+                                    zIndex: 10,
+                                }}>
+                                    <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), mb: 0.5, ml: 1, fontWeight: 600 }}>Company Name</Typography>
+                                    <Box sx={{
+                                        background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                                        p: "14px 22px", borderRadius: "20px 20px 20px 4px",
+                                        maxWidth: 220, boxShadow: "0 20px 40px rgba(34,197,94,0.2)",
+                                        border: "1px solid rgba(255,255,255,0.1)",
+                                    }}>
+                                        <Typography sx={{ color: "#fff", fontSize: "1rem", fontWeight: 700, lineHeight: 1.4 }}>
+                                            We miss you! 🥹 <br />
+                                            Have you seen our new items?
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                {/* Center Icon/Glow */}
+                                <Box sx={{
+                                    position: "relative", width: 80, height: 80,
+                                    borderRadius: "50%", background: "rgba(127,208,255,0.05)",
+                                    border: "1px solid rgba(127,208,255,0.2)",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    zIndex: 1,
+                                }}>
+                                    <SmsIcon sx={{ fontSize: 32, color: alpha("#fff", 0.1) }} />
+                                    <Box sx={{
+                                        position: "absolute", inset: -20,
+                                        background: "radial-gradient(circle, rgba(127,208,255,0.1) 0%, transparent 70%)",
+                                        animation: `${pulseGlow} 4s ease-in-out infinite`,
+                                    }} />
+                                </Box>
                             </Box>
                         </Box>
-                    </Box>
-                </Container>
+                    </Container>
+                </RevealOnScroll>
+            </Box>
+
+            {/* ══════════════════════════════════════════════════════════════════
+                SECTION 5 — How We Approach SMS Marketing
+            ══════════════════════════════════════════════════════════════════ */}
+            <Box sx={{
+                py: { xs: 12, md: 20 },
+                position: "relative",
+                bgcolor: "#060e1a",
+                "&::before": {
+                    content: '""',
+                    position: "absolute", top: 0, left: 0, right: 0, height: "1px",
+                    background: "linear-gradient(90deg, transparent, rgba(127,208,255,0.1), transparent)",
+                }
+            }}>
+                <RevealOnScroll>
+                    <Container maxWidth="lg">
+                        <Box sx={{ textAlign: "center", mb: { xs: 0, md: -10 } }}>
+                            <HeroChip sx={{ mb: 3.5 }}>Our Methodology</HeroChip>
+                            <Typography variant="h2" sx={{
+                                fontWeight: 900,
+                                fontSize: { xs: "2.5rem", sm: "3.2rem", md: "3.8rem" },
+                                lineHeight: 1.1, mb: 3, color: "#fff",
+                            }}>
+                                How We Approach <GradientText>SMS Marketing</GradientText>
+                            </Typography>
+                            <Typography sx={{
+                                color: alpha("#fff", 0.5),
+                                fontSize: { xs: "1.1rem", md: "1.25rem" },
+                                lineHeight: 1.8, maxWidth: 850, mx: "auto",
+                            }}>
+                                Our SMS marketing experts adhere to the best practices to create the best campaigns
+                                and text message promotions that can bring your eCommerce business the most revenue.
+                            </Typography>
+                        </Box>
+                    </Container>
+
+                    <SMSProcessTimeline />
+
+                    <Container maxWidth="lg">
+                        <Box sx={{
+                            textAlign: "center",
+                            position: "relative",
+                            overflow: "hidden"
+                        }}>
+                            <Box sx={{ position: "relative", zIndex: 1 }}>
+                                <Typography variant="h4" sx={{ fontWeight: 800, mb: 3, color: "#fff" }}>
+                                    Ready to get started?
+                                </Typography>
+                                <Typography sx={{ color: alpha("#fff", 0.5), mb: 5, fontSize: "1.1rem" }}>
+                                    Schedule a free consultation with our team and learn about your next steps.
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    endIcon={<ArrowForwardIcon />}
+                                    sx={{
+                                        background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
+                                        color: "#060e1a", px: 6, py: 2.2,
+                                        borderRadius: "16px", fontWeight: 900,
+                                        textTransform: "none", fontSize: "1.1rem",
+
+                                    }}
+                                >
+                                    Get Started
+                                </Button>
+                            </Box>
+
+                            {/* Decorative glow */}
+                            <Box sx={{
+                                position: "absolute", top: "-50%", right: "-20%",
+                                width: 300, height: 300,
+                                background: "radial-gradient(circle, rgba(127,208,255,0.15) 0%, transparent 70%)",
+                                filter: "blur(40px)", pointerEvents: "none"
+                            }} />
+                        </Box>
+                    </Container>
+                </RevealOnScroll>
             </Box>
         </Box>
     );
