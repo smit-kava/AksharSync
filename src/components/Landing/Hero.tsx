@@ -6,6 +6,7 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { keyframes } from "@mui/system";
+import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon } from "../icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 const pulseGlow = keyframes`
@@ -47,12 +48,12 @@ const channels = [
 ];
 
 const liveEvents = [
-  { icon: "✉️", msg: "Flow triggered → Welcome Series", time: "just now", color: "#7fd0ff" },
-  { icon: "💬", msg: "SMS sent → Cart Recovery #4821", time: "2s ago", color: "#a78bfa" },
-  { icon: "📲", msg: "WhatsApp delivered → Order #9923", time: "5s ago", color: "#34d399" },
-  { icon: "🎯", msg: "Segment synced → 12,400 contacts", time: "9s ago", color: "#fbbf24" },
-  { icon: "✉️", msg: "Campaign launched → Black Friday", time: "14s ago", color: "#7fd0ff" },
-  { icon: "📲", msg: "WhatsApp reply → Promo redeemed", time: "18s ago", color: "#34d399" },
+  { icon: <EmailIcon sx={{ fontSize: 16 }} />, msg: "Flow triggered → Welcome Series", time: "just now", color: "#7fd0ff" },
+  { icon: <ChatIcon sx={{ fontSize: 16 }} />, msg: "SMS sent → Cart Recovery #4821", time: "2s ago", color: "#a78bfa" },
+  { icon: <WhatsAppIcon sx={{ fontSize: 16 }} />, msg: "WhatsApp delivered → Order #9923", time: "5s ago", color: "#34d399" },
+  { icon: <TargetIcon sx={{ fontSize: 16 }} />, msg: "Segment synced → 12,400 contacts", time: "9s ago", color: "#fbbf24" },
+  { icon: <EmailIcon sx={{ fontSize: 16 }} />, msg: "Campaign launched → Black Friday", time: "14s ago", color: "#7fd0ff" },
+  { icon: <WhatsAppIcon sx={{ fontSize: 16 }} />, msg: "WhatsApp reply → Promo redeemed", time: "18s ago", color: "#34d399" },
 ];
 
 const statCards = [
@@ -79,10 +80,12 @@ function LiveTicker() {
               py: 0.8, px: 1.2, mb: 0.6,
               borderRadius: "8px",
               background: alpha(ev.color, 0.06),
-              border: `0.5px solid ${alpha(ev.color, 0.15)}`,
+              border: `1px solid ${alpha(ev.color, 0.12)}`,
             }}
           >
-            <Box sx={{ fontSize: "0.8rem" }}>{ev.icon}</Box>
+            <Box sx={{ color: ev.color, display: "flex", alignItems: "center" }}>
+              {ev.icon}
+            </Box>
             <Box sx={{ flex: 1 }}>
               <Typography sx={{ fontSize: "0.7rem", color: alpha("#fff", 0.8), lineHeight: 1.2 }}>
                 {ev.msg}
@@ -272,36 +275,36 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
       {/* Floating badge: Klaviyo */}
       <Box sx={{
         position: "absolute", top: -18, right: -18,
-        px: 1.4, py: 0.8, borderRadius: "12px",
-        background: "rgba(10,22,42,0.95)",
-        border: "0.5px solid rgba(127,208,255,0.2)",
+        px: 1.8, py: 1.2, borderRadius: "16px",
+        background: "rgba(10,22,42,0.92)",
+        border: "1px solid rgba(127,208,255,0.18)",
         backdropFilter: "blur(12px)",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-        display: "flex", alignItems: "center", gap: 0.8,
+        boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+        display: "flex", alignItems: "center", gap: 1.5,
         animation: `${floatY} 4s ease-in-out infinite 0.5s`,
       }}>
-        <Typography sx={{ fontSize: "1rem" }}>🎯</Typography>
+        <TargetIcon sx={{ fontSize: 20, color: "#fbbf24", filter: "drop-shadow(0 0 6px rgba(251,191,36,0.3))" }} />
         <Box>
-          <Typography sx={{ fontSize: "0.62rem", color: "#fbbf24", fontWeight: 700, lineHeight: 1 }}>Klaviyo</Typography>
-          <Typography sx={{ fontSize: "0.58rem", color: alpha("#fff", 0.4) }}>Connected</Typography>
+          <Typography sx={{ fontSize: "0.68rem", color: "#fbbf24", fontWeight: 800, lineHeight: 1.1 }}>Klaviyo</Typography>
+          <Typography sx={{ fontSize: "0.6rem", color: alpha("#fff", 0.45) }}>Connected</Typography>
         </Box>
       </Box>
 
       {/* Floating badge: WhatsApp */}
       <Box sx={{
         position: "absolute", bottom: 40, left: -24,
-        px: 1.4, py: 0.8, borderRadius: "12px",
-        background: "rgba(10,22,42,0.95)",
-        border: "0.5px solid rgba(52,211,153,0.25)",
+        px: 1.8, py: 1.2, borderRadius: "16px",
+        background: "rgba(10,22,42,0.92)",
+        border: "1px solid rgba(52,211,153,0.18)",
         backdropFilter: "blur(12px)",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-        display: "flex", alignItems: "center", gap: 0.8,
+        boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+        display: "flex", alignItems: "center", gap: 1.5,
         animation: `${floatY} 4.5s ease-in-out infinite 1s`,
       }}>
-        <Typography sx={{ fontSize: "1rem" }}>📲</Typography>
+        <WhatsAppIcon sx={{ fontSize: 20, color: "#34d399", filter: "drop-shadow(0 0 6px rgba(52,211,153,0.3))" }} />
         <Box>
-          <Typography sx={{ fontSize: "0.62rem", color: "#34d399", fontWeight: 700, lineHeight: 1 }}>WhatsApp</Typography>
-          <Typography sx={{ fontSize: "0.58rem", color: alpha("#fff", 0.4) }}>91% delivered</Typography>
+          <Typography sx={{ fontSize: "0.68rem", color: "#34d399", fontWeight: 800, lineHeight: 1.1 }}>WhatsApp</Typography>
+          <Typography sx={{ fontSize: "0.6rem", color: alpha("#fff", 0.45) }}>91% delivered</Typography>
         </Box>
       </Box>
     </Box>

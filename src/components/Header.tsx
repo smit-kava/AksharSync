@@ -20,17 +20,58 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { ROUTE_PATHS } from "../routes/paths";
+import {
+  LifecycleIcon,
+  ArchitectureIcon,
+  CreativeIcon,
+  MessagingIcon,
+  EmailIcon,
+  JourneyIcon,
+  MultiChannelIcon,
+  EspMigrationIcon,
+  CrmSyncIcon,
+  DeliverabilityIcon,
+  TemplatingIcon,
+  ModularTemplateIcon,
+  UxUiIcon,
+  WhiteLabelIcon,
+  SmsIcon,
+  PushNotificationIcon,
+  WhatsAppIcon,
+  RcsIcon,
+  InstagramDmIcon,
+} from "./icons";
+import type { IconProps } from "./icons";
+
+// ─── Icon lookup map (string key → component) ─────────────────────────────────
+const iconComponentMap: Record<string, React.FC<IconProps>> = {
+  email: EmailIcon,
+  journey: JourneyIcon,
+  multichannel: MultiChannelIcon,
+  espMigration: EspMigrationIcon,
+  crmSync: CrmSyncIcon,
+  deliverability: DeliverabilityIcon,
+  templating: TemplatingIcon,
+  modularTemplate: ModularTemplateIcon,
+  uxUi: UxUiIcon,
+  whiteLabel: WhiteLabelIcon,
+  sms: SmsIcon,
+  pushNotification: PushNotificationIcon,
+  whatsapp: WhatsAppIcon,
+  rcs: RcsIcon,
+  instagramDm: InstagramDmIcon,
+};
 
 // ─── Data Types ─────────────────────────────────────────────────────────────
 interface SubService {
   label: string;
   to: string;
-  icon: string;
+  icon: string; // IconName key from the icon library
 }
 
 interface ServiceCategory {
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   accent: string;
   desc: string;
   sub: SubService[];
@@ -47,36 +88,49 @@ interface NavItem {
 const mainServices: ServiceCategory[] = [
   {
     label: "Lifecycle & Automation",
-    icon: "⟳",
+    icon: <LifecycleIcon />,
     accent: "#7fd0ff",
     desc: "Behavioral journeys that maximize LTV",
     sub: [
-      { label: "Email Automation Management", to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS, icon: "✉" },
-      { label: "Cross-Platform Journey Mapping", to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS, icon: "→" },
-      { label: "Multi-Channel Workflows", to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION, icon: "⟡" },
+      { label: "Email Automation Management", to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS, icon: "email" },
+      { label: "Cross-Platform Journey Mapping", to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS, icon: "journey" },
+      { label: "Multi-Channel Workflows", to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION, icon: "multichannel" },
     ],
   },
   {
     label: "Technical Architecture",
-    icon: "⚙",
+    icon: <ArchitectureIcon />,
     accent: "#a78bfa",
     desc: "Robust technical infrastructure & sync",
     sub: [
-      { label: "ESP Migration & Integration", to: ROUTE_PATHS.SERVICE_ESP_MIGRATION, icon: "⇄" },
-      { label: "CRM Data Sync", to: ROUTE_PATHS.SERVICE_CRM_DATA_SYNC, icon: "⬡" },
-      { label: "Deliverability Audits", to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS, icon: "◎" },
-      { label: "Liquid & Ampscript Templating", to: ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT, icon: "{ }" },
+      { label: "ESP Migration & Integration", to: ROUTE_PATHS.SERVICE_ESP_MIGRATION, icon: "espMigration" },
+      { label: "CRM Data Sync", to: ROUTE_PATHS.SERVICE_CRM_DATA_SYNC, icon: "crmSync" },
+      { label: "Deliverability Audits", to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS, icon: "deliverability" },
+      { label: "Liquid & Ampscript Templating", to: ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT, icon: "templating" },
     ],
   },
   {
     label: "Creative Production",
-    icon: "✦",
+    icon: <CreativeIcon />,
     accent: "#34d399",
     desc: "Web & digital systems designed for growth",
     sub: [
-      { label: "Modular Template Production", to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES, icon: "▦" },
-      { label: "UX/UI Design", to: ROUTE_PATHS.SERVICE_UX_UI_DESIGN, icon: "◈" },
-      { label: "White Label Solutions", to: ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS, icon: "◻" },
+      { label: "Modular Template Production", to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES, icon: "modularTemplate" },
+      { label: "UX/UI Design", to: ROUTE_PATHS.SERVICE_UX_UI_DESIGN, icon: "uxUi" },
+      { label: "White Label Solutions", to: ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS, icon: "whiteLabel" },
+    ],
+  },
+  {
+    label: "Messaging & Engagement",
+    icon: <MessagingIcon />,
+    accent: "#f472b6",
+    desc: "Direct-to-customer messaging across every channel",
+    sub: [
+      { label: "SMS Service", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
+      { label: "Push Notifications", to: ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS, icon: "pushNotification" },
+      { label: "WhatsApp Marketing", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
+      { label: "RCS Marketing", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
+      { label: "Instagram DM Automation", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, icon: "instagramDm" },
     ],
   },
 ];
@@ -199,7 +253,7 @@ export function Header() {
 
   const handleNavClick = (item: NavItem) => {
     setMobileOpen(false);
-    
+
     if (item.anchor && location.pathname === ROUTE_PATHS.HOME) {
       scrollToSection(item.anchor);
     } else if (item.anchor) {
@@ -365,104 +419,175 @@ export function Header() {
               borderRadius: "28px",
               overflow: "hidden",
               display: "grid",
-              gridTemplateColumns: "240px 1fr",
+              gridTemplateColumns: "280px 1fr",
               boxShadow: "0 20px 80px rgba(0,0,0,0.5)",
             }}
           >
-            <Box sx={{ bgcolor: alpha("#fff", 0.02), p: 3, borderRight: "1px solid", borderColor: alpha("#fff", 0.06) }}>
-              <Stack spacing={0.75}>
-                {mainServices.map((svc) => (
-                  <Button
-                    key={svc.label}
-                    onClick={() => setHoveredService(svc.label)}
-                    onMouseEnter={() => setHoveredService(svc.label)}
-                    sx={{
-                      justifyContent: "flex-start",
-                      p: 1.5,
-                      borderRadius: "16px",
-                      bgcolor: hoveredService === svc.label ? alpha("#fff", 0.06) : "transparent",
-                      color: hoveredService === svc.label ? "common.white" : alpha("#fff", 0.6),
-                      "&:hover": { bgcolor: alpha("#fff", 0.06) },
-                    }}
-                  >
+            <Box sx={{ bgcolor: alpha("#fff", 0.02), p: 2.5, borderRight: "1px solid", borderColor: alpha("#fff", 0.06) }}>
+              <Stack spacing={0.5}>
+                {mainServices.map((svc) => {
+                  const isActive = hoveredService === svc.label;
+                  return (
                     <Box
+                      key={svc.label}
+                      onClick={() => setHoveredService(svc.label)}
+                      onMouseEnter={() => setHoveredService(svc.label)}
                       sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "10px",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.9rem",
-                        mr: 1.5,
-                        bgcolor: alpha(svc.accent, 0.2),
-                        color: svc.accent,
+                        gap: 1.5,
+                        px: 1.5,
+                        py: 1.25,
+                        borderRadius: "14px",
+                        cursor: "pointer",
+                        position: "relative",
+                        bgcolor: isActive ? alpha(svc.accent, 0.08) : "transparent",
+                        border: "1px solid",
+                        borderColor: isActive ? alpha(svc.accent, 0.2) : "transparent",
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          bgcolor: alpha(svc.accent, 0.06),
+                          borderColor: alpha(svc.accent, 0.15),
+                        },
                       }}
                     >
-                      {svc.icon}
+                      {/* Icon bubble */}
+                        <Box
+                          sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "10px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            bgcolor: alpha(svc.accent, isActive ? 0.2 : 0.1),
+                            color: svc.accent,
+                            transition: "background 0.2s",
+                          }}
+                        >
+                          {/* svc.icon is a ReactNode, we can clone it to add fontSize if needed, 
+                              but the default for SvgIcon is fine here. */}
+                          {svc.icon}
+                        </Box>
+
+                      {/* Label */}
+                      <Typography
+                        sx={{
+                          fontSize: "0.82rem",
+                          fontWeight: isActive ? 700 : 500,
+                          color: isActive ? "#fff" : alpha("#fff", 0.6),
+                          lineHeight: 1.3,
+                          transition: "color 0.2s",
+                        }}
+                      >
+                        {svc.label}
+                      </Typography>
+
+                      {/* Active indicator */}
+                      {isActive && (
+                        <Box
+                          sx={{
+                            ml: "auto",
+                            width: 4,
+                            height: 4,
+                            borderRadius: "50%",
+                            bgcolor: svc.accent,
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
                     </Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {svc.label}
-                    </Typography>
-                  </Button>
-                ))}
+                  );
+                })}
               </Stack>
             </Box>
 
             <Box sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ color: "common.white", fontWeight: 700, mb: 0.5 }}>
-                {activeService.label}
-              </Typography>
-              <Typography variant="body2" sx={{ color: alpha("#fff", 0.4), mb: 3 }}>
-                {activeService.desc}
-              </Typography>
+              {/* Header */}
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1.05rem",
+                    mb: 0.5,
+                  }}
+                >
+                  {activeService.label}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: alpha("#fff", 0.38),
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  {activeService.desc}
+                </Typography>
+              </Box>
+
+              {/* Sub-services grid */}
               <Box
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  gap: 1.25,
+                  gap: 1,
                 }}
               >
-                {activeService.sub.map((sub) => (
-                  <Button
-                    key={sub.to}
-                    component={RouterLink}
-                    to={sub.to}
-                    onClick={() => setMegaOpen(false)}
-                    sx={{
-                      justifyContent: "flex-start",
-                      p: 1.5,
-                      borderRadius: "12px",
-                      color: alpha("#fff", 0.65),
-                      "&:hover": {
-                        color: "common.white",
-                        bgcolor: alpha("#fff", 0.05),
-                        transform: "translateX(4px)",
-                      },
-                      transition: "all 0.2s",
-                    }}
-                  >
+                {activeService.sub.map((sub) => {
+                  const IconComp = iconComponentMap[sub.icon];
+                  return (
                     <Box
+                      key={sub.to}
+                      component={RouterLink}
+                      to={sub.to}
+                      onClick={() => setMegaOpen(false)}
                       sx={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "8px",
-                        bgcolor: alpha("#fff", 0.05),
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.8rem",
-                        mr: 1.5,
-                        color: activeService.accent,
+                        gap: 1.25,
+                        p: 1.25,
+                        borderRadius: "12px",
+                        textDecoration: "none",
+                        color: alpha("#fff", 0.6),
+                        border: "1px solid transparent",
+                        transition: "all 0.18s ease",
+                        "&:hover": {
+                          color: "#fff",
+                          bgcolor: alpha(activeService.accent, 0.06),
+                          borderColor: alpha(activeService.accent, 0.18),
+                          transform: "translateX(3px)",
+                        },
                       }}
                     >
-                      {sub.icon}
+                      <Box
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          borderRadius: "8px",
+                          bgcolor: alpha(activeService.accent, 0.1),
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          color: activeService.accent,
+                        }}
+                      >
+                        {IconComp ? <IconComp sx={{ fontSize: 16 }} /> : null}
+                      </Box>
+                      <Typography
+                        sx={{
+                          fontSize: "0.8rem",
+                          fontWeight: 500,
+                          lineHeight: 1.3,
+                          color: "inherit",
+                        }}
+                      >
+                        {sub.label}
+                      </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {sub.label}
-                    </Typography>
-                  </Button>
-                ))}
+                  );
+                })}
               </Box>
             </Box>
           </Box>
