@@ -6,6 +6,7 @@ import { SmsIcon, BroadcastIcon, PackageIcon, TargetIcon, WinBackIcon, TrendUpIc
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RevealOnScroll from "../../components/RevealOnScroll";
 import { SMSProcessTimeline } from "../../components/SMSProcessTimeline";
+import { AnnouncementIcon, BlueTickIcon, OngoingIcons, TransferIcon, WeightICon } from '../../components/icons/Icons';
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 
@@ -676,31 +677,31 @@ const SMSService = () => {
                                 {
                                     title: "Hassle-Free SMS Migration",
                                     desc: "We will handle the entire migration process, ensuring a smooth and secure transfer of all SMS assets.",
-                                    icon: <PackageIcon sx={{ fontSize: 28 }} />,
+                                    icon: <TransferIcon sx={{ fontSize: 28 }} />,
                                     color: "#7fd0ff"
                                 },
                                 {
                                     title: "Seamless SMS Integration",
                                     desc: "We will optimize the performance of your key email automations with strategically placed SMS messages.",
-                                    icon: <BoltIcon sx={{ fontSize: 28 }} />,
+                                    icon: <BlueTickIcon sx={{ fontSize: 28 }} />,
                                     color: "#a78bfa"
                                 },
                                 {
                                     title: "Legally Compliant Opt-ins",
                                     desc: "We will collect SMS consent across multiple touchpoints to ensure legal compliance.",
-                                    icon: <TargetIcon sx={{ fontSize: 28 }} />,
+                                    icon: <WeightICon sx={{ fontSize: 28 }} />,
                                     color: "#34d399"
                                 },
                                 {
                                     title: "Comprehensive Campaign Management",
                                     desc: "We will manage your SMS content calendar, integrating it into your email and social strategies.",
-                                    icon: <BroadcastIcon sx={{ fontSize: 28 }} />,
+                                    icon: <AnnouncementIcon sx={{ fontSize: 28 }} />,
                                     color: "#fbbf24"
                                 },
                                 {
                                     title: "Ongoing Optimization",
                                     desc: "We will continuously test your campaigns to ensure healthy deliverability and maximum performance.",
-                                    icon: <TrendUpIcon sx={{ fontSize: 28 }} />,
+                                    icon: <OngoingIcons sx={{ fontSize: 28 }} />,
                                     color: "#f43f5e"
                                 },
                                 {
@@ -935,7 +936,7 @@ const SMSService = () => {
                 SECTION 5 — How We Approach SMS Marketing
             ══════════════════════════════════════════════════════════════════ */}
             <Box sx={{
-                py: { xs: 12, md: 20 },
+                py: { xs: 5, md: 10 },
                 position: "relative",
                 bgcolor: "#060e1a",
                 "&::before": {
@@ -947,7 +948,6 @@ const SMSService = () => {
                 <RevealOnScroll>
                     <Container maxWidth="lg">
                         <Box sx={{ textAlign: "center", mb: { xs: 0, md: -10 } }}>
-                            <HeroChip sx={{ mb: 3.5 }}>Our Methodology</HeroChip>
                             <Typography variant="h2" sx={{
                                 fontWeight: 900,
                                 fontSize: { xs: "2.5rem", sm: "3.2rem", md: "3.8rem" },
