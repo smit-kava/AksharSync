@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Typography, Button, alpha, Fade } from "@mui/material";
+import { Box, Container, Typography, Button, alpha, Fade, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { keyframes } from "@mui/system";
 import { HeroChip, GradientText } from "../../components/Landing/Shared";
 import { SmsIcon, BroadcastIcon, PackageIcon, TargetIcon, WinBackIcon, TrendUpIcon, BoltIcon } from "../../components/icons";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RevealOnScroll from "../../components/RevealOnScroll";
 import { SMSProcessTimeline } from "../../components/SMSProcessTimeline";
 import { AnnouncementIcon, BlueTickIcon, OngoingIcons, TransferIcon, WeightICon } from '../../components/icons/Icons';
+import { ExpertCTA } from '../../components';
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 
@@ -54,6 +56,12 @@ const pfloat = keyframes`
 
 const SMSService = () => {
     const [visible, setVisible] = useState(false);
+    const [expanded, setExpanded] = useState<string | false>(false);
+
+    const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+
     useEffect(() => { setVisible(true); }, []);
 
     return (
@@ -1003,6 +1011,117 @@ const SMSService = () => {
                                 background: "radial-gradient(circle, rgba(127,208,255,0.15) 0%, transparent 70%)",
                                 filter: "blur(40px)", pointerEvents: "none"
                             }} />
+                        </Box>
+                    </Container>
+                </RevealOnScroll>
+            </Box>
+
+            {/* ══════════════════════════════════════════════════════════════════
+                SECTION 6 — Frequently Asked Questions
+            ══════════════════════════════════════════════════════════════════ */}
+            <Box sx={{
+                py: { xs: 10, md: 15 },
+                position: "relative",
+                bgcolor: "#081121",
+                "&::before": {
+                    content: '""',
+                    position: "absolute", top: 0, left: 0, right: 0, height: "1px",
+                    background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.15), transparent)",
+                }
+            }}>
+                <RevealOnScroll>
+                    <Container maxWidth="md">
+                        <Box sx={{ textAlign: "center", mb: { xs: 6, md: 8 } }}>
+                            <Typography variant="h2" sx={{
+                                fontWeight: 900,
+                                fontSize: { xs: "2.2rem", sm: "2.8rem", md: "3.4rem" },
+                                lineHeight: 1.1, mb: 3,
+                                color: "#fff",
+                            }}>
+                                Frequently Asked <GradientText>Questions</GradientText>
+                            </Typography>
+                            <Typography sx={{
+                                color: alpha("#fff", 0.5),
+                                fontSize: { xs: "1.05rem", md: "1.15rem" },
+                                lineHeight: 1.8,
+                            }}>
+                                Everything you need to know about our SMS marketing services and pricing.
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                            {[
+                                {
+                                    q: "1. What is SMS marketing?",
+                                    a: "SMS marketing is a strategy that involves sending promotional text messages to your audience. By using an SMS marketing platform, you can reach your customers directly through their phones. It’s a marketing method proven effective to promote your brand, inform customers about product updates, and announce sales or special offers."
+                                },
+                                {
+                                    q: "2. How much do your SMS marketing services cost?",
+                                    a: "The price of SMS promotions depends on three main factors: the number of texts you send, the frequency of your campaigns, additional features you may need, and your SMS marketing provider’s fees. The average price is between $0.10 and $0.50 per text message. For a precise quote, please contact our team."
+                                },
+                                {
+                                    q: "3. How to collect phone numbers for SMS marketing?",
+                                    a: "You can collect phone numbers in several ways. One effective method is to offer users the option to subscribe to SMS messages when they sign up for your email list. Another approach is to use a pop-up on your blog or website, inviting your website visitors to receive SMS updates."
+                                },
+                                {
+                                    q: "4. What is the best time to send SMS campaigns?",
+                                    a: "The best time to send your SMS marketing campaigns depends on your audience’s habits and preferences. Before launching SMS campaigns, we study your audience’s behavior as well as your SMS marketing campaign analytics."
+                                }
+                            ].map((faq, i) => {
+                                const panelId = `panel${i}`;
+                                return (
+                                    <Accordion
+                                        key={i}
+                                        expanded={expanded === panelId}
+                                        onChange={handleAccordionChange(panelId)}
+                                        slotProps={{ transition: { timeout: 500 } }}
+                                        sx={{
+                                            bgcolor: "rgba(255,255,255,0.02)",
+                                            color: "#fff",
+                                            borderRadius: "12px !important",
+                                            border: "1px solid rgba(255,255,255,0.05)",
+                                            boxShadow: "none",
+                                            overflow: "hidden",
+                                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                            "&:before": { display: "none" },
+                                            "&:hover": {
+                                                bgcolor: "rgba(255,255,255,0.04)",
+                                                borderColor: "rgba(127,208,255,0.2)",
+                                            },
+                                            "&.Mui-expanded": {
+                                                margin: "0 !important",
+                                                borderColor: "rgba(127,208,255,0.4)",
+                                                bgcolor: "rgba(255,255,255,0.05)",
+                                                boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)",
+                                            }
+                                        }}
+                                    >
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon sx={{ color: "#7fd0ff", fontSize: "1.2rem" }} />}
+                                            sx={{
+                                                p: { xs: 1.5, md: 2 },
+                                                minHeight: "auto !important",
+                                                "& .MuiAccordionSummary-content": { m: "0 !important" }
+                                            }}
+                                        >
+                                            <Typography sx={{ fontWeight: 700, fontSize: "1.05rem" }}>
+                                                {faq.q}
+                                            </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails sx={{ px: { xs: 1.5, md: 2 }, pb: { xs: 2, md: 2.5 }, pt: 0 }}>
+                                            <Typography sx={{ color: alpha("#fff", 0.6), lineHeight: 1.6, fontSize: "0.95rem" }}>
+                                                {faq.a}
+                                            </Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                );
+                            })}
+                        </Box>
+
+                        <Box sx={{ mt: 6, textAlign: "center" }}>
+                            <Box sx={{ mt: 6, textAlign: "center" }}>
+                                <ExpertCTA text='Talk to a Flowium Expert' />
+                            </Box>
                         </Box>
                     </Container>
                 </RevealOnScroll>

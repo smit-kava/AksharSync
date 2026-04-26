@@ -8,4 +8,5 @@ export { Icon } from "./icons";
 export type { IconName, IconProps, IconComponentProps } from "./icons";
 
 export { default as PageLoader } from "./PageLoader";
+export { default as ExpertCTA } from "./ExpertCTA";
 
