@@ -1,22 +1,13 @@
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRoutes } from "./routes";
-
-const theme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+import ScrollProgress from "./components/ScrollProgress";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-
+    <>
+      <ScrollProgress />
       <AppRoutes />
-
-    </ThemeProvider>
+      <ScrollToTop />
+    </>
   );
 }

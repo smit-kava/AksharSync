@@ -6,6 +6,7 @@ import ServiceDetailPage from "../pages/services/ServiceDetailPage";
 import AboutPage from "../pages/AboutPage";
 import WhyPage from "../pages/WhyPage";
 import { ROUTE_PATHS } from "./paths";
+import SMSService from "../pages/services/SMSService";
 
 export function AppRoutes() {
   return (
@@ -13,7 +14,7 @@ export function AppRoutes() {
       <Route element={<CommonLayout />}>
         <Route path={ROUTE_PATHS.HOME} element={<LandingPage />} />
         <Route path={ROUTE_PATHS.SERVICES} element={<ServicesPage />} />
-        
+
         {/* Lifecycle & Automation */}
         <Route path={ROUTE_PATHS.SERVICE_EMAIL_FLOWS} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS} element={<ServiceDetailPage />} />
@@ -35,6 +36,13 @@ export function AppRoutes() {
         <Route path={ROUTE_PATHS.SERVICE_SEO} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_CONTENT} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_WEB_DEV} element={<ServiceDetailPage />} />
+
+        {/* Messaging & Engagement Channels */}
+        <Route path={ROUTE_PATHS.SERVICE_SMS} element={<SMSService />} />
+        <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<ServiceDetailPage />} />
+        <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<ServiceDetailPage />} />
+        <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<ServiceDetailPage />} />
+        <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<ServiceDetailPage />} />
 
         <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
         <Route path={ROUTE_PATHS.WHY} element={<WhyPage />} />

@@ -25,6 +25,13 @@ export const ROUTE_PATHS = {
   SERVICE_CONTENT: "/services/content-creation",
   SERVICE_WEB_DEV: "/services/web-development",
 
+  // Messaging & Engagement Channels
+  SERVICE_SMS: "/services/SMSService",
+  SERVICE_PUSH_NOTIFICATIONS: "/services/push-notifications",
+  SERVICE_WHATSAPP_MARKETING: "/services/whatsapp-marketing",
+  SERVICE_RCS_MARKETING: "/services/rcs-marketing",
+  SERVICE_INSTAGRAM_DM: "/services/instagram-dm-automation",
+
   ABOUT: "/about",
   WHY: "/why",
 } as const;
