@@ -31,51 +31,53 @@ const ProcessStep = ({ number, title, desc, isTop, color = "#0ea5e9", index }: {
       height: 400,
       justifyContent: isTop ? "flex-start" : "flex-end",
     }}>
-      {/* Content Card with Sequential Zoom */}
-      <Box sx={{
-        p: 3,
-        borderRadius: "28px",
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(12px)",
-        maxWidth: 260,
-        transition: "all 0.4s ease",
-        position: "relative",
-        animation: `${sequentialZoom} 10s infinite`,
-        animationDelay: `${delay}s`,
-        "&:hover": {
-          animationPlayState: "paused",
-          transform: isTop ? "translateY(-10px) scale(1.05)" : "translateY(10px) scale(1.05)",
-          background: "rgba(255,255,255,0.06)",
-        }
-      }}>
-        <Typography sx={{ 
-          fontSize: "2.2rem", 
-          fontWeight: 900, 
-          color: color, 
-          mb: 1.5,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          lineHeight: 1
+      <RevealOnScroll delay={index * 0.1}>
+        {/* Content Card with Sequential Zoom */}
+        <Box sx={{
+          p: 3,
+          borderRadius: "28px",
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+          maxWidth: 260,
+          transition: "all 0.4s ease",
+          position: "relative",
+          animation: `${sequentialZoom} 10s infinite`,
+          animationDelay: `${delay}s`,
+          "&:hover": {
+            animationPlayState: "paused",
+            transform: isTop ? "translateY(-10px) scale(1.05)" : "translateY(10px) scale(1.05)",
+            background: "rgba(255,255,255,0.06)",
+          }
         }}>
-          {number}
-        </Typography>
-        <Typography variant="h5" sx={{ 
-          fontWeight: 800, 
-          color: "#fff", 
-          mb: 1.5, 
-          fontSize: "1.1rem",
-          lineHeight: 1.3
-        }}>
-          {title}
-        </Typography>
-        <Typography sx={{ 
-          color: alpha("#fff", 0.4), 
-          fontSize: "0.82rem", 
-          lineHeight: 1.6 
-        }}>
-          {desc}
-        </Typography>
-      </Box>
+          <Typography sx={{ 
+            fontSize: "2.2rem", 
+            fontWeight: 900, 
+            color: color, 
+            mb: 1.5,
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            lineHeight: 1
+          }}>
+            {number}
+          </Typography>
+          <Typography variant="h5" sx={{ 
+            fontWeight: 800, 
+            color: "#fff", 
+            mb: 1.5, 
+            fontSize: "1.1rem",
+            lineHeight: 1.3
+          }}>
+            {title}
+          </Typography>
+          <Typography sx={{ 
+            color: alpha("#fff", 0.4), 
+            fontSize: "0.82rem", 
+            lineHeight: 1.6 
+          }}>
+            {desc}
+          </Typography>
+        </Box>
+      </RevealOnScroll>
     </Box>
   );
 };
@@ -91,7 +93,7 @@ export const SMSProcessTimeline = () => {
 
   return (
     <Box sx={{ py: { xs: 10, md: 15 }, position: "relative", overflow: "hidden" }}>
-      <Container maxWidth="xl" sx={{ position: "relative" }}>
+      <Container maxWidth="lg" sx={{ position: "relative" }}>
         
         <Box
           component="svg"
@@ -147,16 +149,15 @@ export const SMSProcessTimeline = () => {
           minHeight: 400
         }}>
           {steps.map((step, index) => (
-            <RevealOnScroll key={index} delay={index * 0.1}>
-              <ProcessStep 
-                index={index}
-                number={step.number}
-                title={step.title}
-                desc={step.desc}
-                isTop={step.isTop}
-                color={step.color}
-              />
-            </RevealOnScroll>
+            <ProcessStep 
+              key={index}
+              index={index}
+              number={step.number}
+              title={step.title}
+              desc={step.desc}
+              isTop={step.isTop}
+              color={step.color}
+            />
           ))}
         </Box>
       </Container>

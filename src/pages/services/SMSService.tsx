@@ -83,7 +83,7 @@ const SMSService = () => {
                     filter: "blur(60px)", pointerEvents: "none", zIndex: 0,
                 }} />
 
-                <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
+                <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
                     <Box sx={{
                         display: "grid",
                         gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
