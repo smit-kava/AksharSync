@@ -7,3 +7,5 @@ export { FooterLinkGroup, FooterNewsletter, FooterSocialLinks } from "./footer/i
 export { Icon } from "./icons";
 export type { IconName, IconProps, IconComponentProps } from "./icons";
 
+export { default as PageLoader } from "./PageLoader";
+
