@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Box, Container, Typography, alpha, Fade, useMediaQuery, useTheme } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Link as RouterLink } from "react-router-dom";
-import { useInView as useInViewShared, HeroChip, GradientText } from "./Shared";
+import { useInView as useInViewShared, GradientText } from "./Shared";
 import { ROUTE_PATHS } from "../../routes/paths";
 import { motion, useInView } from "framer-motion";
 
