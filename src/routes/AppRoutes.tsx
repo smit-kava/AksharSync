@@ -6,7 +6,8 @@ import ServiceDetailPage from "../pages/services/ServiceDetailPage";
 import AboutPage from "../pages/AboutPage";
 import WhyPage from "../pages/WhyPage";
 import { ROUTE_PATHS } from "./paths";
-import SMSService from "../pages/services/SMSService";
+import SMSService from "../pages/services/SocialMediaservices/SMSService";
+import WhatsappService from "../pages/services/SocialMediaservices/WhatsappService";
 
 export function AppRoutes() {
   return (
@@ -40,7 +41,7 @@ export function AppRoutes() {
         {/* Messaging & Engagement Channels */}
         <Route path={ROUTE_PATHS.SERVICE_SMS} element={<SMSService />} />
         <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<ServiceDetailPage />} />
+        <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<WhatsappService />} />
         <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<ServiceDetailPage />} />
 

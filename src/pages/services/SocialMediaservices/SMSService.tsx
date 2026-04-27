@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Button, alpha, Fade, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { keyframes } from "@mui/system";
-import { HeroChip, GradientText } from "../../components/Landing/Shared";
-import { SmsIcon, BroadcastIcon, PackageIcon, TargetIcon, WinBackIcon, TrendUpIcon, BoltIcon } from "../../components/icons";
+import { HeroChip, GradientText } from "../../../components/Landing/Shared";
+import { SmsIcon, BroadcastIcon, PackageIcon, TargetIcon, WinBackIcon, TrendUpIcon, BoltIcon } from "../../../components/icons";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import RevealOnScroll from "../../components/RevealOnScroll";
-import { SMSProcessTimeline } from "../../components/SMSProcessTimeline";
-import { AnnouncementIcon, BlueTickIcon, OngoingIcons, TransferIcon, WeightICon } from '../../components/icons/Icons';
-import { ExpertCTA } from '../../components';
+import RevealOnScroll from "../../../components/RevealOnScroll";
+import { SMSProcessTimeline } from "../../../components/SMSProcessTimeline";
+import { AnnouncementIcon, BlueTickIcon, OngoingIcons, TransferIcon, WeightICon } from '../../../components/icons/Icons';
+import { ExpertCTA } from '../../../components';
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 

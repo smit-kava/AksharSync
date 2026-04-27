@@ -47,6 +47,12 @@ export {
   WinBackIcon,
   TrendUpIcon,
   BoltIcon,
+
+  // Custom SVG Icons
+  AnnouncementIcon,
+  BlueTickIcon,
+  OngoingIcons,
+  WeightICon,
 } from "./Icons";
 
 export type { IconName, IconProps, IconComponentProps } from "./Icons";

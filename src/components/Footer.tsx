@@ -7,10 +7,13 @@ const serviceLinks = [
   { label: "Email Audit", to: "/services" },
   { label: "Email Deliverability", to: "/services" },
   { label: "Klaviyo Agency", to: "/solutions" },
-  { label: "SMS Service", to: "/services" },
-  { label: "Push Notifications", to: "/services" },
+  { label: "SMS Marketing", to: "/services" },
   { label: "WhatsApp Marketing", to: "/services" },
+  { label: "Push Notifications", to: "/services" },
   { label: "RCS Marketing", to: "/services" },
+  { label: "Direct Mail", to: "/services" },
+  { label: "DM Automation", to: "/services" },
+  { label: "Lifecycle Execution", to: "/services" },
 ];
 
 const learnMoreLinks = [
@@ -211,13 +214,36 @@ export function Footer() {
           margin: 0;
         }
 
+        .service-tag-mini {
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: rgba(127, 208, 255, 0.5);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          padding: 4px 10px;
+          border-radius: 5px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .service-tag-mini:hover {
+          color: #7fd0ff;
+          border-color: rgba(127, 208, 255, 0.25);
+          background: rgba(127, 208, 255, 0.05);
+          transform: translateY(-1px);
+        }
+
+        @media (max-width: 960px) {
+          .footer-top-bar { flex-direction: column; align-items: flex-start !important; gap: 20px !important; }
+          .footer-top-tags { justify-content: flex-start !important; }
+        }
+
         @media (max-width: 860px) {
           .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 40px 24px !important; }
-          .footer-brand-col { grid-column: 1 / -1; }
         }
         @media (max-width: 520px) {
           .footer-grid { grid-template-columns: 1fr !important; }
-          .footer-brand-col { grid-column: auto; }
         }
       `}</style>
 
@@ -225,7 +251,7 @@ export function Footer() {
         {/* ── Main body ── */}
         <div style={{
           background: "linear-gradient(160deg, #06101e 0%, #0b1d35 55%, #130829 100%)",
-          padding: "72px 0 0",
+          padding: "64px 0 0",
           borderTop: "1px solid rgba(255,255,255,0.05)",
         }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 32px" }}>
@@ -233,12 +259,12 @@ export function Footer() {
             {/* Grid */}
             <div className="footer-grid" style={{
               display: "grid",
-              gridTemplateColumns: "1.6fr 1.2fr 1fr 1.4fr",
+              gridTemplateColumns: "1.8fr 1fr 1fr 1.2fr",
               gap: "0 48px",
-              paddingBottom: 56,
+              paddingBottom: 40,
             }}>
 
-              {/* ── Brand col ── */}
+              {/* ── Brand & Statement ── */}
               <div className="footer-brand-col" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
                 {/* Logo */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -257,28 +283,40 @@ export function Footer() {
                   </span>
                 </div>
 
-                {/* Tagline */}
-                <p style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.75, maxWidth: 300 }}>
-                  Scaling D2C brands through data-driven communication across Email, SMS, and WhatsApp.
-                </p>
-
-                {/* Facebook CTA */}
-                <div>
-                  <a href="#" className="footer-fb-btn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                    </svg>
-                    Join Our Facebook Community
-                  </a>
+                {/* Tagline Statement */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  <p style={{
+                    fontSize: "0.98rem",
+                    fontWeight: 700,
+                    color: "white",
+                    lineHeight: 1.4,
+                    letterSpacing: "-0.01em",
+                    margin: 0
+                  }}>
+                    White-Label Retention Systems for Agencies & Ecommerce Brands
+                  </p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 8px" }}>
+                    {["Email", "SMS", "WhatsApp", "Push Notifications", "RCS", "Direct Mail", "DM Automation", "Lifecycle Execution"].map(s => (
+                      <span key={s} className="service-tag-mini">{s}</span>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Social icons */}
-                <div style={{ display: "flex", gap: 8 }}>
-                  {socialLinks.map((s) => (
-                    <a key={s.label} href={s.to} className="footer-social-btn" title={s.label}>
-                      {s.icon}
-                    </a>
-                  ))}
+                {/* Socials */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <a href="#" className="footer-fb-btn" style={{ padding: "8px 16px", fontSize: "0.8rem" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                    Community
+                  </a>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {socialLinks.map((s) => (
+                      <a key={s.label} href={s.to} className="footer-social-btn" title={s.label} style={{ width: 32, height: 32 }}>
+                        {s.icon}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
 
