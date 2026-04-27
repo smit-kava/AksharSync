@@ -366,6 +366,7 @@ export function Header() {
               to={ROUTE_PATHS.ABOUT}
               sx={{
                 display: { xs: "none", sm: "inline-flex" },
+                marginRight: "10px",
                 borderRadius: "999px",
                 bgcolor: alpha("#fff", 0.05),
                 color: "common.white",
@@ -377,6 +378,7 @@ export function Header() {
                 fontWeight: 700,
                 textTransform: "none",
                 transition: "all 0.3s ease",
+
                 "&:hover": {
                   bgcolor: alpha("#fff", 0.1),
                   borderColor: alpha("#fff", 0.4),
@@ -452,24 +454,24 @@ export function Header() {
                       }}
                     >
                       {/* Icon bubble */}
-                        <Box
-                          sx={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: "10px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                            bgcolor: alpha(svc.accent, isActive ? 0.2 : 0.1),
-                            color: svc.accent,
-                            transition: "background 0.2s",
-                          }}
-                        >
-                          {/* svc.icon is a ReactNode, we can clone it to add fontSize if needed, 
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          bgcolor: alpha(svc.accent, isActive ? 0.2 : 0.1),
+                          color: svc.accent,
+                          transition: "background 0.2s",
+                        }}
+                      >
+                        {/* svc.icon is a ReactNode, we can clone it to add fontSize if needed, 
                               but the default for SvgIcon is fine here. */}
-                          {svc.icon}
-                        </Box>
+                        {svc.icon}
+                      </Box>
 
                       {/* Label */}
                       <Typography
