@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Container, Typography, alpha, Fade, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { keyframes } from "@mui/system";
-import { HeroChip, GradientText } from "../../../components/Landing/Shared";
-import {
-    WhatsAppIcon, MessagingIcon, TrendUpIcon, BoltIcon, ArchitectureIcon, TargetIcon,
-    AnnouncementIcon, BlueTickIcon, OngoingIcons, WeightICon
-} from "../../../components/icons";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import StarIcon from "@mui/icons-material/Star";
+import { Accordion, AccordionDetails, AccordionSummary, alpha, Box, Container, Fade, Typography } from "@mui/material";
+import { keyframes } from "@mui/system";
+import React, { useEffect, useState } from 'react';
+import { ExpertCTA } from '../../../components';
+import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import RevealOnScroll from "../../../components/RevealOnScroll";
 import { SMSProcessTimeline } from "../../../components/SMSProcessTimeline";
-import { ExpertCTA } from '../../../components';
-import StarIcon from "@mui/icons-material/Star";
+import {
+    AnnouncementIcon,
+    ArchitectureIcon,
+    BlueTickIcon,
+    BoltIcon,
+    OngoingIcons,
+    TargetIcon,
+    TrendUpIcon,
+    WeightICon,
+    WhatsAppIcon
+} from "../../../components/icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 
