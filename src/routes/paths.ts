@@ -27,7 +27,7 @@ export const ROUTE_PATHS = {
 
   // Messaging & Engagement Channels
   SERVICE_SMS: "/services/SMSService",
-  SERVICE_PUSH_NOTIFICATIONS: "/services/push-notifications",
+  SERVICE_PUSH_NOTIFICATIONS: "/services/PushNotification",
   SERVICE_WHATSAPP_MARKETING: "/services/whatsapp-marketing",
   SERVICE_RCS_MARKETING: "/services/rcs-marketing",
   SERVICE_INSTAGRAM_DM: "/services/instagram-dm-automation",

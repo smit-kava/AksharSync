@@ -126,6 +126,7 @@ const mainServices: ServiceCategory[] = [
     icon: <MessagingIcon />,
     accent: "#f472b6",
     desc: "Multi-platform reach across all messaging channels",
+    to: ROUTE_PATHS.SERVICE_SMS,
     sub: [
       { label: "SMS Automation", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
       { label: "WhatsApp Retention Systems", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
@@ -183,8 +184,10 @@ const PillContainer = styled(Box, {
     easing: theme.transitions.easing.easeInOut,
     duration: 400,
   }),
+  borderBlockEnd: 'aliceblue',
   boxShadow: scrolled ? "0 8px 32px 0 rgba(0, 0, 0, 0.37)" : "none",
   color: theme.palette.text.primary,
+
 }));
 
 const MegaMenu = styled(Box, {
@@ -720,7 +723,7 @@ export function Header() {
                           <Box key={svc.label} sx={{ mb: 2 }}>
                             <Typography
                               variant="caption"
-                              onClick={() => { if(svc.to) { setMobileOpen(false); navigate(svc.to); } }}
+                              onClick={() => { if (svc.to) { setMobileOpen(false); navigate(svc.to); } }}
                               sx={{ color: svc.accent, fontWeight: 700, textTransform: "uppercase", px: 2, cursor: svc.to ? "pointer" : "default" }}
                             >
                               {svc.label}

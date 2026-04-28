@@ -12,6 +12,7 @@ import LifecycleAudit from "../pages/services/LifecycleAudit";
 import CreativeAudit from "../pages/services/CreativeAudit";
 import DeliverabilityAudit from "../pages/services/DeliverabilityAudit";
 import RevenueAudit from "../pages/services/RevenueAudit";
+import PushNotification from "../pages/services/SocialMediaservices/PushNotification";
 
 export function AppRoutes() {
   return (
@@ -44,7 +45,7 @@ export function AppRoutes() {
 
         {/* Messaging & Engagement Channels */}
         <Route path={ROUTE_PATHS.SERVICE_SMS} element={<SMSService />} />
-        <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<ServiceDetailPage />} />
+        <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<PushNotification />} />
         <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<WhatsappService />} />
         <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<ServiceDetailPage />} />

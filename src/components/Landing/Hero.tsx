@@ -323,7 +323,7 @@ export default function Hero() {
   return (
     <Box
       sx={{
-        minHeight: { xs: "auto", md: "90vh" },
+        minHeight: { xs: "auto", md: "100vh" },
         maxHeight: { md: "900px" },
         position: "relative",
         display: "flex",

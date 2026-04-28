@@ -64,13 +64,13 @@ const services = [
     rotate: 20,
     spreadX: 600,
     icon: <MessagingIcon sx={{ fontSize: "2.4rem" }} />,
-    id: ROUTE_PATHS.SERVICES,
+    id: ROUTE_PATHS.SERVICE_SMS,
     title: "Omnichannel Review",
     sub: "Multi-Platform",
     desc: "Audit of SMS, WhatsApp, Push, RCS, Direct Mail, and Instagram DM automation systems.",
     accent: "#f472b6",
     label: "05",
-    clickable: false,
+    clickable: true,
   },
 ];
 
