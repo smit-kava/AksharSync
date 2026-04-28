@@ -14,10 +14,6 @@ import StarIcon from "@mui/icons-material/Star";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 
-const floatY = keyframes`
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-`;
 
 const slideInUp = keyframes`
   from { opacity: 0; transform: translateY(30px); }
@@ -33,6 +29,11 @@ const ofloat = keyframes`
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-8px); }
 `;
+
+// const floatY = keyframes`
+//   0%, 100% { transform: translateY(0px); }
+//   50% { transform: translateY(-15px); }
+// `;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

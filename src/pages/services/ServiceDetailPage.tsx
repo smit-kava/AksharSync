@@ -122,12 +122,12 @@
 
 
 
-import React from 'react'
+
 
 const ServiceDetailPage = () => {
   return (
     <div>
-
+      <h1>Service Detail Page</h1>
     </div>
   )
 }

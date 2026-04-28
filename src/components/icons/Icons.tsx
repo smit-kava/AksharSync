@@ -301,7 +301,7 @@ export function TrendUpIcon(props: IconProps) {
 }
 
 /** Bolt / lightning flash — speed & power */
-export function BoltIcon(props: IconProps) {
+export function BoltIcon(_props: IconProps) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M315.27 33L96 304h128l-31.51 173.23a2.36 2.36 0 0 0 2.33 2.77h0a2.36 2.36 0 0 0 1.89-.95L416 208H288l31.66-173.25a2.45 2.45 0 0 0-2.44-2.75h0a2.42 2.42 0 0 0-1.95 1" /></svg>
   );
@@ -309,7 +309,7 @@ export function BoltIcon(props: IconProps) {
 
 
 
-export function TimeIcons(props: IconProps) {
+export function TimeIcons() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 80 80"><g fill="none"><path fill="currentColor" fill-opacity="0.25" d="M40.015 22.243a22.173 22.173 0 1 1 16.97 40.97a22.173 22.173 0 0 1-16.97-40.97" /><path fill="currentColor" fill-opacity="0.25" d="M48.5 39.729a3 3 0 1 0 0 6a3 3 0 0 0 0-6" /><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m64.2 27.072l4.099-4.099m-2.829-2.828l5.657 5.657M48.5 20.555v-5.783m-5 0h10m-20.7 12.3l-4.1-4.099m-2.828 2.829l5.656-5.657m23.656 13.848l-4.86 6.353m12.083 10.292L51.11 44.21M12.373 58.272h10m-13-8h10m-2-8h-10m20.642-8.029a22.173 22.173 0 1 1 40.97 16.97a22.173 22.173 0 0 1-40.97-16.97M45.5 42.73a3 3 0 1 1 6 0a3 3 0 0 1-6 0" stroke-width="1" /></g></svg>
   )
