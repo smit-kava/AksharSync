@@ -3,17 +3,11 @@ import type { FormEvent } from "react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const serviceLinks = [
-  { label: "Email Marketing", to: "/services" },
-  { label: "Email Audit", to: "/services" },
-  { label: "Email Deliverability", to: "/services" },
-  { label: "Klaviyo Agency", to: "/solutions" },
-  { label: "SMS Marketing", to: "/services" },
-  { label: "WhatsApp Marketing", to: "/services" },
-  { label: "Push Notifications", to: "/services" },
-  { label: "RCS Marketing", to: "/services" },
-  { label: "Direct Mail", to: "/services" },
-  { label: "DM Automation", to: "/services" },
-  { label: "Lifecycle Execution", to: "/services" },
+  { label: "Lifecycle Flow Review", to: "/services" },
+  { label: "Template & Creative Review", to: "/services" },
+  { label: "Deliverability Review", to: "/services" },
+  { label: "Revenue Opportunity Analysis", to: "/services" },
+  { label: "Omnichannel Retention Review", to: "/services" },
 ];
 
 const learnMoreLinks = [

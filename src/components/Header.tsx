@@ -19,6 +19,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import { ROUTE_PATHS } from "../routes/paths";
 import {
   LifecycleIcon,
@@ -43,7 +45,7 @@ import {
 } from "./icons";
 import type { IconProps } from "./icons";
 
-// ─── Icon lookup map (string key → component) ─────────────────────────────────
+// ─── Icon lookup map ──────────────────────────────────────────────────────────
 const iconComponentMap: Record<string, React.FC<IconProps>> = {
   email: EmailIcon,
   journey: JourneyIcon,
@@ -62,11 +64,11 @@ const iconComponentMap: Record<string, React.FC<IconProps>> = {
   instagramDm: InstagramDmIcon,
 };
 
-// ─── Data Types ─────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface SubService {
   label: string;
   to: string;
-  icon: string; // IconName key from the icon library
+  icon: string;
 }
 
 interface ServiceCategory {
@@ -74,6 +76,7 @@ interface ServiceCategory {
   icon: React.ReactNode;
   accent: string;
   desc: string;
+  to?: string;
   sub: SubService[];
 }
 
@@ -84,52 +87,51 @@ interface NavItem {
   hasServices?: boolean;
 }
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const mainServices: ServiceCategory[] = [
   {
-    label: "Lifecycle & Automation",
+    label: "Lifecycle Flow Review",
     icon: <LifecycleIcon />,
     accent: "#7fd0ff",
-    desc: "Behavioral journeys that maximize LTV",
-    sub: [
-      { label: "Email Automation Management", to: ROUTE_PATHS.SERVICE_EMAIL_FLOWS, icon: "email" },
-      { label: "Cross-Platform Journey Mapping", to: ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS, icon: "journey" },
-      { label: "Multi-Channel Workflows", to: ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION, icon: "multichannel" },
-    ],
+    desc: "Behavioral journey audit to identify automation gaps",
+    to: ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT,
+    sub: [],
   },
   {
-    label: "Technical Architecture",
-    icon: <ArchitectureIcon />,
-    accent: "#a78bfa",
-    desc: "Robust technical infrastructure & sync",
-    sub: [
-      { label: "ESP Migration & Integration", to: ROUTE_PATHS.SERVICE_ESP_MIGRATION, icon: "espMigration" },
-      { label: "CRM Data Sync", to: ROUTE_PATHS.SERVICE_CRM_DATA_SYNC, icon: "crmSync" },
-      { label: "Deliverability Audits", to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS, icon: "deliverability" },
-      { label: "Liquid & Ampscript Templating", to: ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT, icon: "templating" },
-    ],
-  },
-  {
-    label: "Creative Production",
+    label: "Template & Creative Review",
     icon: <CreativeIcon />,
-    accent: "#34d399",
-    desc: "Web & digital systems designed for growth",
-    sub: [
-      { label: "Modular Template Production", to: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES, icon: "modularTemplate" },
-      { label: "UX/UI Design", to: ROUTE_PATHS.SERVICE_UX_UI_DESIGN, icon: "uxUi" },
-      { label: "White Label Solutions", to: ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS, icon: "whiteLabel" },
-    ],
+    accent: "#a78bfa",
+    desc: "Design performance and brand consistency evaluation",
+    to: ROUTE_PATHS.SERVICE_CREATIVE_AUDIT,
+    sub: [],
   },
   {
-    label: "Messaging & Engagement",
+    label: "Deliverability Review",
+    icon: <ArchitectureIcon />,
+    accent: "#34d399",
+    desc: "Technical inbox health and reputation audit",
+    to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT,
+    sub: [],
+  },
+  {
+    label: "Revenue Opportunity Analysis",
+    icon: <SyncProblemIcon />,
+    accent: "#fbbf24",
+    desc: "Data-driven discovery of hidden repeat revenue",
+    to: ROUTE_PATHS.SERVICE_REVENUE_AUDIT,
+    sub: [],
+  },
+  {
+    label: "Omnichannel Retention Review",
     icon: <MessagingIcon />,
     accent: "#f472b6",
-    desc: "Direct-to-customer messaging across every channel",
+    desc: "Multi-platform reach across all messaging channels",
     sub: [
-      { label: "SMS Service", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
+      { label: "SMS Automation", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
+      { label: "WhatsApp Retention Systems", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
       { label: "Push Notifications", to: ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS, icon: "pushNotification" },
-      { label: "WhatsApp Marketing", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
-      { label: "RCS Marketing", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
+      { label: "RCS Messaging", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
+      { label: "Direct Mail Opportunities", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
       { label: "Instagram DM Automation", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, icon: "instagramDm" },
     ],
   },
@@ -139,11 +141,10 @@ const navItems: NavItem[] = [
   { label: "Home", to: ROUTE_PATHS.HOME },
   { label: "Services", to: ROUTE_PATHS.SERVICES, anchor: "services", hasServices: true },
   { label: "About Us", to: ROUTE_PATHS.ABOUT },
-  { label: "Why?", to: ROUTE_PATHS.WHY, anchor: "why-us" },
+  { label: "Why Audit?", to: ROUTE_PATHS.WHY, anchor: "why-us" },
 ];
 
-// ─── Styled Components ───────────────────────────────────────────────────────
-
+// ─── Styled Components ────────────────────────────────────────────────────────
 const RootHeader = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "scrolled",
 })<{ scrolled: boolean }>(({ theme, scrolled }) => ({
@@ -171,9 +172,7 @@ const PillContainer = styled(Box, {
   justifyContent: "space-between",
   padding: scrolled ? "0 8px 0 28px" : "0 40px",
   borderRadius: scrolled ? "999px" : "0",
-  background: scrolled
-    ? alpha("#06101e", 0.45)
-    : alpha("#06101e", 0.15),
+  background: scrolled ? alpha("#06101e", 0.45) : alpha("#06101e", 0.15),
   backdropFilter: "blur(20px)",
   WebkitBackdropFilter: "blur(20px)",
   border: `1px solid ${alpha("#fff", 0.15)}`,
@@ -193,10 +192,12 @@ const MegaMenu = styled(Box, {
 })<{ open: boolean }>(({ theme, open }) => ({
   position: "absolute",
   top: "100%",
-  left: "40px",
-  right: "40px",
-  paddingTop: "12px",
+  left: 0,
+  right: 0,
+  paddingTop: "8px",
   zIndex: 999,
+  display: "flex",
+  justifyContent: "center",
   opacity: open ? 1 : 0,
   transform: open ? "translateY(0)" : "translateY(-10px)",
   pointerEvents: open ? "auto" : "none",
@@ -206,18 +207,19 @@ const MegaMenu = styled(Box, {
   }),
 }));
 
-// ─── Component ─────────────────────────────────────────────────────────────
-
+// ─── Component ────────────────────────────────────────────────────────────────
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [megaOpen, setMegaOpen] = useState(false);
-  const [hoveredService, setHoveredService] = useState(mainServices[0].label);
+  // null = compact cards view; service label = sub-services expanded
+  const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const megaTimeout = useRef<number | null>(null);
+  const collapseTimeout = useRef<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -233,8 +235,26 @@ export function Header() {
   const handleCloseMega = () => {
     megaTimeout.current = window.setTimeout(() => {
       setMegaOpen(false);
-      setHoveredService(mainServices[0].label);
+      // delay collapse so it fades out gracefully
+      collapseTimeout.current = window.setTimeout(() => {
+        setExpandedService(null);
+      }, 350);
     }, 180);
+  };
+
+  // When hovering a service card
+  const handleServiceHover = (svc: ServiceCategory) => {
+    if (collapseTimeout.current) clearTimeout(collapseTimeout.current);
+    if (svc.sub.length > 0) {
+      setExpandedService(svc.label);
+    } else {
+      setExpandedService(null);
+    }
+  };
+
+  // When leaving the sub-panel area, collapse back
+  const handleSubPanelLeave = () => {
+    setExpandedService(null);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -243,17 +263,12 @@ export function Header() {
       const headerOffset = 100;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
 
   const handleNavClick = (item: NavItem) => {
     setMobileOpen(false);
-
     if (item.anchor && location.pathname === ROUTE_PATHS.HOME) {
       scrollToSection(item.anchor);
     } else if (item.anchor) {
@@ -264,11 +279,11 @@ export function Header() {
     }
   };
 
-  const activeService = mainServices.find((s) => s.label === hoveredService) || mainServices[0];
+  const activeSubService = mainServices.find((s) => s.label === expandedService);
 
   return (
     <>
-      <RootHeader position="fixed" scrolled={scrolled} className="akshar-header-root">
+      <RootHeader position="fixed" scrolled={scrolled}>
         <PillContainer scrolled={scrolled}>
           {/* Logo */}
           <Box
@@ -277,13 +292,8 @@ export function Header() {
               display: "flex",
               alignItems: "center",
               gap: 1.5,
-              textDecoration: "none",
-              color: "inherit",
               cursor: "pointer",
-              "&:hover .logo-icon": {
-                transform: "rotate(-10deg) scale(1.1)",
-                borderColor: "primary.light",
-              },
+              "&:hover .logo-icon": { transform: "rotate(-10deg) scale(1.1)" },
             }}
           >
             <Box
@@ -299,8 +309,7 @@ export function Header() {
                 fontSize: "0.9rem",
                 fontWeight: 800,
                 color: "common.white",
-                border: "1px solid",
-                borderColor: alpha("#fff", 0.2),
+                border: "1px solid rgba(255,255,255,0.2)",
                 transition: "all 0.3s ease",
               }}
             >
@@ -311,7 +320,6 @@ export function Header() {
               sx={{
                 fontFamily: "'Anta', sans-serif",
                 fontSize: "1.35rem",
-                fontWeight: 400,
                 color: "common.white",
                 letterSpacing: "-0.02em",
                 "& span": { color: "#7fd0ff" },
@@ -347,11 +355,7 @@ export function Header() {
                   textTransform: "none",
                   borderRadius: "999px",
                   padding: "8px 18px",
-                  minWidth: "auto",
-                  "&:hover": {
-                    color: "#fff",
-                    background: alpha("#fff", 0.06),
-                  },
+                  "&:hover": { color: "#fff", background: alpha("#fff", 0.06) },
                 }}
               >
                 {item.label}
@@ -360,139 +364,150 @@ export function Header() {
           </Box>
 
           {/* CTA & Toggle */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }} component="div">
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
             <Button
-              component={RouterLink as any}
+              component={RouterLink}
               to={ROUTE_PATHS.ABOUT}
               sx={{
                 display: { xs: "none", sm: "inline-flex" },
-                marginRight: "10px",
                 borderRadius: "999px",
                 bgcolor: alpha("#fff", 0.05),
                 color: "common.white",
-                border: "1px solid",
-                borderColor: alpha("#fff", 0.2),
-                px: 3.5,
-                height: 42,
-                fontSize: "0.92rem",
+                border: "1px solid rgba(255,255,255,0.2)",
+                px: 3,
+                height: 40,
+                fontSize: "0.85rem",
                 fontWeight: 700,
                 textTransform: "none",
-                transition: "all 0.3s ease",
-
-                "&:hover": {
-                  bgcolor: alpha("#fff", 0.1),
-                  borderColor: alpha("#fff", 0.4),
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 8px 24px rgba(255,255,255,0.1)",
-                },
+                "&:hover": { bgcolor: alpha("#fff", 0.1), borderColor: alpha("#fff", 0.4) },
               }}
             >
               Contact us
             </Button>
             <IconButton
               onClick={() => setMobileOpen(true)}
-              sx={{
-                display: { md: "none" },
-                color: "common.white",
-                "& .ham-line": {
-                  width: 22,
-                  height: 2,
-                  bgcolor: "common.white",
-                  mb: 0.6,
-                  borderRadius: 1,
-                },
-              }}
+              sx={{ display: { md: "none" }, color: "common.white" }}
             >
               <MenuIcon />
             </IconButton>
           </Stack>
         </PillContainer>
 
-        {/* Mega Menu */}
+        {/* ── Mega Menu ── */}
         <MegaMenu open={megaOpen} onMouseEnter={handleOpenMega} onMouseLeave={handleCloseMega}>
           <Box
             sx={{
-              maxWidth: "1240px",
-              margin: "0 auto",
-              bgcolor: alpha("#060e1a", 0.96),
+              width: "fit-content",
+              margin: "0",
+              bgcolor: "rgba(6, 14, 26, 0.98)",
               backdropFilter: "blur(24px)",
-              border: "1px solid",
-              borderColor: alpha("#fff", 0.08),
-              borderRadius: "28px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "18px",
               overflow: "hidden",
-              display: "grid",
-              gridTemplateColumns: "280px 1fr",
-              boxShadow: "0 20px 80px rgba(0,0,0,0.5)",
+              display: "flex",
+              flexDirection: "row",
+              boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
             }}
           >
-            <Box sx={{ bgcolor: alpha("#fff", 0.02), p: 2.5, borderRight: "1px solid", borderColor: alpha("#fff", 0.06) }}>
-              <Stack spacing={0.5}>
+            {/* ── LEFT: 5 compact service cards ── */}
+            <Box sx={{ width: "340px", minWidth: "340px", p: 1.5, flexShrink: 0 }}>
+              <Stack spacing={0.25}>
                 {mainServices.map((svc) => {
-                  const isActive = hoveredService === svc.label;
+                  const isExpanded = expandedService === svc.label;
+                  const hasSub = svc.sub.length > 0;
+
                   return (
                     <Box
                       key={svc.label}
-                      onClick={() => setHoveredService(svc.label)}
-                      onMouseEnter={() => setHoveredService(svc.label)}
+                      component={svc.to ? RouterLink : "div"}
+                      to={svc.to}
+                      onMouseEnter={() => handleServiceHover(svc)}
+                      onClick={() => svc.to && setMegaOpen(false)}
                       sx={{
                         display: "flex",
                         alignItems: "center",
                         gap: 1.5,
                         px: 1.5,
-                        py: 1.25,
-                        borderRadius: "14px",
+                        py: 1,
+                        borderRadius: "10px",
                         cursor: "pointer",
-                        position: "relative",
-                        bgcolor: isActive ? alpha(svc.accent, 0.08) : "transparent",
+                        textDecoration: "none",
+                        bgcolor: isExpanded ? alpha(svc.accent, 0.08) : "transparent",
                         border: "1px solid",
-                        borderColor: isActive ? alpha(svc.accent, 0.2) : "transparent",
-                        transition: "all 0.2s ease",
+                        borderColor: isExpanded ? alpha(svc.accent, 0.3) : "transparent",
+                        transition: "all 0.18s ease",
                         "&:hover": {
-                          bgcolor: alpha(svc.accent, 0.06),
-                          borderColor: alpha(svc.accent, 0.15),
+                          bgcolor: alpha(svc.accent, 0.07),
+                          borderColor: alpha(svc.accent, 0.2),
                         },
                       }}
                     >
-                      {/* Icon bubble */}
+                      {/* Icon */}
                       <Box
                         sx={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: "10px",
+                          width: 32,
+                          height: 32,
+                          borderRadius: "9px",
+                          flexShrink: 0,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          flexShrink: 0,
-                          bgcolor: alpha(svc.accent, isActive ? 0.2 : 0.1),
+                          bgcolor: alpha(svc.accent, isExpanded ? 0.22 : 0.1),
                           color: svc.accent,
-                          transition: "background 0.2s",
+                          transition: "background 0.18s",
+                          "& svg": { fontSize: "1rem" },
                         }}
                       >
-                        {/* svc.icon is a ReactNode, we can clone it to add fontSize if needed, 
-                              but the default for SvgIcon is fine here. */}
                         {svc.icon}
                       </Box>
 
-                      {/* Label */}
-                      <Typography
-                        sx={{
-                          fontSize: "0.82rem",
-                          fontWeight: isActive ? 700 : 500,
-                          color: isActive ? "#fff" : alpha("#fff", 0.6),
-                          lineHeight: 1.3,
-                          transition: "color 0.2s",
-                        }}
-                      >
-                        {svc.label}
-                      </Typography>
+                      {/* Text */}
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography
+                          sx={{
+                            fontSize: "0.82rem",
+                            fontWeight: isExpanded ? 700 : 600,
+                            color: isExpanded ? "#fff" : alpha("#fff", 0.7),
+                            lineHeight: 1.2,
+                            transition: "color 0.18s",
+                          }}
+                        >
+                          {svc.label}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontSize: "0.71rem",
+                            color: alpha("#fff", 0.28),
+                            mt: 0.2,
+                            lineHeight: 1.2,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {svc.desc}
+                        </Typography>
+                      </Box>
 
-                      {/* Active indicator */}
-                      {isActive && (
+                      {/* Arrow indicator for expandable */}
+                      {hasSub && (
+                        <KeyboardArrowRightIcon
+                          sx={{
+                            fontSize: "0.95rem",
+                            color: isExpanded ? svc.accent : alpha("#fff", 0.18),
+                            flexShrink: 0,
+                            transition: "color 0.18s, transform 0.18s",
+                            transform: isExpanded ? "translateX(2px)" : "none",
+                          }}
+                        />
+                      )}
+
+                      {/* Active dot for non-expandable */}
+                      {!hasSub && isExpanded && (
                         <Box
                           sx={{
-                            ml: "auto",
-                            width: 4,
-                            height: 4,
+                            width: 5,
+                            height: 5,
                             borderRadius: "50%",
                             bgcolor: svc.accent,
                             flexShrink: 0,
@@ -505,234 +520,241 @@ export function Header() {
               </Stack>
             </Box>
 
-            <Box sx={{ p: 4 }}>
-              {/* Header */}
-              <Box sx={{ mb: 3 }}>
-                <Typography
+            {/* ── RIGHT: Sub-services panel (slides in) ── */}
+            <Box
+              onMouseLeave={handleSubPanelLeave}
+              sx={{
+                width: expandedService ? "360px" : "0px",
+                overflow: "hidden",
+                flexShrink: 0,
+                transition: "width 0.32s cubic-bezier(0.4, 0, 0.2, 1)",
+                borderLeft: expandedService
+                  ? "1px solid rgba(255,255,255,0.06)"
+                  : "1px solid transparent",
+              }}
+            >
+              {activeSubService && (
+                <Box
                   sx={{
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: "1.05rem",
-                    mb: 0.5,
+                    width: "360px",
+                    p: 3,
+                    opacity: expandedService ? 1 : 0,
+                    transition: "opacity 0.22s ease 0.1s",
                   }}
                 >
-                  {activeService.label}
-                </Typography>
-                <Typography
-                  sx={{
-                    color: alpha("#fff", 0.38),
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  {activeService.desc}
-                </Typography>
-              </Box>
-
-              {/* Sub-services grid */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 1,
-                }}
-              >
-                {activeService.sub.map((sub) => {
-                  const IconComp = iconComponentMap[sub.icon];
-                  return (
+                  {/* Sub-panel header */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
                     <Box
-                      key={sub.to}
-                      component={RouterLink}
-                      to={sub.to}
-                      onClick={() => setMegaOpen(false)}
                       sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "10px",
                         display: "flex",
                         alignItems: "center",
-                        gap: 1.25,
-                        p: 1.25,
-                        borderRadius: "12px",
-                        textDecoration: "none",
-                        color: alpha("#fff", 0.6),
-                        border: "1px solid transparent",
-                        transition: "all 0.18s ease",
-                        "&:hover": {
-                          color: "#fff",
-                          bgcolor: alpha(activeService.accent, 0.06),
-                          borderColor: alpha(activeService.accent, 0.18),
-                          transform: "translateX(3px)",
-                        },
+                        justifyContent: "center",
+                        bgcolor: alpha(activeSubService.accent, 0.18),
+                        color: activeSubService.accent,
                       }}
                     >
-                      <Box
-                        sx={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: "8px",
-                          bgcolor: alpha(activeService.accent, 0.1),
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          color: activeService.accent,
-                        }}
-                      >
-                        {IconComp ? <IconComp sx={{ fontSize: 16 }} /> : null}
-                      </Box>
-                      <Typography
-                        sx={{
-                          fontSize: "0.8rem",
-                          fontWeight: 500,
-                          lineHeight: 1.3,
-                          color: "inherit",
-                        }}
-                      >
-                        {sub.label}
+                      {activeSubService.icon}
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontSize: "0.8rem", fontWeight: 700, color: activeSubService.accent, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Channels
+                      </Typography>
+                      <Typography sx={{ fontSize: "0.75rem", color: alpha("#fff", 0.35) }}>
+                        {activeSubService.sub.length} options available
                       </Typography>
                     </Box>
-                  );
-                })}
-              </Box>
+                  </Box>
+
+                  {/* Sub-service links */}
+                  <Stack spacing={0.75}>
+                    {activeSubService.sub.map((sub, i) => {
+                      const IconComp = iconComponentMap[sub.icon];
+                      return (
+                        <Box
+                          key={sub.label}
+                          component={RouterLink}
+                          to={sub.to}
+                          onClick={() => setMegaOpen(false)}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.75,
+                            px: 1.5,
+                            py: 1.25,
+                            borderRadius: "12px",
+                            textDecoration: "none",
+                            color: alpha("#fff", 0.65),
+                            border: "1px solid transparent",
+                            transition: "all 0.18s ease",
+                            // staggered entrance
+                            opacity: expandedService ? 1 : 0,
+                            transform: expandedService ? "translateX(0)" : "translateX(-8px)",
+                            transitionDelay: expandedService ? `${i * 35 + 120}ms` : "0ms",
+                            "&:hover": {
+                              color: "#fff",
+                              bgcolor: alpha(activeSubService.accent, 0.07),
+                              borderColor: alpha(activeSubService.accent, 0.18),
+                              transform: "translateX(3px)",
+                            },
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "9px",
+                              flexShrink: 0,
+                              bgcolor: alpha(activeSubService.accent, 0.1),
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: activeSubService.accent,
+                              border: `1px solid ${alpha(activeSubService.accent, 0.18)}`,
+                            }}
+                          >
+                            {IconComp && <IconComp sx={{ fontSize: 16 }} />}
+                          </Box>
+                          <Typography sx={{ fontSize: "0.83rem", fontWeight: 600 }}>
+                            {sub.label}
+                          </Typography>
+                          <KeyboardArrowRightIcon
+                            sx={{
+                              ml: "auto",
+                              fontSize: "0.9rem",
+                              color: alpha("#fff", 0.15),
+                              flexShrink: 0,
+                            }}
+                          />
+                        </Box>
+                      );
+                    })}
+                  </Stack>
+
+                  {/* Bottom CTA */}
+                  <Box
+                    sx={{
+                      mt: 3,
+                      pt: 2.5,
+                      borderTop: "1px solid rgba(255,255,255,0.05)",
+                      opacity: expandedService ? 1 : 0,
+                      transition: "opacity 0.22s ease 0.28s",
+                    }}
+                  >
+                    <Typography
+                      component={RouterLink}
+                      to={ROUTE_PATHS.SERVICES}
+                      onClick={() => setMegaOpen(false)}
+                      sx={{
+                        fontSize: "0.78rem",
+                        color: activeSubService.accent,
+                        textDecoration: "none",
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        opacity: 0.7,
+                        "&:hover": { opacity: 1 },
+                        transition: "opacity 0.2s",
+                      }}
+                    >
+                      View all services
+                      <KeyboardArrowRightIcon sx={{ fontSize: "1rem" }} />
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Box>
         </MegaMenu>
       </RootHeader>
 
-      {/* Mobile Drawer */}
+      {/* ── Mobile Drawer ── */}
       <Drawer
         anchor="right"
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
-        slotProps={{
-          paper: {
-            sx: {
-              width: 320,
-              bgcolor: "#060e1a",
-              backdropFilter: "blur(40px)",
-              p: 4,
-            },
-          }
-        }}
+        slotProps={{ paper: { sx: { width: 320, bgcolor: "#060e1a", p: 4 } } }}
       >
-        <Stack spacing={4} component="div">
-          <Stack
-            direction="row"
-            component="div"
-            sx={{ alignItems: "center", justifyContent: "space-between" }}
-          >
-            <Box
-              onClick={() => handleNavClick({ label: "Home", to: ROUTE_PATHS.HOME })}
-              sx={{ display: "flex", alignItems: "center", gap: 1.5, textDecoration: "none", cursor: "pointer" }}
-            >
+        <Stack spacing={4}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <Box
                 sx={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
+                  width: 30, height: 30, borderRadius: "50%",
                   background: "linear-gradient(135deg, #0D3B66 0%, #472187 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "0.9rem",
-                  fontWeight: 800,
-                  color: "common.white",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff", fontWeight: 800, fontSize: "0.8rem",
                 }}
               >
                 A
               </Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontFamily: "'Anta', sans-serif",
-                  fontSize: "1.35rem",
-                  color: "common.white",
-                  "& span": { color: "#7fd0ff" },
-                }}
-              >
-                Akshar<span>Sync</span>
+              <Typography variant="h6" sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}>
+                Akshar<span style={{ color: "#7fd0ff" }}>Sync</span>
               </Typography>
             </Box>
-            <IconButton onClick={() => setMobileOpen(false)} sx={{ color: "common.white" }}>
+            <IconButton onClick={() => setMobileOpen(false)} sx={{ color: "#fff" }}>
               <CloseIcon />
             </IconButton>
-          </Stack>
+          </Box>
 
-          <List sx={{ p: 0 }}>
+          <List>
             {navItems.map((item) => (
               <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
                 {item.hasServices ? (
                   <>
                     <ListItemButton
                       onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
-                      sx={{
-                        py: 2,
-                        color: "common.white",
-                        borderBottom: "1px solid",
-                        borderColor: alpha("#fff", 0.1),
-                      }}
+                      sx={{ py: 2, color: "#fff" }}
                     >
-                      <ListItemText
-                        primary={item.label}
-                        sx={{
-                          "& .MuiListItemText-primary": { fontSize: "1.1rem", fontWeight: 700 }
-                        }}
-                      />
+                      <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 700 } } }} />
                       <KeyboardArrowDownIcon
-                        sx={{ transform: mobileExpanded === item.label ? "rotate(180deg)" : "none" }}
+                        sx={{ transform: mobileExpanded === item.label ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
                       />
                     </ListItemButton>
                     <Collapse in={mobileExpanded === item.label}>
-                      <List sx={{ pl: 2, mt: 1 }}>
+                      <List sx={{ pl: 2 }}>
                         {mainServices.map((svc) => (
                           <Box key={svc.label} sx={{ mb: 2 }}>
                             <Typography
                               variant="caption"
-                              sx={{
-                                color: svc.accent,
-                                fontWeight: 700,
-                                textTransform: "uppercase",
-                                letterSpacing: 1,
-                                px: 2,
-                              }}
+                              onClick={() => { if(svc.to) { setMobileOpen(false); navigate(svc.to); } }}
+                              sx={{ color: svc.accent, fontWeight: 700, textTransform: "uppercase", px: 2, cursor: svc.to ? "pointer" : "default" }}
                             >
                               {svc.label}
                             </Typography>
-                            {svc.sub.map((sub) => (
-                              <ListItemButton
-                                key={sub.to}
-                                onClick={() => {
-                                  setMobileOpen(false);
-                                  navigate(sub.to);
-                                }}
-                                sx={{ borderRadius: 1 }}
-                              >
-                                <ListItemText
-                                  primary={sub.label}
-                                  sx={{
-                                    "& .MuiListItemText-primary": { fontSize: "0.9rem", color: alpha("#fff", 0.6) }
-                                  }}
-                                />
-                              </ListItemButton>
-                            ))}
+                            {svc.sub.length > 0 ? (
+                              svc.sub.map((sub) => (
+                                <ListItemButton
+                                  key={sub.label}
+                                  onClick={() => { setMobileOpen(false); navigate(sub.to); }}
+                                >
+                                  <ListItemText
+                                    primary={sub.label}
+                                    slotProps={{ primary: { style: { fontSize: "0.9rem", color: alpha("#fff", 0.6) } } }}
+                                  />
+                                </ListItemButton>
+                              ))
+                            ) : (
+                              svc.to && (
+                                <ListItemButton onClick={() => { setMobileOpen(false); navigate(svc.to!); }}>
+                                  <ListItemText
+                                    primary="View Details"
+                                    slotProps={{ primary: { style: { fontSize: "0.85rem", color: alpha("#fff", 0.4), fontStyle: "italic" } } }}
+                                  />
+                                </ListItemButton>
+                              )
+                            )}
                           </Box>
                         ))}
                       </List>
                     </Collapse>
                   </>
                 ) : (
-                  <ListItemButton
-                    onClick={() => handleNavClick(item)}
-                    sx={{
-                      py: 2,
-                      color: "common.white",
-                      borderBottom: "1px solid",
-                      borderColor: alpha("#fff", 0.1),
-                    }}
-                  >
-                    <ListItemText
-                      primary={item.label}
-                      sx={{
-                        "& .MuiListItemText-primary": { fontSize: "1.1rem", fontWeight: 700 }
-                      }}
-                    />
+                  <ListItemButton onClick={() => handleNavClick(item)} sx={{ py: 2, color: "#fff" }}>
+                    <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 700 } } }} />
                   </ListItemButton>
                 )}
               </ListItem>

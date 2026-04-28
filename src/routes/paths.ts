@@ -32,6 +32,12 @@ export const ROUTE_PATHS = {
   SERVICE_RCS_MARKETING: "/services/rcs-marketing",
   SERVICE_INSTAGRAM_DM: "/services/instagram-dm-automation",
 
+  // Audit Services
+  SERVICE_LIFECYCLE_AUDIT: "/services/lifecycle-audit",
+  SERVICE_CREATIVE_AUDIT: "/services/creative-audit",
+  SERVICE_DELIVERABILITY_AUDIT: "/services/deliverability-audit",
+  SERVICE_REVENUE_AUDIT: "/services/revenue-audit",
+
   ABOUT: "/about",
   WHY: "/why",
 } as const;

@@ -8,6 +8,10 @@ import WhyPage from "../pages/WhyPage";
 import { ROUTE_PATHS } from "./paths";
 import SMSService from "../pages/services/SocialMediaservices/SMSService";
 import WhatsappService from "../pages/services/SocialMediaservices/WhatsappService";
+import LifecycleAudit from "../pages/services/LifecycleAudit";
+import CreativeAudit from "../pages/services/CreativeAudit";
+import DeliverabilityAudit from "../pages/services/DeliverabilityAudit";
+import RevenueAudit from "../pages/services/RevenueAudit";
 
 export function AppRoutes() {
   return (
@@ -44,6 +48,12 @@ export function AppRoutes() {
         <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<WhatsappService />} />
         <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<ServiceDetailPage />} />
         <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<ServiceDetailPage />} />
+
+        {/* Audit Services */}
+        <Route path={ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT} element={<LifecycleAudit />} />
+        <Route path={ROUTE_PATHS.SERVICE_CREATIVE_AUDIT} element={<CreativeAudit />} />
+        <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT} element={<DeliverabilityAudit />} />
+        <Route path={ROUTE_PATHS.SERVICE_REVENUE_AUDIT} element={<RevenueAudit />} />
 
         <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
         <Route path={ROUTE_PATHS.WHY} element={<WhyPage />} />

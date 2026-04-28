@@ -6,43 +6,71 @@ import { useInView as useInViewShared, GradientText } from "./Shared";
 import { ROUTE_PATHS } from "../../routes/paths";
 import { motion, useInView } from "framer-motion";
 
-import { LifecycleIcon, ArchitectureIcon, CreativeIcon } from "../icons";
+import { LifecycleIcon, ArchitectureIcon, CreativeIcon, MessagingIcon } from "../icons";
+import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 
 // ─── Service data ──────────────────────────────────────────────────────────────
 
 const services = [
   {
-    rotate: -15,
-    spreadX: -440,
+    rotate: -20,
+    spreadX: -600,
     icon: <LifecycleIcon sx={{ fontSize: "2.4rem" }} />,
-    id: ROUTE_PATHS.SERVICE_EMAIL_FLOWS,
-    title: "Lifecycle & Automation",
-    sub: "Multi-Channel Workflows",
-    desc: "Email Automation Management, Cross-Platform Journey Mapping, and Multi-Channel Workflows that maximize LTV and drive repeat revenue.",
+    id: ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT,
+    title: "Lifecycle Flow Review",
+    sub: "Journey Audit",
+    desc: "Complete review of behavioral journeys and automated sequences to identify conversion gaps.",
     accent: "#7fd0ff",
     label: "01",
+    clickable: true,
+  },
+  {
+    rotate: -10,
+    spreadX: -300,
+    icon: <CreativeIcon sx={{ fontSize: "2.4rem" }} />,
+    id: ROUTE_PATHS.SERVICE_CREATIVE_AUDIT,
+    title: "Template & Creative",
+    sub: "Visual Audit",
+    desc: "Evaluating design performance, mobile responsiveness, and brand consistency across all assets.",
+    accent: "#a78bfa",
+    label: "02",
+    clickable: true,
   },
   {
     rotate: 0,
     spreadX: 0,
     icon: <ArchitectureIcon sx={{ fontSize: "2.4rem" }} />,
-    id: ROUTE_PATHS.SERVICE_ESP_MIGRATION,
-    title: "Technical Architecture",
-    sub: "ESP Migration & CRM Sync",
-    desc: "ESP Migration & Integration, CRM Data Sync, Deliverability Audits, and Liquid & Ampscript Templating for enterprise-grade systems.",
-    accent: "#a78bfa",
-    label: "02",
-  },
-  {
-    rotate: 15,
-    spreadX: 440,
-    icon: <CreativeIcon sx={{ fontSize: "2.4rem" }} />,
-    id: ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES,
-    title: "Creative Production",
-    sub: "Modular Templates & Design",
-    desc: "Modular Template Production, UX/UI Design, and White Label Solutions engineered for scalable, on-brand growth at every touchpoint.",
+    id: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT,
+    title: "Deliverability Review",
+    sub: "Inbox Health",
+    desc: "Technical audit of SPF, DKIM, DMARC, and sender reputation for maximum inbox placement.",
     accent: "#34d399",
     label: "03",
+    clickable: true,
+  },
+  {
+    rotate: 10,
+    spreadX: 300,
+    icon: <SyncProblemIcon sx={{ fontSize: "2.4rem" }} />,
+    id: ROUTE_PATHS.SERVICE_REVENUE_AUDIT,
+    title: "Revenue Opportunity",
+    sub: "Growth Discovery",
+    desc: "Data-driven analysis to uncover missed repeat purchase opportunities and hidden revenue.",
+    accent: "#fbbf24",
+    label: "04",
+    clickable: true,
+  },
+  {
+    rotate: 20,
+    spreadX: 600,
+    icon: <MessagingIcon sx={{ fontSize: "2.4rem" }} />,
+    id: ROUTE_PATHS.SERVICES,
+    title: "Omnichannel Review",
+    sub: "Multi-Platform",
+    desc: "Audit of SMS, WhatsApp, Push, RCS, Direct Mail, and Instagram DM automation systems.",
+    accent: "#f472b6",
+    label: "05",
+    clickable: false,
   },
 ];
 
@@ -51,8 +79,8 @@ const services = [
 function CardInner({ svc }: { svc: (typeof services)[0] }) {
   return (
     <Box
-      component={RouterLink}
-      to={svc.id}
+      component={svc.clickable ? RouterLink : "div"}
+      to={svc.clickable ? svc.id : undefined}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -69,9 +97,9 @@ function CardInner({ svc }: { svc: (typeof services)[0] }) {
           "0 32px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.07)",
         position: "relative",
         overflow: "hidden",
-        p: 4,
-        pb: "52px",
-        cursor: "pointer",
+        p: 3.5,
+        pb: "48px",
+        cursor: svc.clickable ? "pointer" : "default",
         transition: "border-color 0.4s, box-shadow 0.4s",
         "&:hover": {
           borderColor: alpha(svc.accent, 0.55),
@@ -115,17 +143,17 @@ function CardInner({ svc }: { svc: (typeof services)[0] }) {
       {/* Icon bubble */}
       <Box
         sx={{
-          width: 72,
-          height: 72,
-          borderRadius: "20px",
+          width: 60,
+          height: 60,
+          borderRadius: "18px",
           background: alpha(svc.accent, 0.12),
           border: `1.5px solid ${alpha(svc.accent, 0.3)}`,
           color: svc.accent,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          mb: 3.5,
-          filter: `drop-shadow(0 0 14px ${alpha(svc.accent, 0.5)})`,
+          mb: 3,
+          filter: `drop-shadow(0 0 12px ${alpha(svc.accent, 0.4)})`,
           position: "relative",
           zIndex: 1,
           flexShrink: 0,
@@ -201,7 +229,7 @@ function CardInner({ svc }: { svc: (typeof services)[0] }) {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 52,
+          height: 48,
           background: "rgba(255,255,255,0.03)",
           borderTop: `1px solid ${alpha(svc.accent, 0.12)}`,
           display: "flex",
@@ -209,17 +237,17 @@ function CardInner({ svc }: { svc: (typeof services)[0] }) {
           justifyContent: "center",
           gap: 1,
           color: svc.accent,
-          fontSize: "0.8rem",
+          fontSize: "0.78rem",
           fontWeight: 700,
           letterSpacing: "0.04em",
           transition: "background 0.3s",
           "&:hover": {
-            background: alpha(svc.accent, 0.08),
+            background: svc.clickable ? alpha(svc.accent, 0.08) : "transparent",
           },
         }}
       >
-        <span>Discover more</span>
-        <ArrowForwardIcon sx={{ fontSize: "0.9rem" }} />
+        <span>{svc.clickable ? "Discover more" : `Audit Focus ${svc.label}`}</span>
+        {svc.clickable && <ArrowForwardIcon sx={{ fontSize: "0.85rem" }} />}
       </Box>
     </Box>
   );
@@ -274,7 +302,7 @@ function DesktopFanDeck() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: 480,
+        height: 420,
         width: "100%",
       }}
     >
@@ -297,7 +325,7 @@ function DesktopFanDeck() {
           }}
           whileHover={isInView ? { scale: 1.04, zIndex: 10 } : {}}
         >
-          <Box sx={{ width: 350, height: 460 }}>
+          <Box sx={{ width: 310, height: 410 }}>
             <CardInner svc={svc} />
           </Box>
         </motion.div>
@@ -325,7 +353,7 @@ export default function Services() {
       ref={servicesRef}
       id="services"
       sx={{
-        py: { xs: 10, md: 18 },
+        py: { xs: 8, md: 12 },
         position: "relative",
         overflow: "hidden",
         background:
@@ -348,9 +376,9 @@ export default function Services() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 1.5,
             textAlign: "center",
-            mb: { xs: 6, md: 14 },
+            mb: { xs: 5, md: 8 },
           }}
         >
           <Fade in={servicesInView} timeout={500}>
@@ -359,9 +387,9 @@ export default function Services() {
                 variant="h2"
                 sx={{
                   fontWeight: 900,
-                  fontSize: { xs: "2rem", sm: "2.4rem", md: "3.8rem" },
+                  fontSize: { xs: "1.8rem", sm: "2.2rem", md: "3.2rem" },
                   letterSpacing: "-0.03em",
-                  lineHeight: 1.08,
+                  lineHeight: 1.1,
                 }}
               >
                 The science of{" "}
@@ -369,19 +397,17 @@ export default function Services() {
               </Typography>
               <Typography
                 sx={{
-                  color: alpha("#fff", 0.48),
-                  mt: 2.5,
-                  maxWidth: 700,
+                  color: alpha("#fff", 0.4),
+                  mt: 2,
+                  maxWidth: 640,
                   mx: "auto",
-                  fontSize: { xs: "0.95rem", md: "1.1rem" },
-                  lineHeight: 1.9,
+                  fontSize: { xs: "0.9rem", md: "1rem" },
+                  lineHeight: 1.7,
                   px: { xs: 1, md: 0 },
                 }}
               >
-                We don't just provide tools — we engineer the strategic
-                ecosystem that powers your brand's growth. Our approach
-                deep-dives into your customer data to build long-term revenue
-                engines.
+                We engineer the strategic ecosystem that powers your brand's growth.
+                Our audits deep-dive into your data to build high-performance revenue engines.
               </Typography>
             </Box>
           </Fade>
@@ -392,15 +418,15 @@ export default function Services() {
           <Typography
             sx={{
               textAlign: "center",
-              fontSize: "0.7rem",
-              letterSpacing: "0.16em",
+              fontSize: "0.65rem",
+              letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: alpha("#fff", 0.22),
-              mb: 4,
+              color: alpha("#fff", 0.2),
+              mb: 3,
               display: { xs: "none", md: "block" },
             }}
           >
-            ↓ scroll to reveal all services
+            ↓ scroll to reveal services
           </Typography>
         </Fade>
 

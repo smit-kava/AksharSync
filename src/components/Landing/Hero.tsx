@@ -6,7 +6,7 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { keyframes } from "@mui/system";
-import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon } from "../icons";
+import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon, PushNotificationIcon, RcsIcon } from "../icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 const pulseGlow = keyframes`
@@ -48,12 +48,12 @@ const channels = [
 ];
 
 const liveEvents = [
-  { icon: <EmailIcon sx={{ fontSize: 16 }} />, msg: "Flow triggered → Welcome Series", time: "just now", color: "#7fd0ff" },
-  { icon: <ChatIcon sx={{ fontSize: 16 }} />, msg: "SMS sent → Cart Recovery #4821", time: "2s ago", color: "#a78bfa" },
-  { icon: <WhatsAppIcon sx={{ fontSize: 16 }} />, msg: "WhatsApp delivered → Order #9923", time: "5s ago", color: "#34d399" },
-  { icon: <TargetIcon sx={{ fontSize: 16 }} />, msg: "Segment synced → 12,400 contacts", time: "9s ago", color: "#fbbf24" },
-  { icon: <EmailIcon sx={{ fontSize: 16 }} />, msg: "Campaign launched → Black Friday", time: "14s ago", color: "#7fd0ff" },
-  { icon: <WhatsAppIcon sx={{ fontSize: 16 }} />, msg: "WhatsApp reply → Promo redeemed", time: "18s ago", color: "#34d399" },
+  { icon: <EmailIcon sx={{ fontSize: 16 }} />, msg: "Audit finding: 22% Email revenue leak", time: "just now", color: "#7fd0ff" },
+  { icon: <ChatIcon sx={{ fontSize: 16 }} />, msg: "SMS Flow Optimization: +14% CTR", time: "2s ago", color: "#a78bfa" },
+  { icon: <WhatsAppIcon sx={{ fontSize: 16 }} />, msg: "WhatsApp CRM Sync: 12k contacts", time: "5s ago", color: "#34d399" },
+  { icon: <TargetIcon sx={{ fontSize: 16 }} />, msg: "Klaviyo Audit: 4 missing flows", time: "9s ago", color: "#fbbf24" },
+  { icon: <PushNotificationIcon sx={{ fontSize: 16 }} />, msg: "Push Strategy: +8% retention", time: "14s ago", color: "#7fd0ff" },
+  { icon: <RcsIcon sx={{ fontSize: 16 }} />, msg: "RCS Pilot: 3.4x higher ROI", time: "18s ago", color: "#34d399" },
 ];
 
 const statCards = [
@@ -212,7 +212,7 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
                   {s.value}
                 </Typography>
                 <Typography sx={{ fontSize: "0.65rem", color: s.color, fontWeight: 700, mt: 0.3 }}>
-                  {s.delta} this month
+                  Identified growth
                 </Typography>
               </Box>
             ))}
@@ -323,13 +323,15 @@ export default function Hero() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: { xs: "auto", md: "90vh" },
+        maxHeight: { md: "900px" },
         position: "relative",
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
         background: "linear-gradient(145deg, #060e1a 0%, #0b1e35 40%, #1a0a3a 100%)",
-        pt: { xs: 12, md: 0 },
+        pt: { xs: 12, md: 8 },
+        pb: { xs: 8, md: 4 },
       }}
     >
       {/* BG Grid */}
@@ -350,75 +352,95 @@ export default function Hero() {
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: { md: 6, lg: 8 },
+            gap: { md: 10, lg: 16 },
             flexDirection: { xs: "column", md: "row" },
           }}
         >
           {/* ── LEFT: Text content ── */}
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 3.5, maxWidth: { md: 560 } }}>
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2.5, maxWidth: { md: 540 } }}>
             <Fade in={heroVisible} timeout={800}>
               <Box sx={{
                 display: "inline-flex", alignItems: "center", gap: 0.8,
-                px: 1.6, py: 0.7, borderRadius: "20px",
+                px: 1.4, py: 0.6, borderRadius: "20px",
                 border: "0.5px solid rgba(127,208,255,0.2)",
                 background: "rgba(127,208,255,0.06)",
                 width: "fit-content",
               }}>
-                <AutoAwesomeIcon sx={{ fontSize: "0.85rem", color: "#7fd0ff" }} />
-                <Typography sx={{ fontSize: "0.72rem", fontWeight: 700, color: "#7fd0ff", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                  Scaling D2C Growth
+                <AutoAwesomeIcon sx={{ fontSize: "0.8rem", color: "#7fd0ff" }} />
+                <Typography sx={{ fontSize: "0.68rem", fontWeight: 700, color: "#7fd0ff", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                  Free Retention Growth Audit for Agencies & Brands
                 </Typography>
               </Box>
             </Fade>
 
             <Fade in={heroVisible} timeout={1000}>
-              <Typography variant="h1" sx={{ fontSize: { xs: "2.8rem", sm: "3.8rem", md: "4.6rem" }, fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.04em", color: "#fff" }}>
-                Scaling D2C Brands{" "}
-                <br />
+              <Typography variant="h1" sx={{ fontSize: { xs: "2.2rem", sm: "2.8rem", md: "3.4rem" }, fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.03em", color: "#fff" }}>
+                Discover hidden revenue opportunities across{" "}
                 <Box component="span" sx={{ background: "linear-gradient(90deg, #7fd0ff, #a78bfa, #34d399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  Through Data-Driven
+                  Lifecycle Channels.
                 </Box>
-                <br />
-                Communication.
               </Typography>
             </Fade>
 
             <Fade in={heroVisible} timeout={1200}>
-              <Typography sx={{ fontWeight: 400, color: alpha("#fff", 0.6), lineHeight: 1.7, fontSize: { xs: "1rem", md: "1.1rem" } }}>
-                We build automated revenue engines across{" "}
-                <Box component="span" sx={{ color: "#fff", fontWeight: 700 }}>Email, SMS, WhatsApp,</Box>{" "}
-                using{" "}
-                <Box component="span" sx={{ color: "#fff", fontWeight: 600 }}>12 years of technical architecture experience</Box>.
-                Expert support for leading ESP, CRM, and CMS platforms.
+              <Typography sx={{ fontWeight: 400, color: alpha("#fff", 0.5), lineHeight: 1.6, fontSize: { xs: "0.9rem", md: "0.95rem" } }}>
+                AksharSync identifies retention gaps and unlocks repeat revenue through strategic audits. We review what’s leaking revenue and what should be fixed first.
               </Typography>
             </Fade>
 
             <Fade in={heroVisible} timeout={1400}>
-              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5 }}>
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5, pt: 2 }}>
                 <Button
                   variant="contained"
                   endIcon={<ArrowForwardIcon />}
-                  sx={{ bgcolor: "#fff", color: "#060e1a", px: 3.5, py: 1.6, borderRadius: "12px", fontWeight: 800, textTransform: "none", fontSize: "0.95rem", "&:hover": { bgcolor: "#e8f4ff", transform: "translateY(-2px)" }, transition: "all 0.2s" }}
+                  sx={{ bgcolor: "#fff", color: "#060e1a", px: 3, py: 1.5, borderRadius: "10px", fontWeight: 800, textTransform: "none", fontSize: "0.95rem", "&:hover": { bgcolor: "#e8f4ff", transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
-                  Get Started Free
+                  Book Your Free Retention Audit
                 </Button>
                 <Button
                   variant="outlined"
-                  sx={{ color: "#fff", borderColor: alpha("#fff", 0.2), px: 3.5, py: 1.6, borderRadius: "12px", fontWeight: 600, textTransform: "none", fontSize: "0.95rem", "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.05), transform: "translateY(-2px)" }, transition: "all 0.2s" }}
+                  sx={{ color: "#fff", borderColor: alpha("#fff", 0.2), px: 3, py: 1.5, borderRadius: "10px", fontWeight: 600, textTransform: "none", fontSize: "0.95rem", "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.05), transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
-                  Learn More
+                  View Case Studies
                 </Button>
               </Box>
             </Fade>
 
-            <Fade in={heroVisible} timeout={1600}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, pt: 1 }}>
-                <AvatarGroup max={6} sx={{ "& .MuiAvatar-root": { width: 34, height: 34, border: "2px solid #060e1a" } }}>
+            <Fade in={heroVisible} timeout={1500}>
+              <Box sx={{ mt: 3 }}>
+                <Typography sx={{ fontSize: "0.62rem", fontWeight: 800, color: alpha("#fff", 0.35), letterSpacing: "0.12em", textTransform: "uppercase", mb: 1.5 }}>
+                  Designed For:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
+                  {[
+                    "Shopify Brands", "DTC Ecommerce", "Agencies", "Klaviyo Users", "Growth Teams"
+                  ].map((tag) => (
+                    <Box
+                      key={tag}
+                      sx={{
+                        px: 1.2, py: 0.5, borderRadius: "6px",
+                        background: "rgba(255,255,255,0.02)",
+                        border: "0.5px solid rgba(255,255,255,0.06)",
+                        fontSize: "0.68rem", color: alpha("#fff", 0.6), fontWeight: 600,
+                        transition: "all 0.2s",
+                        "&:hover": { background: "rgba(255,255,255,0.05)", borderColor: alpha("#7fd0ff", 0.3), color: "#7fd0ff" }
+                      }}
+                    >
+                      {tag}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Fade>
+
+            <Fade in={heroVisible} timeout={1700}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 5, pt: 3 }}>
+                <AvatarGroup max={6} sx={{ "& .MuiAvatar-root": { width: 30, height: 30, border: "2px solid #060e1a" } }}>
                   {avatars.map((a, i) => (
-                    <Avatar key={i} sx={{ bgcolor: a.bg, color: a.color, fontSize: "0.65rem", fontWeight: 800 }}>{a.initials}</Avatar>
+                    <Avatar key={i} sx={{ bgcolor: a.bg, color: a.color, fontSize: "0.6rem", fontWeight: 800 }}>{a.initials}</Avatar>
                   ))}
                 </AvatarGroup>
-                <Typography variant="body2" sx={{ color: alpha("#fff", 0.45), fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.06em" }}>
+                <Typography variant="body2" sx={{ color: alpha("#fff", 0.4), fontWeight: 600, fontSize: "0.65rem", letterSpacing: "0.06em" }}>
                   TRUSTED BY{" "}
                   <Box component="span" sx={{ background: "linear-gradient(90deg, #7fd0ff, #34d399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 800 }}>
                     350+ GLOBAL BRANDS
@@ -429,7 +451,7 @@ export default function Hero() {
           </Box>
 
           {/* ── RIGHT: Visual Panel ── */}
-          <Box sx={{ flexShrink: 0, display: { xs: "none", md: "block" }, width: { md: 380, lg: 440 } }}>
+          <Box sx={{ flexShrink: 0, display: { xs: "none", md: "block" }, width: { md: 360, lg: 420 } }}>
             <HeroVisualPanel visible={heroVisible} />
           </Box>
         </Box>

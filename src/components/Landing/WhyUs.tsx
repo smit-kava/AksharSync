@@ -3,19 +3,20 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import { useInView, HeroChip, GradientText } from "./Shared";
 
 const features = [
-  "Dedicated account manager for every project",
-  "Weekly performance reports & insights",
-  "Agile execution with 48-hour turnaround",
-  "Multi-channel synced campaigns",
-  "Real-time analytics dashboard",
-  "On-demand strategy consultations",
+  "Missed repeat purchase opportunities",
+  "Weak lifecycle flows",
+  "Poor deliverability issues",
+  "Low-performing email templates",
+  "Segmentation gaps",
+  "Underused SMS and WhatsApp opportunities",
+  "Revenue leaks across the customer journey",
 ];
 
 const FeatureRow = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: theme.spacing(2),
-  padding: theme.spacing(1.5, 2.5),
+  padding: theme.spacing(1.2, 2),
   borderRadius: "16px",
   transition: "all 0.2s ease",
   "&:hover": {
@@ -39,29 +40,30 @@ export default function WhyUs() {
       }}
     >
       <Container maxWidth="lg">
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 6, md: 10 }, alignItems: "center" }}>
           <Box sx={{ flex: { xs: "0 0 100%", md: "1 1 calc(50% - 40px)" } }}>
             <Fade in={whyInView} timeout={800}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                <HeroChip sx={{ alignSelf: "flex-start" }}>Why Choose Us</HeroChip>
-                <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: "2.2rem", md: "3rem" } }}>
-                  One Agency. <br />
-                  <GradientText>Total Synchronization.</GradientText>
+                <HeroChip sx={{ alignSelf: "flex-start" }}>Why This Audit Matters</HeroChip>
+                <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: "2.2rem", md: "2.8rem" }, lineHeight: 1.2 }}>
+                  Most Brands Don’t Have a Traffic Problem — <br />
+                  <GradientText>They Have a Retention Problem.</GradientText>
                 </Typography>
-                <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "1.1rem", lineHeight: 1.8 }}>
-                  We stop the fragmentation. Our team aligns every communication channel
-                  into a single, high-performing revenue engine.
+                <Typography sx={{ color: alpha("#fff", 0.6), fontSize: "1.05rem", lineHeight: 1.8 }}>
+                  If your welcome flows are weak, your abandoned cart recovery is underperforming, or your customer journey stops after the first purchase, you are losing revenue every day.
+                  <br /><br />
+                  Most businesses focus only on acquisition. The real profit comes from retention. Our audit helps you uncover:
                 </Typography>
               </Box>
             </Fade>
           </Box>
           <Box sx={{ flex: { xs: "0 0 100%", md: "1 1 calc(50% - 40px)" } }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
               {features.map((f, i) => (
-                <Fade in={whyInView} timeout={600 + i * 150} key={f}>
+                <Fade in={whyInView} timeout={600 + i * 100} key={f}>
                   <FeatureRow>
-                    <CheckCircleOutlinedIcon sx={{ color: "#34d399", fontSize: "1.4rem" }} />
-                    <Typography sx={{ fontWeight: 600, color: alpha("#fff", 0.8) }}>{f}</Typography>
+                    <CheckCircleOutlinedIcon sx={{ color: "#34d399", fontSize: "1.2rem" }} />
+                    <Typography sx={{ fontWeight: 600, color: alpha("#fff", 0.8), fontSize: "0.95rem" }}>{f}</Typography>
                   </FeatureRow>
                 </Fade>
               ))}
