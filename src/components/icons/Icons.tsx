@@ -123,6 +123,46 @@ export function OngoingIcons(_props: IconProps) {
 }
 
 
+export function IndiaFlagIcon(_props: IconProps) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 28 28"><clipPath id="india-cp"><circle cx="14" cy="14" r="13" /></clipPath><g clipPath="url(#india-cp)"><rect width="28" height="9.4" fill="#FF9933" /><rect y="9.3" width="28" height="9.4" fill="#FFFFFF" /><rect y="18.6" width="28" height="9.4" fill="#138808" /><circle cx="14" cy="14" r="3.5" fill="none" stroke="#000080" strokeWidth="1" /><circle cx="14" cy="14" r="1" fill="#000080" /></g></svg>
+  )
+}
+
+
+export function UKFlagIcon(_props: IconProps) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#012169" /><path d="M1 1L27 27M27 1L1 27" stroke="white" stroke-width="4.5" /><path d="M1 1L27 27M27 1L1 27" stroke="#C8102E" stroke-width="2.5" /><path d="M14 1V27M1 14H27" stroke="white" stroke-width="8" /><path d="M14 1V27M1 14H27" stroke="#C8102E" stroke-width="5" /></svg>
+  );
+}
+
+
+export function EUFlagIcon(_props: IconProps) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#003399" /><circle cx="14" cy="14" r="5.5" fill="#FFCC00" stroke="#FFCC00" stroke-width="0.5" /><circle cx="14" cy="14" r="3.5" fill="#003399" /></svg>
+  )
+}
+
+
+export function GlobeIcon(_props: IconProps) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 640 640"><path fill="currentColor" d="m119.7 263.7l30.9 30.9c6 6 14.1 9.4 22.6 9.4h21.5c8.5 0 16.6 3.4 22.6 9.4l29.3 29.3c6 6 9.4 14.1 9.4 22.6v37.5c0 8.5 3.4 16.6 9.4 22.6l13.3 13.3c6 6 9.4 14.1 9.4 22.6V480c0 17.7 14.3 32 32 32s32-14.3 32-32v-2.7c0-8.5 3.4-16.6 9.4-22.6l45.3-45.3c6-6 9.4-14.1 9.4-22.6v-34.7c0-17.7-14.3-32-32-32h-82.7c-8.5 0-16.6-3.4-22.6-9.4l-16-16c-4.2-4.2-6.6-10-6.6-16c0-12.5 10.1-22.6 22.6-22.6h34.7c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16l-19.7-19.7c-3.9-3.8-5.9-8.7-5.9-13.8s2-10 5.7-13.7L327 153c5.8-5.8 9.1-13.7 9.1-21.9c0-7.2-2.4-13.7-6.4-18.9c-3.2-.1-6.4-.2-9.6-.2c-95.4 0-175.7 64.2-200.3 151.7zM528 320c0-34.6-8.4-67.2-23.4-95.8c-6.4.9-12.7 3.9-17.9 9.1l-13.4 13.4c-6 6-9.4 14.1-9.4 22.6V304c0 17.7 14.3 32 32 32H520c2.5 0 5-.3 7.3-.8c.4-5 .5-10.1.5-15.2zm-464 0C64 178.6 178.6 64 320 64s256 114.6 256 256s-114.6 256-256 256S64 461.4 64 320" /></svg>
+  )
+}
+
+export function EuIcons(_props: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><defs><g id="SVGEMZ5HduN"><g id="SVGGTty7bMH"><path id="SVGwkBBpcNU" d="m0-1l-.3 1l.5.1z" /><use href="#SVGwkBBpcNU" transform="scale(-1 1)" /></g><g id="SVGlgVBhBlu"><use href="#SVGGTty7bMH" transform="rotate(72)" /><use href="#SVGGTty7bMH" transform="rotate(144)" /></g><use href="#SVGlgVBhBlu" transform="scale(-1 1)" /></g></defs><path fill="#039" d="M0 0h512v512H0z" /><g fill="#fc0" transform="translate(256 258.4)scale(25.28395)"><use width="100%" height="100%" y="-6" href="#SVGEMZ5HduN" /><use width="100%" height="100%" y="6" href="#SVGEMZ5HduN" /><g id="SVGCH9N7c3I"><use width="100%" height="100%" x="-6" href="#SVGEMZ5HduN" /><use width="100%" height="100%" href="#SVGEMZ5HduN" transform="rotate(-144 -2.3 -2.1)" /><use width="100%" height="100%" href="#SVGEMZ5HduN" transform="rotate(144 -2.1 -2.3)" /><use width="100%" height="100%" href="#SVGEMZ5HduN" transform="rotate(72 -4.7 -2)" /><use width="100%" height="100%" href="#SVGEMZ5HduN" transform="rotate(72 -5 .5)" /></g><use width="100%" height="100%" href="#SVGCH9N7c3I" transform="scale(-1 1)" /></g></svg>
+  )
+}
+
+
+export function NetherlandsFlagIcon(_props: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 28"><clipPath id="cp"><circle cx="14" cy="14" r="13" /></clipPath><g clipPath="url(#cp)"><rect width="28" height="10" fill="#AE1C28" /><rect y="9" width="28" height="10" fill="white" /><rect y="18" width="28" height="10" fill="#21468B" /></g></svg>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  SERVICE ICONS — Technical Architecture
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -246,11 +286,9 @@ export function InstagramDmIcon(props: IconProps) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /** Target / Klaviyo / Segment bullseye */
-export function TargetIcon(props: IconProps) {
+export function TargetIcon(_props: IconProps) {
   return (
-    <SvgIcon {...props}>
-      <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-12.5c-2.48 0-4.5 2.02-4.5 4.5s2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5-2.02-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-    </SvgIcon>
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><path fill="#138808" d="M0 27a4 4 0 0 0 4 4h28a4 4 0 0 0 4-4v-5H0z" /><path fill="#f93" d="M36 14V9a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v5z" /><path fill="#f7f7f7" d="M0 13.667h36v8.667H0z" /><circle cx="18" cy="18" r="4" fill="#000080" /><circle cx="18" cy="18" r="3.375" fill="#f7f7f7" /><path fill="#6666b3" d="m18.1 16.75l-.1.65l-.1-.65l.1-1.95zm-.928-1.841l.408 1.909l.265.602l-.072-.653zm-.772.32l.888 1.738l.412.513l-.238-.613zm-.663.508l1.308 1.45l.531.389l-.389-.531zm-.508.663l1.638 1.062l.613.238l-.513-.412zm-.32.772l1.858.601l.653.072l-.602-.265zM14.8 18l1.95.1l.65-.1l-.65-.1zm.109.828l1.909-.408l.602-.265l-.653.072zm.32.772l1.738-.888l.513-.412l-.613.238zm.508.663l1.45-1.308l.389-.531l-.531.389zm.663.508l1.062-1.638l.238-.613l-.412.513zm.772.32l.601-1.858l.072-.653l-.265.602zM18 21.2l.1-1.95l-.1-.65l-.1.65zm.828-.109l-.408-1.909l-.265-.602l.072.653zm.772-.32l-.888-1.738l-.412-.513l.238.613zm.663-.508l-1.308-1.45l-.531-.389l.389.531zm.508-.663l-1.638-1.062l-.613-.238l.513.412zm.32-.772l-1.858-.601l-.653-.072l.602.265zM21.2 18l-1.95-.1l-.65.1l.65.1zm-.109-.828l-1.909.408l-.602.265l.653-.072zm-.32-.772l-1.738.888l-.513.412l.613-.238zm-.508-.663l-1.45 1.308l-.389.531l.531-.389zm-.663-.508l-1.062 1.638l-.238.613l.412-.513zm-.772-.32l-.601 1.858l-.072.653l.265-.602z" /><g fill="#000080"><circle cx="17.56" cy="14.659" r=".2" /><circle cx="16.71" cy="14.887" r=".2" /><circle cx="15.948" cy="15.326" r=".2" /><circle cx="15.326" cy="15.948" r=".2" /><circle cx="14.887" cy="16.71" r=".2" /><circle cx="14.659" cy="17.56" r=".2" /><circle cx="14.659" cy="18.44" r=".2" /><circle cx="14.887" cy="19.29" r=".2" /><circle cx="15.326" cy="20.052" r=".2" /><circle cx="15.948" cy="20.674" r=".2" /><circle cx="16.71" cy="21.113" r=".2" /><circle cx="17.56" cy="21.341" r=".2" /><circle cx="18.44" cy="21.341" r=".2" /><circle cx="19.29" cy="21.113" r=".2" /><circle cx="20.052" cy="20.674" r=".2" /><circle cx="20.674" cy="20.052" r=".2" /><circle cx="21.113" cy="19.29" r=".2" /><circle cx="21.341" cy="18.44" r=".2" /><circle cx="21.341" cy="17.56" r=".2" /><circle cx="21.113" cy="16.71" r=".2" /><circle cx="20.674" cy="15.948" r=".2" /><circle cx="20.052" cy="15.326" r=".2" /><circle cx="19.29" cy="14.887" r=".2" /><circle cx="18.44" cy="14.659" r=".2" /><circle cx="18" cy="18" r=".9" /></g></svg>
   );
 }
 

@@ -3,8 +3,8 @@ import Hero from "../components/Landing/Hero";
 import TechStack from "../components/Landing/TechStack";
 
 import Services from "../components/Landing/Services";
-import WhyUs from "../components/Landing/WhyUs";
 import CTA from "../components/Landing/CTA";
+import WhyUs from "../components/Landing/WhyUs";
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: "#060e1a",
@@ -26,9 +26,6 @@ export default function LandingPage() {
       <Services />
 
       {/* ── PLATFORM ECOSYSTEM (Section II) ── */}
-
-
-      {/* ── WHY US SECTION ── */}
       <WhyUs />
 
       {/* ── CTA BANNER ── */}

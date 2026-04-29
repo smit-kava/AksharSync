@@ -142,7 +142,7 @@ const navItems: NavItem[] = [
   { label: "Home", to: ROUTE_PATHS.HOME },
   { label: "Services", to: ROUTE_PATHS.SERVICES, anchor: "services", hasServices: true },
   { label: "About Us", to: ROUTE_PATHS.ABOUT },
-  { label: "Why Audit?", to: ROUTE_PATHS.WHY, anchor: "why-us" },
+  { label: "Why AksharSync", to: ROUTE_PATHS.WHY },
 ];
 
 // ─── Styled Components ────────────────────────────────────────────────────────
@@ -378,6 +378,7 @@ export function Header() {
                 color: "common.white",
                 border: "1px solid rgba(255,255,255,0.2)",
                 px: 3,
+                marginLeft: '10px',
                 height: 40,
                 fontSize: "0.85rem",
                 fontWeight: 700,
