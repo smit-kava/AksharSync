@@ -1,9 +1,9 @@
 import { Box, styled } from "@mui/material";
 import Hero from "../components/Landing/Hero";
-import TechStack from "../components/Landing/TechStack";
 
-import Services from "../components/Landing/Services";
+import { ClientReviews } from "../components";
 import CTA from "../components/Landing/CTA";
+import Services from "../components/Landing/Services";
 import WhyUs from "../components/Landing/WhyUs";
 
 const PageWrapper = styled(Box)(({ theme }) => ({
@@ -19,14 +19,14 @@ export default function LandingPage() {
       {/* ── HERO SECTION ── */}
       <Hero />
 
-      {/* ── TECH STACK ── */}
-      <TechStack />
-
       {/* ── STRATEGIC SERVICES (Section I) ── */}
       <Services />
 
       {/* ── PLATFORM ECOSYSTEM (Section II) ── */}
       <WhyUs />
+
+      {/* ── CLIENT REVIEWS ── */}
+      <ClientReviews />
 
       {/* ── CTA BANNER ── */}
       <CTA />
