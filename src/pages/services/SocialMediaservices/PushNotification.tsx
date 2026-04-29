@@ -17,7 +17,7 @@ import {
     PushNotificationIcon,
     TargetIcon, TrendUpIcon
 } from "../../../components/icons";
-import { TimeIcons } from '../../../components/icons/Icons';
+import { ApproachIcons, TimeIcons } from '../../../components/icons/Icons';
 
 // ─── Keyframes ────────────────────────────────────────────────────────────────
 
@@ -245,7 +245,7 @@ export default function PushNotification() {
         {
             title: "Finding an Approach to Your Customers",
             desc: "Our agency has been working in email marketing across a wide variety of industries for years. This means that we know a great deal about personalization, timing, and finding the right audience to segment. If you choose emails, mobile, or web push notifications services, they will be highly relevant and help you connect with your audience while encouraging them to interact.",
-            icon: <TargetIcon sx={{ fontSize: 32 }} />,
+            icon: <ApproachIcons sx={{ fontSize: 32 }} />,
             color: "#34d399"
         },
         {

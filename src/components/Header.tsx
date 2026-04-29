@@ -369,6 +369,7 @@ export function Header() {
           {/* CTA & Toggle */}
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px', }}>
             <Button
+
               component={RouterLink}
               to={ROUTE_PATHS.ABOUT}
               sx={{
