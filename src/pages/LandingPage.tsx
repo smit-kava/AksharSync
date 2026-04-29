@@ -5,6 +5,7 @@ import { ClientReviews } from "../components";
 import CTA from "../components/Landing/CTA";
 import Services from "../components/Landing/Services";
 import WhyUs from "../components/Landing/WhyUs";
+import Culture from "../components/Landing/Culture";
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: "#060e1a",
@@ -24,6 +25,9 @@ export default function LandingPage() {
 
       {/* ── PLATFORM ECOSYSTEM (Section II) ── */}
       <WhyUs />
+
+      {/* ── CULTURE SECTION ── */}
+      <Culture />
 
       {/* ── CLIENT REVIEWS ── */}
       <ClientReviews />
