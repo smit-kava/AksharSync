@@ -378,7 +378,7 @@ export function Header() {
                 color: "common.white",
                 border: "1px solid rgba(255,255,255,0.2)",
                 px: 3,
-                marginLeft: '10px',
+                marginRight: '11px',
                 height: 40,
                 fontSize: "0.85rem",
                 fontWeight: 700,
