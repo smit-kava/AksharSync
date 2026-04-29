@@ -5,7 +5,6 @@ import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
 import {
     ArchitectureIcon,
-    BlueTickIcon,
     BoltIcon,
     OngoingIcons,
     TargetIcon,
@@ -15,10 +14,7 @@ import { EuIcons, GlobeIcon, IndiaFlagIcon, NetherlandsFlagIcon, UKFlagIcon } fr
 
 // ─── Animations ───────────────────────────────────────────────────────────────
 
-const fadeUp = keyframes`
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
+
 
 const scrollX = keyframes`
   0% { transform: translateX(0); }
@@ -47,7 +43,7 @@ const MarqueeTrack = styled(Box)({
     }
 });
 
-const PTag = styled(Box)(({ theme }) => ({
+const PTag = styled(Box)(({ }) => ({
     display: "inline-flex",
     alignItems: "center",
     gap: "7px",
@@ -255,11 +251,11 @@ const WhyPage = () => {
                     <Grid container spacing={3} sx={{ alignItems: "stretch" }}>
                         <Grid size={{ xs: 12, md: 7 }}>
                             <RevealOnScroll delay={0.1}>
-                                <Box sx={{ 
-                                    p: { xs: 3, md: 4.5 }, 
+                                <Box sx={{
+                                    p: { xs: 3, md: 4.5 },
                                     height: "100%",
-                                    borderRadius: "24px", 
-                                    bgcolor: "rgba(255,255,255,0.02)", 
+                                    borderRadius: "24px",
+                                    bgcolor: "rgba(255,255,255,0.02)",
                                     border: "1px solid rgba(255,255,255,0.05)",
                                     display: "flex",
                                     flexDirection: "column",
@@ -268,11 +264,11 @@ const WhyPage = () => {
                                     overflow: "hidden"
                                 }}>
                                     <Box sx={{ position: "absolute", top: -50, left: -50, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-                                    
+
                                     <Typography sx={{ color: alpha("#fff", 0.65), fontSize: "1.05rem", lineHeight: 1.8, mb: 4, position: "relative", zIndex: 1 }}>
                                         We don't just send emails. We build technical systems. Hands-on experience across every major platform ensures your retention strategy is never bottlenecked by execution capability.
                                     </Typography>
-                                    
+
                                     <Box sx={{ display: "flex", gap: 2, position: "relative", zIndex: 1, flexWrap: "wrap" }}>
                                         {[
                                             "Multi-region delivery",
@@ -298,7 +294,7 @@ const WhyPage = () => {
                                                 {/* Small check-circle icon */}
                                                 <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(125,211,252,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <path d="M3 8.5L6.5 12L13 5" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                                                        <path d="M3 8.5L6.5 12L13 5" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                                                     </svg>
                                                 </Box>
                                                 <Typography sx={{ fontSize: "0.72rem", fontWeight: 500, color: alpha("#fff", 0.7), lineHeight: 1.3 }}>{t}</Typography>
@@ -330,7 +326,7 @@ const WhyPage = () => {
                                             }
                                         }}>
                                             <Box sx={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: item.bg, filter: "blur(40px)" }} />
-                                            
+
                                             <Box sx={{
                                                 width: 44, height: 44, borderRadius: "12px",
                                                 display: "flex", alignItems: "center", justifyContent: "center",
@@ -419,10 +415,10 @@ const WhyPage = () => {
                                         transition: "transform 0.2s",
                                         "&:hover": { transform: "translateY(-2px)", bgcolor: r.isSpecial ? "rgba(99,102,241,0.08)" : "rgba(52,211,153,0.08)" }
                                     }}>
-                                        <Box sx={{ 
-                                            display: "flex", 
-                                            alignItems: "center", 
-                                            justifyContent: "center", 
+                                        <Box sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
                                             width: 22, height: 22,
                                             borderRadius: "50%",
                                             overflow: "hidden",
