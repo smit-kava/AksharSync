@@ -367,7 +367,7 @@ export function Header() {
           </Box>
 
           {/* CTA & Toggle */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px', }}>
             <Button
               component={RouterLink}
               to={ROUTE_PATHS.ABOUT}
@@ -378,7 +378,6 @@ export function Header() {
                 color: "common.white",
                 border: "1px solid rgba(255,255,255,0.2)",
                 px: 3,
-                marginRight: '11px',
                 height: 40,
                 fontSize: "0.85rem",
                 fontWeight: 700,
