@@ -20,7 +20,6 @@ const learnMoreLinks = [
 const legalLinks = [
   { label: "Privacy Policy", to: "/about" },
   { label: "Terms of Service", to: "/services" },
-  { label: "Cookie Policy", to: "/why" },
 ];
 
 const socialLinks = [

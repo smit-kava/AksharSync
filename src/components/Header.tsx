@@ -352,7 +352,7 @@ export function Header() {
                   ) : undefined
                 }
                 sx={{
-                  color: location.pathname === item.to ? "#7fd0ff" : alpha("#fff", 0.7),
+                  color: location.pathname === item.to ? "#7fd0ff" : alpha("#fff", 5),
                   fontSize: "0.9rem",
                   fontWeight: location.pathname === item.to ? 700 : 600,
                   textTransform: "none",

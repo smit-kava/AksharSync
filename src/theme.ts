@@ -38,7 +38,7 @@ export const marketingTheme = createTheme({
         },
         "*": {
           scrollbarWidth: "thin",
-          scrollbarColor: "#0D3B66 transparent",
+          scrollbarColor: "#031423 #e4cece00",
           "&::-webkit-scrollbar": {
             width: "8px",
             height: "8px",
