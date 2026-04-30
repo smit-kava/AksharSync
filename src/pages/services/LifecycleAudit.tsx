@@ -29,19 +29,19 @@ export default function LifecycleAudit() {
           transition={{ duration: 0.6 }}
         >
           <Stack spacing={8}>
-            
+
             {/* 1. Hero Section */}
             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" }, gap: { xs: 6, md: 8 }, alignItems: "center", pt: { xs: 2, md: 4 } }}>
               <Box>
-                <Box sx={{ 
-                  display: "inline-flex", alignItems: "center", gap: 1.5, 
-                  px: 2, py: 1, borderRadius: "12px", 
+                <Box sx={{
+                  display: "inline-flex", alignItems: "center", gap: 1.5,
+                  px: 2, py: 1, borderRadius: "12px",
                   bgcolor: alpha(THEME_COLOR, 0.1), border: "1px solid", borderColor: alpha(THEME_COLOR, 0.2),
                   mb: 4
                 }}>
                   <TimelineIcon sx={{ color: THEME_COLOR, fontSize: 24 }} />
                   <Typography sx={{ color: THEME_COLOR, fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                    Service Module 01
+                    Service Module
                   </Typography>
                 </Box>
                 <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "4rem" }, fontWeight: 900, lineHeight: 1.1, mb: 3 }}>
@@ -51,25 +51,25 @@ export default function LifecycleAudit() {
                   Transform one-time buyers into loyal brand advocates with data-driven lifecycle marketing and automated journeys tailored for E-commerce and D2C brands.
                 </Typography>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                  <Button 
-                    variant="contained" 
+                  <Button
+                    variant="contained"
                     size="large"
                     endIcon={<ArrowForwardIcon />}
-                    sx={{ 
-                      bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, px: 4, 
+                    sx={{
+                      bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, px: 4,
                       fontWeight: 800, fontSize: "1rem", borderRadius: "12px",
-                      "&:hover": { bgcolor: alpha(THEME_COLOR, 0.8) } 
+                      "&:hover": { bgcolor: alpha(THEME_COLOR, 0.8) }
                     }}
                   >
                     Book a Demo
                   </Button>
-                  <Button 
-                    variant="outlined" 
+                  <Button
+                    variant="outlined"
                     size="large"
-                    sx={{ 
-                      borderColor: alpha(THEME_COLOR, 0.5), color: THEME_COLOR, py: 1.5, px: 4, 
+                    sx={{
+                      borderColor: alpha(THEME_COLOR, 0.5), color: THEME_COLOR, py: 1.5, px: 4,
                       fontWeight: 700, fontSize: "1rem", borderRadius: "12px",
-                      "&:hover": { borderColor: THEME_COLOR, bgcolor: alpha(THEME_COLOR, 0.05) } 
+                      "&:hover": { borderColor: THEME_COLOR, bgcolor: alpha(THEME_COLOR, 0.05) }
                     }}
                   >
                     View Pricing
@@ -85,8 +85,8 @@ export default function LifecycleAudit() {
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                   style={{ position: "relative", zIndex: 1 }}
                 >
-                  <Box sx={{ 
-                    p: 4, borderRadius: "24px", bgcolor: alpha("#fff", 0.03), 
+                  <Box sx={{
+                    p: 4, borderRadius: "24px", bgcolor: alpha("#fff", 0.03),
                     border: "1px solid rgba(255,255,255,0.08)",
                     backdropFilter: "blur(10px)",
                     boxShadow: `0 20px 40px -10px ${alpha(THEME_COLOR, 0.15)}`
@@ -123,9 +123,9 @@ export default function LifecycleAudit() {
             </Box>
 
             {/* 2. Introduction Section */}
-            <Box sx={{ 
-              p: { xs: 4, md: 6 }, borderRadius: "24px", 
-              background: `linear-gradient(135deg, ${alpha(THEME_COLOR, 0.05)} 0%, rgba(255,255,255,0.01) 100%)`, 
+            <Box sx={{
+              p: { xs: 4, md: 6 }, borderRadius: "24px",
+              background: `linear-gradient(135deg, ${alpha(THEME_COLOR, 0.05)} 0%, rgba(255,255,255,0.01) 100%)`,
               border: "1px solid rgba(255,255,255,0.06)",
               position: "relative", overflow: "hidden"
             }}>
@@ -165,7 +165,7 @@ export default function LifecycleAudit() {
                   We build, test, and optimize the critical automated journeys that every scalable e-commerce brand needs.
                 </Typography>
               </Box>
-              
+
               <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(4, 1fr)" }, gap: 3 }}>
                 {[
                   { title: "Welcome Series", desc: "Convert new subscribers into first-time buyers with a compelling brand introduction.", icon: <AutoGraphIcon /> },
@@ -177,8 +177,8 @@ export default function LifecycleAudit() {
                   { title: "Reactivation & Sunset", desc: "Clean your list by engaging dormant subscribers or gracefully sunsetting them.", icon: <NightlightRoundIcon /> },
                   { title: "VIP & Loyalty", desc: "Reward your best customers with exclusive perks to maximize lifetime value.", icon: <WorkspacePremiumIcon /> }
                 ].map((flow, i) => (
-                  <Box key={i} sx={{ 
-                    p: 3, borderRadius: "20px", bgcolor: alpha("#fff", 0.02), 
+                  <Box key={i} sx={{
+                    p: 3, borderRadius: "20px", bgcolor: alpha("#fff", 0.02),
                     border: "1px solid rgba(255,255,255,0.05)",
                     transition: "transform 0.3s, background 0.3s",
                     "&:hover": { transform: "translateY(-5px)", bgcolor: alpha("#fff", 0.04), borderColor: alpha(THEME_COLOR, 0.3) }
@@ -220,9 +220,9 @@ export default function LifecycleAudit() {
                 </Stack>
               </Box>
               <Box sx={{ position: "relative" }}>
-                <Box sx={{ 
-                  p: 4, borderRadius: "24px", 
-                  background: `linear-gradient(135deg, ${alpha(THEME_COLOR, 0.1)} 0%, ${alpha("#060e1a", 1)} 100%)`, 
+                <Box sx={{
+                  p: 4, borderRadius: "24px",
+                  background: `linear-gradient(135deg, ${alpha(THEME_COLOR, 0.1)} 0%, ${alpha("#060e1a", 1)} 100%)`,
                   border: `1px solid ${alpha(THEME_COLOR, 0.2)}`,
                   boxShadow: `0 20px 40px -10px ${alpha(THEME_COLOR, 0.15)}`
                 }}>
@@ -233,7 +233,7 @@ export default function LifecycleAudit() {
                     +35%
                   </Typography>
                   <Typography sx={{ fontWeight: 700, fontSize: "1.2rem", mb: 4 }}>Average Lift in Email Revenue</Typography>
-                  
+
                   <Stack spacing={2}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", pb: 2 }}>
                       <Typography sx={{ color: alpha("#fff", 0.6) }}>Implementation Time</Typography>
@@ -257,13 +257,13 @@ export default function LifecycleAudit() {
               <Typography variant="h3" sx={{ fontWeight: 800, mb: 6 }}>How It Works</Typography>
               <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(4, 1fr)" }, gap: 4, position: "relative" }}>
                 {/* Connecting line for desktop */}
-                <Box sx={{ 
-                  display: { xs: "none", md: "block" }, 
-                  position: "absolute", top: "40px", left: "12%", right: "12%", 
-                  height: "2px", background: `linear-gradient(90deg, transparent, ${alpha(THEME_COLOR, 0.5)}, transparent)`, 
-                  zIndex: 0 
+                <Box sx={{
+                  display: { xs: "none", md: "block" },
+                  position: "absolute", top: "40px", left: "12%", right: "12%",
+                  height: "2px", background: `linear-gradient(90deg, transparent, ${alpha(THEME_COLOR, 0.5)}, transparent)`,
+                  zIndex: 0
                 }} />
-                
+
                 {[
                   { step: "01", title: "Audit", desc: "We analyze your existing flows and identify revenue leaks." },
                   { step: "02", title: "Strategy", desc: "We design a custom lifecycle roadmap tailored to your brand." },
@@ -271,10 +271,10 @@ export default function LifecycleAudit() {
                   { step: "04", title: "Optimization", desc: "Continuous A/B testing and refinement for maximum ROI." }
                 ].map((phase, i) => (
                   <Box key={i} sx={{ position: "relative", zIndex: 1 }}>
-                    <Box sx={{ 
-                      width: 80, height: 80, borderRadius: "50%", 
-                      bgcolor: "#060e1a", border: `2px solid ${THEME_COLOR}`, 
-                      display: "flex", alignItems: "center", justifyContent: "center", 
+                    <Box sx={{
+                      width: 80, height: 80, borderRadius: "50%",
+                      bgcolor: "#060e1a", border: `2px solid ${THEME_COLOR}`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
                       mx: "auto", mb: 3,
                       boxShadow: `0 0 20px ${alpha(THEME_COLOR, 0.2)}`
                     }}>
@@ -288,8 +288,8 @@ export default function LifecycleAudit() {
             </Box>
 
             {/* 6. Why Choose Us */}
-            <Box sx={{ 
-              p: { xs: 4, md: 6 }, borderRadius: "24px", 
+            <Box sx={{
+              p: { xs: 4, md: 6 }, borderRadius: "24px",
               bgcolor: alpha("#fff", 0.02), border: "1px solid rgba(255,255,255,0.05)",
               display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 6, alignItems: "center"
             }}>
@@ -328,9 +328,9 @@ export default function LifecycleAudit() {
                 <Box sx={{ p: 4, borderRadius: "20px", background: `linear-gradient(135deg, ${alpha(THEME_COLOR, 0.15)} 0%, ${alpha("#060e1a", 1)} 100%)`, border: `1px solid ${alpha(THEME_COLOR, 0.3)}`, textAlign: "center" }}>
                   <Typography variant="h5" sx={{ fontWeight: 800, mb: 2 }}>Ready to scale your retention?</Typography>
                   <Typography sx={{ color: alpha("#fff", 0.6), mb: 4 }}>Book a free discovery call to audit your current flows.</Typography>
-                  <Button 
-                    variant="contained" 
-                    fullWidth 
+                  <Button
+                    variant="contained"
+                    fullWidth
                     size="large"
                     endIcon={<ArrowForwardIcon />}
                     sx={{ bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, fontWeight: 800, "&:hover": { bgcolor: alpha(THEME_COLOR, 0.8) } }}
