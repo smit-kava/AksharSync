@@ -2,7 +2,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Fade, Typography, alpha } from "@mui/material";
 import { keyframes } from "@mui/system";
 import React, { useEffect, useState } from 'react';
-import { ClientReviews, ExpertCTA } from '../../../components';
+import { ClientReviews, ExpertCTA, FAQComponent } from '../../../components';
 import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import { UserIcons } from '../../../components/icons/Icons';
 
@@ -639,13 +639,14 @@ export default function InstagramDM() {
                                     key={index}
                                     expanded={expandedService === `service-${index}`}
                                     onChange={handleServiceChange(`service-${index}`)}
+                                    slotProps={{ transition: { timeout: 500 } }}
                                     sx={{
                                         bgcolor: "rgba(255,255,255,0.02)",
                                         color: "#fff",
                                         borderRadius: "12px !important",
                                         border: "1px solid rgba(255,255,255,0.08)",
                                         boxShadow: "none",
-                                        transition: "all 0.001s",
+                                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                                         width: "100%",
                                         "&:hover": { borderColor: "rgba(56, 189, 248, 0.3)" },
                                         "&.Mui-expanded": {
@@ -699,10 +700,36 @@ export default function InstagramDM() {
                 </Container>
             </Box>
 
+
+
             <Box sx={{ py: 8 }}>
                 <ClientReviews />
             </Box>
-
+            <FAQComponent
+                title={<>Frequently Asked <GradientText>Questions</GradientText></>}
+                items={[
+                    {
+                        question: "How does Instagram DM automation work?",
+                        answer: "Instagram DM automation works by setting up and configuring triggers. Triggers can be keywords used by a follower, comments on posts, or replies to stories that send automatic direct messages through certified Instagram integrations as a response."
+                    },
+                    {
+                        question: "Is Instagram DM automation allowed in the US?",
+                        answer: "Of course! The requirements for Instagram DM automation in the US are that the tools comply with Meta’s API rules, comply with the platform’s policies, and that you avoid sending spam or other unwanted bulk messages."
+                    },
+                    {
+                        question: "Is Instagram DM automation safe for business accounts?",
+                        answer: "Yes, Instagram DM automation is safe for business accounts under two conditions. First, if the software used is compatible, and second, if message limits align with Instagram’s usage guidelines."
+                    },
+                    {
+                        question: "Can Instagram DM automation help increase sales?",
+                        answer: "Yes, Instagram DM automation can boost sales. This is achieved by providing instant answers to questions about products, bringing customers closer to making a purchase, and providing links that direct customers to order or booking pages."
+                    },
+                    {
+                        question: "Can Instagram DM automation integrate with CRM and email tools?",
+                        answer: "Yes, it can. Many Instagram DM automation platforms integrate with CRM tools, email and SMS marketing software, and even analytics platforms, which will definitely come in handy. For platform integration and other Instagram DM automation services, feel free to contact us!"
+                    }
+                ]}
+            />
         </Box>
     );
 }
