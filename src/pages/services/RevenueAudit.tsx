@@ -55,7 +55,7 @@ const data = [
 export default function RevenueAudit() {
 
 
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handleScroll = () => {
@@ -88,14 +88,16 @@ export default function RevenueAudit() {
     return () => clearInterval(interval);
   }, []);
 
-  const scroll = (direction) => {
+  const scroll = (direction: 'left' | 'right') => {
     const container = scrollRef.current;
     const cardWidth = 280 + 24;
 
-    if (direction === "left") {
-      container.scrollBy({ left: -cardWidth, behavior: "smooth" });
-    } else {
-      container.scrollBy({ left: cardWidth, behavior: "smooth" });
+    if (container) {
+      if (direction === "left") {
+        container.scrollBy({ left: -cardWidth, behavior: "smooth" });
+      } else {
+        container.scrollBy({ left: cardWidth, behavior: "smooth" });
+      }
     }
   };
 
