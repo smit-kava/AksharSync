@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Container, Fade, Typography, alpha } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Fade, Typography, alpha } from "@mui/material";
 import { keyframes } from "@mui/system";
-import { ExpertCTA } from '../../../components';
+import React, { useEffect, useState } from 'react';
+import { ClientReviews, ExpertCTA } from '../../../components';
 import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import { UserIcons } from '../../../components/icons/Icons';
 
@@ -152,8 +153,13 @@ const PhoneMockup = () => {
 
 export default function InstagramDM() {
     const [ready, setReady] = useState(false);
+    const [expandedService, setExpandedService] = useState<string | false>('service-0');
 
     useEffect(() => { setReady(true); }, []);
+
+    const handleServiceChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+        setExpandedService(isExpanded ? panel : false);
+    };
 
     return (
         <Box sx={{ bgcolor: "#060e1a", color: "#fff" }}>
@@ -352,6 +358,351 @@ export default function InstagramDM() {
                     </Box>
                 </Container>
             </Box>
+
+            <Box>
+                <ClientReviews />
+            </Box>
+
+            {/* ══ BENEFITS SECTION ══ */}
+            <Box sx={{
+                py: { xs: 10, md: 16 },
+                bgcolor: "#09162a",
+                position: "relative",
+                overflow: "hidden",
+                borderTop: "1px solid rgba(255,255,255,0.04)",
+            }}>
+                {/* Background glow */}
+                <Box sx={{
+                    position: "absolute", top: "50%", left: "60%",
+                    transform: "translate(-50%, -50%)",
+                    width: "50vw", height: "50vw",
+                    background: "radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%)",
+                    filter: "blur(60px)", pointerEvents: "none",
+                }} />
+
+                <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+                    <Box sx={{ textAlign: "center", mb: { xs: 7, md: 10 } }}>
+                        <Box sx={{ width: 40, height: 4, bgcolor: "#38bdf8", borderRadius: "100px", mx: "auto", mb: 3 }} />
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2rem", md: "3.2rem" }, color: "#fff" }}>
+                            Benefits Provided by this <GradientText>Instagram DM</GradientText><br />Automation Agency
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: { xs: 8, md: 10 }, alignItems: "center" }}>
+
+                        {/* LEFT TEXT */}
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            {[
+                                {
+                                    title: "Always-On Customer Communication",
+                                    text: "Primarily, DM automation for your Instagram helps you quickly and systematically engage with your audience without needing to be online 24/7. Instant responses to messages, comments, and customer reactions help keep your customers engaged and prevent you from losing them due to delays."
+                                },
+                                {
+                                    title: "Automated User Journeys at Scale",
+                                    text: "Thanks to automated scripts, you can guide users to the information they need, collect leads, segment your audience, and maintain personalized communication even with a large flow of inquiries."
+                                },
+                                {
+                                    title: "Better Experience, Higher Efficiency",
+                                    text: "The overall benefits of social media automation include an improved customer experience, increased conversion rates, and reduced workload for your team."
+                                }
+                            ].map((item, i) => (
+                                <Box key={i} sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
+                                    <Box sx={{
+                                        width: 22, height: 22, borderRadius: "50%", flexShrink: 0, mt: "4px",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        color: "#38bdf8",
+                                    }}>
+                                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                            <path d="M4 11.5L8.5 16L18 7" stroke="#38bdf8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </Box>
+                                    <Box>
+                                        <Typography sx={{ color: "#fff", fontSize: "1.15rem", fontWeight: 700, mb: 1 }}>
+                                            {item.title}
+                                        </Typography>
+                                        <Typography sx={{ color: alpha("#fff", 0.72), fontSize: "0.95rem", lineHeight: 1.7 }}>
+                                            {item.text}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            ))}
+                        </Box>
+
+                        {/* RIGHT GRAPHIC */}
+                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                            {/* Graphic showing SMS icons and smiles on a phone */}
+                            <Box component="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" sx={{ width: "100%", maxWidth: 400, filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.5))" }}>
+                                {/* Floating Background Elements */}
+                                <circle cx="200" cy="200" r="140" fill="rgba(56,189,248,0.05)" />
+                                <circle cx="200" cy="200" r="100" fill="rgba(56,189,248,0.08)" />
+
+                                {/* Phone Outline */}
+                                <rect x="110" y="40" width="180" height="340" rx="28" fill="#0a1220" stroke="#38bdf8" strokeWidth="2" strokeOpacity="0.4" />
+                                <rect x="160" y="48" width="80" height="6" rx="3" fill="rgba(255,255,255,0.08)" />
+
+                                {/* Chat Bubbles inside Phone */}
+                                <rect x="125" y="80" width="110" height="36" rx="12" fill="rgba(255,255,255,0.08)" />
+                                <rect x="135" y="90" width="80" height="6" rx="3" fill="rgba(255,255,255,0.4)" />
+                                <rect x="135" y="100" width="40" height="4" rx="2" fill="rgba(255,255,255,0.2)" />
+
+                                <rect x="165" y="130" width="110" height="36" rx="12" fill="rgba(56,189,248,0.15)" />
+                                <rect x="185" y="140" width="80" height="6" rx="3" fill="#38bdf8" opacity="0.9" />
+                                <rect x="235" y="150" width="30" height="4" rx="2" fill="#38bdf8" opacity="0.6" />
+
+                                <rect x="125" y="180" width="130" height="46" rx="12" fill="rgba(255,255,255,0.08)" />
+                                <rect x="135" y="190" width="100" height="6" rx="3" fill="rgba(255,255,255,0.4)" />
+                                <rect x="135" y="200" width="80" height="4" rx="2" fill="rgba(255,255,255,0.2)" />
+                                <rect x="135" y="208" width="60" height="4" rx="2" fill="rgba(255,255,255,0.2)" />
+
+                                {/* Smile 1 */}
+                                <g transform="translate(60, 100)">
+                                    <circle cx="16" cy="16" r="16" fill="#fbbf24" />
+                                    <circle cx="10" cy="12" r="2" fill="#000" />
+                                    <circle cx="22" cy="12" r="2" fill="#000" />
+                                    <path d="M 9 18 Q 16 24 23 18" stroke="#000" strokeWidth="2" fill="none" strokeLinecap="round" />
+                                </g>
+
+                                {/* SMS Icon */}
+                                <g transform="translate(300, 150)">
+                                    <rect x="0" y="0" width="36" height="28" rx="8" fill="#38bdf8" />
+                                    <path d="M 6 28 L 12 28 L 6 34 Z" fill="#38bdf8" />
+                                    <circle cx="10" cy="14" r="2" fill="#fff" />
+                                    <circle cx="18" cy="14" r="2" fill="#fff" />
+                                    <circle cx="26" cy="14" r="2" fill="#fff" />
+                                </g>
+
+                                {/* Heart */}
+                                <g transform="translate(70, 240)">
+                                    <path d="M 16 30 C 16 30 4 20 4 10 C 4 4 10 2 16 8 C 22 2 28 4 28 10 C 28 20 16 30 16 30 Z" fill="#f43f5e" />
+                                </g>
+
+                                {/* Another Smile */}
+                                <g transform="translate(290, 260)">
+                                    <circle cx="14" cy="14" r="14" fill="#fbbf24" />
+                                    <path d="M 8 10 Q 10 8 12 10" stroke="#000" strokeWidth="1.5" fill="none" />
+                                    <path d="M 16 10 Q 18 8 20 10" stroke="#000" strokeWidth="1.5" fill="none" />
+                                    <path d="M 9 16 Q 14 22 19 16" stroke="#000" strokeWidth="1.5" fill="none" />
+                                </g>
+
+                            </Box>
+                        </Box>
+                    </Box>
+                </Container>
+            </Box>
+
+            {/* ══ OTHER KEY BENEFITS SECTION ══ */}
+            <Box sx={{ py: { xs: 10, md: 14 }, bgcolor: "#060e1a", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                <Container maxWidth="lg">
+                    <Typography variant="h3" sx={{ textAlign: "center", fontWeight: 800, fontSize: { xs: "1.8rem", md: "2.4rem" }, color: "#fff", mb: 8 }}>
+                        Other key benefits include:
+                    </Typography>
+
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                        {/* Row 1 (3 items) */}
+                        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 4 }}>
+                            {/* Item 1 */}
+                            <Box sx={{ textAlign: "center", px: 2 }}>
+                                <Box sx={{ color: "#38bdf8", mb: 2.5, display: "flex", justifyContent: "center" }}>
+                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 14v-4a8 8 0 1 1 16 0v4" />
+                                        <rect x="2" y="14" width="4" height="4" />
+                                        <rect x="18" y="14" width="4" height="4" />
+                                        <circle cx="12" cy="20" r="2" />
+                                        <circle cx="8" cy="20" r="2" />
+                                        <circle cx="16" cy="20" r="2" />
+                                    </svg>
+                                </Box>
+                                <Typography sx={{ color: "#fff", fontSize: "1.05rem", lineHeight: 1.6 }}>
+                                    <strong>Lead generation</strong> directly on<br />Instagram
+                                </Typography>
+                            </Box>
+
+                            {/* Item 2 */}
+                            <Box sx={{ textAlign: "center", px: 2 }}>
+                                <Box sx={{ color: "#38bdf8", mb: 2.5, display: "flex", justifyContent: "center" }}>
+                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="9" strokeDasharray="4 3" />
+                                        <circle cx="12" cy="9" r="3" />
+                                        <path d="M7 19c0-3 3-5 5-5s5 2 5 5" />
+                                    </svg>
+                                </Box>
+                                <Typography sx={{ color: "#fff", fontSize: "1.05rem", lineHeight: 1.6 }}>
+                                    Development of <strong>personalized<br />communication scenarios</strong> based on<br />triggers
+                                </Typography>
+                            </Box>
+
+                            {/* Item 3 */}
+                            <Box sx={{ textAlign: "center", px: 2 }}>
+                                <Box sx={{ color: "#38bdf8", mb: 2.5, display: "flex", justifyContent: "center" }}>
+                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                        <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                                    </svg>
+                                </Box>
+                                <Typography sx={{ color: "#fff", fontSize: "1.05rem", lineHeight: 1.6 }}>
+                                    Additional opportunities to <strong>segment<br />your audience</strong> by interests and actions
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        {/* Row 2 (2 items) */}
+                        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: 4, maxWidth: "800px", mx: "auto" }}>
+                            {/* Item 4 */}
+                            <Box sx={{ textAlign: "center", px: 2 }}>
+                                <Box sx={{ color: "#38bdf8", mb: 2.5, display: "flex", justifyContent: "center" }}>
+                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="17 6 22 10 17 14" />
+                                        <line x1="2" y1="10" x2="22" y2="10" />
+                                        <polyline points="7 18 2 14 7 10" />
+                                        <line x1="22" y1="14" x2="2" y2="14" />
+                                    </svg>
+                                </Box>
+                                <Typography sx={{ color: "#fff", fontSize: "1.05rem", lineHeight: 1.6 }}>
+                                    Faster <strong>processing</strong> of requests from<br />potential customers
+                                </Typography>
+                            </Box>
+
+                            {/* Item 5 */}
+                            <Box sx={{ textAlign: "center", px: 2 }}>
+                                <Box sx={{ color: "#38bdf8", mb: 2.5, display: "flex", justifyContent: "center" }}>
+                                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="3 3 3 21 21 21" />
+                                        <polyline points="3 17 9 11 13 15 21 7" />
+                                        <polyline points="16 7 21 7 21 12" />
+                                    </svg>
+                                </Box>
+                                <Typography sx={{ color: "#fff", fontSize: "1.05rem", lineHeight: 1.6 }}>
+                                    <strong>Increased conversion</strong> from comments<br />and stories into dialogues.
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Container>
+            </Box>
+            {/* ══ SERVICES WE PROVIDE ══ */}
+            <Box sx={{ py: { xs: 12, md: 16 }, bgcolor: "#0a1220", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                <Container maxWidth="lg">
+                    {/* Header */}
+                    <Box sx={{ textAlign: "center", mb: 10, maxWidth: 850, mx: "auto" }}>
+                        <Box sx={{ width: 45, height: 3, bgcolor: "#38bdf8", borderRadius: 10, mx: "auto", mb: 4 }} />
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.2rem" }, mb: 3 }}>
+                            Instagram DM <GradientText>Automation Services</GradientText> We Provide
+                        </Typography>
+                        <Typography sx={{ color: alpha("#fff", 0.5), fontSize: "1.05rem", lineHeight: 1.8 }}>
+                            To be competitive in the omnichannel marketing services market, our work must stand out and offer customers something unique. Fortunately, years of expertise of the AksharSync team ensured special solutions. Our services go beyond standard social media automation, guaranteeing you ROI and customer engagement thanks to:
+                        </Typography>
+                    </Box>
+
+                    {/* Services Accordion Grid (Masonry flex layout to prevent cross-column spacing) */}
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: { xs: "column", md: "row" },
+                        gap: { xs: 1, md: 1 },
+                        maxWidth: 1100,
+                        mx: "auto",
+                        alignItems: "flex-start"
+                    }}>
+                        {(() => {
+                            const services = [
+                                {
+                                    title: "DM Automation",
+                                    desc: "Engaging recipients with automated direct messages, replies, and campaigns."
+                                },
+                                {
+                                    title: "Omnichannel Activity",
+                                    desc: "Engaging your followers to be active not only on social media but also on your other channels."
+                                },
+                                {
+                                    title: "List Expansion",
+                                    desc: "Development of incentives for your Instagram followers that will lead to the expansion of your email and SMS lists."
+                                },
+                                {
+                                    title: "Increased Engagement",
+                                    desc: "Ensuring engagement in your social media posts through dynamic and rapid conversational experiences."
+                                },
+                                {
+                                    title: "Triggered Message Flows",
+                                    desc: "Customization of automated direct message flows triggered by comments, keywords, replies to stories, or clicks on links."
+                                },
+                                {
+                                    title: "Enhancing Loyal Customers",
+                                    desc: "Analysis of your potential customers in direct messages and redirecting them to email or SMS."
+                                },
+                                {
+                                    title: "Synchronization with CRM",
+                                    desc: "Synchronization of interactions in direct messages with your CRM for targeting and attribution."
+                                }
+                            ];
+
+                            const renderAccordion = (index: number) => (
+                                <Accordion
+                                    key={index}
+                                    expanded={expandedService === `service-${index}`}
+                                    onChange={handleServiceChange(`service-${index}`)}
+                                    sx={{
+                                        bgcolor: "rgba(255,255,255,0.02)",
+                                        color: "#fff",
+                                        borderRadius: "12px !important",
+                                        border: "1px solid rgba(255,255,255,0.08)",
+                                        boxShadow: "none",
+                                        transition: "all 0.001s",
+                                        width: "100%",
+                                        "&:hover": { borderColor: "rgba(56, 189, 248, 0.3)" },
+                                        "&.Mui-expanded": {
+                                            bgcolor: "rgba(255,255,255,0.04)",
+                                            borderColor: "rgba(56, 189, 248, 0.5)",
+                                            m: "0 !important"
+                                        },
+                                        "&:before": { display: "none" }
+                                    }}
+                                >
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: alpha("#fff", 0.4) }} />} sx={{ minHeight: "72px !important", "& .MuiAccordionSummary-content": { my: 0 } }}>
+                                        <Typography sx={{ fontWeight: 800, fontSize: "1.05rem" }}>{services[index].title}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails sx={{ pt: 0, pb: 3, px: 2.5 }}>
+                                        <Typography sx={{ color: alpha("#fff", 0.65), lineHeight: 1.6, fontSize: "0.95rem" }}>
+                                            {services[index].desc}
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                            );
+
+                            return (
+                                <>
+                                    {/* Column 1 */}
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 3 }, flex: 1, width: "100%" }}>
+                                        {renderAccordion(0)}
+                                        {renderAccordion(3)}
+                                    </Box>
+
+                                    {/* Column 2 */}
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 3 }, flex: 1, width: "100%" }}>
+                                        {renderAccordion(1)}
+                                        {renderAccordion(4)}
+                                        {renderAccordion(6)}
+                                    </Box>
+
+                                    {/* Column 3 */}
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 }, flex: 1, width: "100%" }}>
+                                        {renderAccordion(2)}
+                                        {renderAccordion(5)}
+                                    </Box>
+                                </>
+                            );
+                        })()}
+                    </Box>
+
+                    {/* Bottom CTA */}
+                    <Box sx={{ mt: 10, textAlign: "center" }}>
+                        <ExpertCTA text="Talk to Our Expert" />
+                    </Box>
+                </Container>
+            </Box>
+
+            <Box sx={{ py: 8 }}>
+                <ClientReviews />
+            </Box>
+
         </Box>
     );
 }
