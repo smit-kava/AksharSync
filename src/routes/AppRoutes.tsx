@@ -14,6 +14,7 @@ import DeliverabilityAudit from "../pages/services/DeliverabilityAudit";
 import RevenueAudit from "../pages/services/RevenueAudit";
 import PushNotification from "../pages/services/SocialMediaservices/PushNotification";
 import InstagramDM from "../pages/services/SocialMediaservices/InstagramDM";
+import ContactUs from "../pages/ContactUs";
 
 export function AppRoutes() {
   return (
@@ -59,6 +60,7 @@ export function AppRoutes() {
 
         <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
         <Route path={ROUTE_PATHS.WHY} element={<WhyPage />} />
+        <Route path={ROUTE_PATHS.CONTACT} element={<ContactUs />} />
         <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
       </Route>
     </Routes>

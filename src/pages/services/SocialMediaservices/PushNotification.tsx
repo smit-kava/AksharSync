@@ -1,10 +1,8 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Accordion, AccordionDetails, AccordionSummary, alpha, Box, Container, Fade, Typography } from "@mui/material";
 import { keyframes } from "@mui/system";
 import React, { useEffect, useState } from 'react';
-import { ClientReviews, ExpertCTA } from '../../../components';
+import { ClientReviews, ExpertCTA, FAQComponent } from '../../../components';
 import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import RevealOnScroll from "../../../components/RevealOnScroll";
 import {
@@ -112,8 +110,8 @@ const PhoneMockup: React.FC = () => {
     const rows = [
         { icon: <BoltIcon sx={{ fontSize: 14 }} />, text: "Flash Sale Live Now", color: "#fbbf24" },
         { icon: <TimeIcons sx={{ fontSize: 14 }} />, text: "Only 2 hours left!", color: "#f43f5e" },
-        { icon: <LocalShippingIcon sx={{ fontSize: 14 }} />, text: "Free shipping today", color: "#34d399" },
-        { icon: <ShoppingCartIcon sx={{ fontSize: 14 }} />, text: "Complete your order", color: "#a78bfa" },
+        // { icon: <LocalShippingIcon sx={{ fontSize: 14 }} />, text: "Free shipping today", color: "#34d399" },
+        // { icon: <ShoppingCartIcon sx={{ fontSize: 14 }} />, text: "Complete your order", color: "#a78bfa" },
     ];
 
     return (
@@ -204,7 +202,6 @@ const PhoneMockup: React.FC = () => {
 
 export default function PushNotification() {
     const [ready, setReady] = useState(false);
-    const [expanded, setExpanded] = useState<string | false>(false);
     const [detailedExpanded, setDetailedExpanded] = useState<string | false>('mobile');
 
     const handleDetailedChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -281,10 +278,6 @@ export default function PushNotification() {
     ];
 
     useEffect(() => { setReady(true); }, []);
-
-    const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panel : false);
-    };
 
     return (
         <Box sx={{ bgcolor: "#060e1a", color: "#fff" }}>
@@ -709,50 +702,31 @@ export default function PushNotification() {
 
 
             {/* ══ FAQ SECTION ══ */}
-            <Box sx={{ py: { xs: 10, md: 15 }, bgcolor: "#081121", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                <RevealOnScroll>
-                    <Container maxWidth="md">
-                        <Box sx={{ textAlign: "center", mb: 8 }}>
-                            <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.4rem" }, mb: 3 }}>
-                                Frequently Asked <GradientText>Questions</GradientText>
-                            </Typography>
-                        </Box>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                            {[
-                                {
-                                    q: "What are push notifications?",
-                                    a: "Push notifications are short alerts that can appear in a browser or phone, even when the user isn’t on the site or in the app. To get them, the customer needs to allow notifications in their browser or install the app. They let brands constantly reach out, quickly share info, and boost customer engagement."
-                                },
-                                {
-                                    q: "Which businesses can benefit from push notifications?",
-                                    a: "Push notifications are very effective for eCommerce, SaaS, media, delivery services, educational platforms, and any projects that want to stay in the customer’s focus."
-                                },
-                                {
-                                    q: "How are mobile push notifications useful?",
-                                    a: "Mobile push notifications help maintain activity and online presence in a mobile app, notify users about updates, personalized offers, completed transactions, and important events. Having a high open rate, they attract high engagement."
-                                },
-                                {
-                                    q: "How long does it take to launch push notifications?",
-                                    a: "They can be launched fairly quickly. Basic setup takes from a few hours to 1-2 days, depending on the complexity of the customization. Automation and custom scenarios may take longer. With AksharSync, you can launch effective push notifications at the optimal time."
-                                },
-                                {
-                                    q: "Do users need to allow push notifications?",
-                                    a: "Yes. Web and mobile push notifications only work after the user subscribes through the native permission window of the browser or operating system. On phones, it is often enough for the user to download your app for you to be able to send them notifications."
-                                }
-                            ].map((faq, i) => (
-                                <Accordion key={i} expanded={expanded === `panel${i}`} onChange={handleAccordionChange(`panel${i}`)} sx={{ bgcolor: "rgba(255,255,255,0.02)", color: "#fff", borderRadius: "12px !important", border: "1px solid rgba(255,255,255,0.05)", boxShadow: "none", "&.Mui-expanded": { borderColor: "rgba(56, 189, 248, 0.4)" } }}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#38bdf8" }} />}>
-                                        <Typography sx={{ fontWeight: 700 }}>{faq.q}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography sx={{ color: alpha("#fff", 0.6), lineHeight: 1.6 }}>{faq.a}</Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            ))}
-                        </Box>
-                    </Container>
-                </RevealOnScroll>
-            </Box>
+            <FAQComponent
+                subtitle="Everything you need to know about our push notification services."
+                items={[
+                    {
+                        question: "What are push notifications?",
+                        answer: "Push notifications are short alerts that can appear in a browser or phone, even when the user isn’t on the site or in the app. To get them, the customer needs to allow notifications in their browser or install the app. They let brands constantly reach out, quickly share info, and boost customer engagement."
+                    },
+                    {
+                        question: "Which businesses can benefit from push notifications?",
+                        answer: "Push notifications are very effective for eCommerce, SaaS, media, delivery services, educational platforms, and any projects that want to stay in the customer’s focus."
+                    },
+                    {
+                        question: "How are mobile push notifications useful?",
+                        answer: "Mobile push notifications help maintain activity and online presence in a mobile app, notify users about updates, personalized offers, completed transactions, and important events. Having a high open rate, they attract high engagement."
+                    },
+                    {
+                        question: "How long does it take to launch push notifications?",
+                        answer: "They can be launched fairly quickly. Basic setup takes from a few hours to 1-2 days, depending on the complexity of the customization. Automation and custom scenarios may take longer. With AksharSync, you can launch effective push notifications at the optimal time."
+                    },
+                    {
+                        question: "Do users need to allow push notifications?",
+                        answer: "Yes. Web and mobile push notifications only work after the user subscribes through the native permission window of the browser or operating system. On phones, it is often enough for the user to download your app for you to be able to send them notifications."
+                    }
+                ]}
+            />
 
         </Box>
     );

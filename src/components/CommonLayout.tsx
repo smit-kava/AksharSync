@@ -13,6 +13,8 @@ function ScrollToTop() {
 }
 
 export function CommonLayout() {
+  const location = useLocation();
+
   return (
     <Box
       sx={{
@@ -28,7 +30,7 @@ export function CommonLayout() {
       <Box component="main" sx={{ flex: 1 }}>
         <Outlet />
       </Box>
-      <Footer />
+      {location.pathname !== "/contact" && <Footer />}
     </Box>
   );
 }

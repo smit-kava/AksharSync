@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Container, Typography, alpha, Stack, Button } from "@mui/material";
+import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
@@ -283,6 +284,29 @@ export default function DeliverabilityAudit() {
                  </Box>
                </Box>
             </Box>
+
+            {/* 4. FAQ Section */}
+            <FAQComponent
+              subtitle="Everything you need to know about our email deliverability services."
+              items={[
+                {
+                  question: "What is email deliverability?",
+                  answer: "Email deliverability is the ability to deliver emails to subscribers' inboxes. It's what some marketers use to gauge the likelihood of their email campaigns reaching their subscribers' primary inboxes rather than the spam or junk folder."
+                },
+                {
+                  question: "How do I know if my emails are going to spam?",
+                  answer: "You can track your open rates and use seed testing tools. If your open rates suddenly drop or are consistently low (below 15-20%), it's a strong indicator that you have deliverability issues."
+                },
+                {
+                  question: "What are SPF, DKIM, and DMARC?",
+                  answer: "These are email authentication protocols. SPF specifies which mail servers are authorized to send email for your domain. DKIM adds a digital signature to your emails. DMARC uses SPF and DKIM to give instructions to the receiving mail server on how to handle emails that fail authentication."
+                },
+                {
+                  question: "How often should I audit my deliverability?",
+                  answer: "We recommend a comprehensive technical audit at least once a quarter, or immediately if you notice a significant drop in engagement or plan to migrate to a new sending platform."
+                }
+              ]}
+            />
 
           </Stack>
         </motion.div>

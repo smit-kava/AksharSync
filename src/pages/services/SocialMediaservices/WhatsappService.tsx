@@ -1,9 +1,8 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StarIcon from "@mui/icons-material/Star";
-import { Accordion, AccordionDetails, AccordionSummary, alpha, Box, Container, Fade, Typography } from "@mui/material";
+import { alpha, Box, Container, Fade, Typography } from "@mui/material";
 import { keyframes } from "@mui/system";
 import React, { useEffect, useState } from 'react';
-import { ExpertCTA } from '../../../components';
+import { ExpertCTA, FAQComponent } from '../../../components';
 import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import RevealOnScroll from "../../../components/RevealOnScroll";
 import { SMSProcessTimeline } from "../../../components/SMSProcessTimeline";
@@ -46,12 +45,6 @@ const ofloat = keyframes`
 
 const WhatsappService = () => {
     const [visible, setVisible] = useState(false);
-    const [expanded, setExpanded] = useState<string | false>(false);
-
-    const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panel : false);
-    };
-
     useEffect(() => { setVisible(true); }, []);
 
     return (
@@ -708,48 +701,23 @@ const WhatsappService = () => {
                             </Typography>
                         </Box>
 
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                            {[
+                        <FAQComponent
+                            subtitle="Everything you need to know about our WhatsApp marketing services."
+                            items={[
                                 {
-                                    q: "1. What is WhatsApp marketing?",
-                                    a: "WhatsApp marketing is a strategy that involves sending promotional and transactional messages to your audience via WhatsApp. It allows for direct, two-way communication with high engagement rates."
+                                    question: "What is WhatsApp marketing?",
+                                    answer: "WhatsApp marketing is a strategy that involves sending promotional and transactional messages to your audience via WhatsApp. It allows for direct, two-way communication with high engagement rates."
                                 },
                                 {
-                                    q: "2. How does WhatsApp compare to SMS?",
-                                    a: "WhatsApp offers richer content (images, videos, buttons) and is generally more cost-effective for international outreach. It also allows for continuous chat sessions."
+                                    question: "How does WhatsApp compare to SMS?",
+                                    answer: "WhatsApp offers richer content (images, videos, buttons) and is generally more cost-effective for international outreach. It also allows for continuous chat sessions."
                                 },
                                 {
-                                    q: "3. Is my business eligible for a Green Tick?",
-                                    a: "The Green Tick (verified status) is awarded by Meta to notable and authentic brands. We assist our clients in the application process to maximize their chances of approval."
+                                    question: "Is my business eligible for a Green Tick?",
+                                    answer: "The Green Tick (verified status) is awarded by Meta to notable and authentic brands. We assist our clients in the application process to maximize their chances of approval."
                                 }
-                            ].map((faq, i) => {
-                                const panelId = `panel${i}`;
-                                return (
-                                    <Accordion
-                                        key={i}
-                                        expanded={expanded === panelId}
-                                        onChange={handleAccordionChange(panelId)}
-                                        slotProps={{ transition: { timeout: 500 } }}
-                                        sx={{
-                                            bgcolor: "rgba(255,255,255,0.02)",
-                                            color: "#fff",
-                                            borderRadius: "12px !important",
-                                            border: "1px solid rgba(255,255,255,0.05)",
-                                            boxShadow: "none",
-                                            "&:hover": { bgcolor: "rgba(255,255,255,0.04)" },
-                                            "&.Mui-expanded": { bgcolor: "rgba(255,255,255,0.05)", borderColor: "rgba(37, 211, 102, 0.4)" }
-                                        }}
-                                    >
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#25d366" }} />}>
-                                            <Typography sx={{ fontWeight: 700 }}>{faq.q}</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <Typography sx={{ color: alpha("#fff", 0.6), lineHeight: 1.6 }}>{faq.a}</Typography>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                );
-                            })}
-                        </Box>
+                            ]}
+                        />
 
                         <Box sx={{ mt: 8, textAlign: "center" }}>
                             <ExpertCTA text="Talk to a WhatsApp Expert" />

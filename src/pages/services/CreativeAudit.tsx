@@ -1,4 +1,5 @@
 import { Box, Container, Typography, alpha, Stack, Button } from "@mui/material";
+import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
@@ -280,6 +281,29 @@ export default function CreativeAudit() {
                 ))}
               </Box>
             </Box>
+
+            {/* 4. FAQ Section */}
+            <FAQComponent
+              subtitle="Everything you need to know about our template and creative review process."
+              items={[
+                {
+                  question: "What is included in a creative review?",
+                  answer: "We analyze your email and SMS templates for mobile responsiveness, conversion-focused layout, CTA clarity, rendering consistency across clients, and brand alignment."
+                },
+                {
+                  question: "Why is mobile-first design important for email?",
+                  answer: "Over 60% of all emails are opened on mobile devices. If your creative doesn't look perfect on a phone, you're alienating the majority of your audience and losing conversions."
+                },
+                {
+                  question: "Do you provide the actual designs or just the audit?",
+                  answer: "This service is an audit and strategic review. We provide a detailed report with actionable improvements. If you need design implementation, we can discuss our full-service creative packages."
+                },
+                {
+                  question: "How does creative optimization affect ROI?",
+                  answer: "Better design leads to higher engagement (clicks) and a smoother path to purchase. Even a 1% increase in click-through rate can result in a significant revenue boost for high-volume brands."
+                }
+              ]}
+            />
 
           </Stack>
         </motion.div>

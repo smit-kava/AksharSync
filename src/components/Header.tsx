@@ -371,7 +371,7 @@ export function Header() {
             <Button
 
               component={RouterLink}
-              to={ROUTE_PATHS.ABOUT}
+              to={ROUTE_PATHS.CONTACT}
               sx={{
                 display: { xs: "none", sm: "inline-flex" },
                 borderRadius: "999px",

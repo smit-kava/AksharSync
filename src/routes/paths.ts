@@ -40,4 +40,5 @@ export const ROUTE_PATHS = {
 
   ABOUT: "/about",
   WHY: "/why",
+  CONTACT: "/contact",
 } as const;

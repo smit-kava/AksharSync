@@ -1,4 +1,5 @@
 import { Box, Container, Typography, alpha, Stack, Button, IconButton } from "@mui/material";
+import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
@@ -423,6 +424,29 @@ export default function RevenueAudit() {
                 </Box>
               </Box>
             </Box>
+
+            {/* 4. FAQ Section */}
+            <FAQComponent
+              subtitle="Everything you need to know about our revenue opportunity audit."
+              items={[
+                {
+                  question: "What is a revenue opportunity audit?",
+                  answer: "It's a comprehensive analysis of your entire retention marketing ecosystem to identify where you're losing money and where you have untapped potential for growth."
+                },
+                {
+                  question: "How long does the audit take?",
+                  answer: "Typically, a full revenue audit takes 7-10 business days to complete, including data collection, analysis, and the final strategy presentation."
+                },
+                {
+                  question: "What data do you need for the audit?",
+                  answer: "We require view-only access to your ESP (like Klaviyo), your e-commerce platform (like Shopify), and your Google Analytics to get a complete picture of your customer journey."
+                },
+                {
+                  question: "How much extra revenue can I expect?",
+                  answer: "While results vary, most brands see a 15-30% increase in automated revenue within the first 90 days of implementing our audit's recommendations."
+                }
+              ]}
+            />
 
           </Stack>
         </motion.div>

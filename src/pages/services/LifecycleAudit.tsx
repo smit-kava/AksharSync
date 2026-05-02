@@ -1,4 +1,5 @@
 import { Box, Container, Typography, alpha, Stack, Button } from "@mui/material";
+import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -340,6 +341,29 @@ export default function LifecycleAudit() {
                 </Box>
               </Box>
             </Box>
+
+            {/* 7. FAQ Section */}
+            <FAQComponent
+              subtitle="Everything you need to know about our lifecycle marketing and automation."
+              items={[
+                {
+                  question: "What is lifecycle marketing?",
+                  answer: "Lifecycle marketing is the process of providing your customers with the right information and experiences at every stage of their journey with your brand—from discovery to purchase and long-term loyalty."
+                },
+                {
+                  question: "Which flows are most important for my brand?",
+                  answer: "While it depends on your specific business, the 'Big Three' are almost always the Welcome Series, Abandoned Cart, and Post-Purchase sequences. These typically drive the highest ROI."
+                },
+                {
+                  question: "How do you measure the success of automated journeys?",
+                  answer: "We focus on key performance indicators like Revenue Per Subscriber (RPS), Open Rates, Click-Through Rates, and overall lift in total store revenue."
+                },
+                {
+                  question: "Can you work with my existing email platform?",
+                  answer: "Yes, we are experts in Klaviyo, Omnisend, Mailchimp, and many other leading ESPs. We can optimize your existing setup or help you migrate to a more powerful platform."
+                }
+              ]}
+            />
 
           </Stack>
         </motion.div>
