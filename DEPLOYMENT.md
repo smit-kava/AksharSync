@@ -32,11 +32,17 @@ If you want Vercel to manage all your DNS records:
 2. Click **Change** and select **I'll use my own nameservers**.
 3. Enter the nameservers provided by Vercel (e.g., `ns1.vercel-dns.com`, `ns2.vercel-dns.com`).
 
-## Step 3: Verification
+## Step 3: SSL Configuration & Verification
 1. Go back to the **Vercel Domains** settings page.
 2. Vercel will periodically check if the DNS records have been updated.
 3. Once verified, the status will change to **Valid Configuration** (Blue checkmark).
-4. SSL certificates will be generated automatically.
+4. **Automatic SSL**: Vercel automatically generates a Let's Encrypt SSL certificate for your domain. No manual action is required.
+5. **HTTPS Redirection**: All traffic will be automatically redirected from `http` to `https`.
+
+## SSL Best Practices
+- **Auto-Renewal**: Vercel handles certificate renewals automatically before they expire.
+- **CAA Records**: If you use custom CAA records in GoDaddy, ensure they permit `letsencrypt.org` to issue certificates for your domain.
+- **HSTS**: Vercel enables HTTP Strict Transport Security (HSTS) by default for improved security.
 
 ## Troubleshooting
 - **Propagation Delay**: DNS changes can take anywhere from a few minutes to 48 hours to propagate globally.
