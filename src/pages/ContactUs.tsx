@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
     Box,
     Container,
@@ -9,6 +10,9 @@ import {
     Grid,
     MenuItem,
     alpha,
+    Alert,
+    Snackbar,
+    CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import {
@@ -50,6 +54,78 @@ const COUNTRY_CODES = [
 ];
 
 const ContactUs = () => {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        countryCode: "+91",
+        phone: "",
+        website: "",
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+    }>({ type: null, message: "" });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prev) => ({ ...prev, countryCode: e.target.value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setStatus({ type: null, message: "" });
+
+        try {
+            const response = await fetch("/api/send-email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setStatus({
+                    type: "success",
+                    message: "Thank you! Your request has been sent successfully. We'll be in touch soon.",
+                });
+                setFormData({
+                    name: "",
+                    email: "",
+                    countryCode: "+91",
+                    phone: "",
+                    website: "",
+                });
+            } else {
+                setStatus({
+                    type: "error",
+                    message: data.error || "Something went wrong. Please try again later.",
+                });
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            setStatus({
+                type: "error",
+                message: "Failed to connect to the server. Please check your internet connection.",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCloseStatus = () => {
+        setStatus({ ...status, type: null });
+    };
+
     return (
         <Box
             sx={{
@@ -202,95 +278,140 @@ const ContactUs = () => {
                                     Let's talk growth
                                 </Typography>
 
-                                <Stack spacing={3}>
-                                    <TextField
-                                        fullWidth
-                                        label="Your Name"
-                                        variant="outlined"
-                                        placeholder="John Doe"
-                                        sx={inputStyles}
-                                    />
-                                    <TextField
-                                        fullWidth
-                                        label="Business Email"
-                                        type="email"
-                                        variant="outlined"
-                                        placeholder="john@company.com"
-                                        sx={inputStyles}
-                                    />
-
-                                    <Stack direction="row" spacing={2}>
-                                        <TextField
-                                            select
-                                            label="Code"
-                                            defaultValue="+91"
-                                            sx={{ ...inputStyles, minWidth: "100px" }}
-                                        >
-                                            {COUNTRY_CODES.map((option) => (
-                                                <MenuItem key={option.code} value={option.code}>
-                                                    <Box sx={{ display: 'flex', gap: 1 }}>
-                                                        <span>{option.flag}</span>
-                                                        <span>{option.code}</span>
-                                                    </Box>
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
+                                <Box component="form" onSubmit={handleSubmit}>
+                                    <Stack spacing={3}>
                                         <TextField
                                             fullWidth
-                                            label="Phone Number"
+                                            label="Your Name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
                                             variant="outlined"
-                                            placeholder="1234567890"
+                                            placeholder="John Doe"
+                                            required
                                             sx={inputStyles}
                                         />
-                                    </Stack>
-
-                                    <TextField
-                                        fullWidth
-                                        label="Website URL"
-                                        variant="outlined"
-                                        placeholder="www.yourbrand.com"
-                                        sx={inputStyles}
-                                    />
-
-                                    <Box sx={{ pt: 2 }}>
-                                        <Button
+                                        <TextField
                                             fullWidth
-                                            size="large"
-                                            variant="contained"
+                                            label="Business Email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            type="email"
+                                            variant="outlined"
+                                            placeholder="john@company.com"
+                                            required
+                                            sx={inputStyles}
+                                        />
+
+                                        <Stack direction="row" spacing={2}>
+                                            <TextField
+                                                select
+                                                label="Code"
+                                                name="countryCode"
+                                                value={formData.countryCode}
+                                                onChange={handleSelectChange}
+                                                sx={{ ...inputStyles, minWidth: "100px" }}
+                                            >
+                                                {COUNTRY_CODES.map((option) => (
+                                                    <MenuItem key={option.code} value={option.code}>
+                                                        <Box sx={{ display: 'flex', gap: 1 }}>
+                                                            <span>{option.flag}</span>
+                                                            <span>{option.code}</span>
+                                                        </Box>
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <TextField
+                                                fullWidth
+                                                label="Phone Number"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleInputChange}
+                                                variant="outlined"
+                                                placeholder="1234567890"
+                                                sx={inputStyles}
+                                            />
+                                        </Stack>
+
+                                        <TextField
+                                            fullWidth
+                                            label="Website URL"
+                                            name="website"
+                                            value={formData.website}
+                                            onChange={handleInputChange}
+                                            variant="outlined"
+                                            placeholder="www.yourbrand.com"
+                                            sx={inputStyles}
+                                        />
+
+                                        <Box sx={{ pt: 2 }}>
+                                            <Button
+                                                fullWidth
+                                                size="large"
+                                                variant="contained"
+                                                type="submit"
+                                                disabled={loading}
+                                                sx={{
+                                                    py: 2,
+                                                    fontSize: "1.1rem",
+                                                    fontWeight: 700,
+                                                    background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                                                    boxShadow: "0 10px 20px rgba(127, 208, 255, 0.2)",
+                                                    transition: "all 0.3s ease",
+                                                    "&:hover": {
+                                                        transform: "translateY(-2px)",
+                                                        boxShadow: "0 15px 30px rgba(127, 208, 255, 0.3)",
+                                                    },
+                                                    "&.Mui-disabled": {
+                                                        background: alpha("#7fd0ff", 0.3),
+                                                        color: alpha("#fff", 0.5),
+                                                    }
+                                                }}
+                                            >
+                                                {loading ? (
+                                                    <CircularProgress size={24} sx={{ color: "#fff" }} />
+                                                ) : (
+                                                    "Book Your Consultation Call"
+                                                )}
+                                            </Button>
+                                        </Box>
+
+                                        <Typography
+                                            variant="caption"
                                             sx={{
-                                                py: 2,
-                                                fontSize: "1.1rem",
-                                                fontWeight: 700,
-                                                background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
-                                                boxShadow: "0 10px 20px rgba(127, 208, 255, 0.2)",
-                                                transition: "all 0.3s ease",
-                                                "&:hover": {
-                                                    transform: "translateY(-2px)",
-                                                    boxShadow: "0 15px 30px rgba(127, 208, 255, 0.3)",
-                                                },
+                                                textAlign: "center",
+                                                color: "text.secondary",
+                                                mt: 2,
+                                                display: "block",
                                             }}
                                         >
-                                            Book Your Consultation Call
-                                        </Button>
-                                    </Box>
-
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            textAlign: "center",
-                                            color: "text.secondary",
-                                            mt: 2,
-                                            display: "block",
-                                        }}
-                                    >
-                                        No spam. Just high-impact strategy.
-                                    </Typography>
-                                </Stack>
+                                            No spam. Just high-impact strategy.
+                                        </Typography>
+                                    </Stack>
+                                </Box>
                             </Paper>
                         </motion.div>
                     </Grid>
                 </Grid>
             </Container>
+
+            {/* Notification Snackbar */}
+            <Snackbar
+                open={status.type !== null}
+                autoHideDuration={6000}
+                onClose={handleCloseStatus}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseStatus}
+                    severity={status.type || 'info'}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {status.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
