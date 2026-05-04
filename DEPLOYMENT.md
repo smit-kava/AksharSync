@@ -63,6 +63,24 @@ CWP provides free SSL via Let's Encrypt.
 
 ---
 
+## 📧 Creating a New Mailbox in CWP
+1. Log in to your **CWP Control Panel**.
+2. Navigate to **Email Accounts** > **Email Accounts**.
+3. Click the **Add a New MailBox** button.
+4. Fill in the details:
+   - **Email Address**: Enter your desired prefix (e.g., `support`).
+   - **Password**: Use a strong password (copy it for your `.env.local`).
+   - **Quota MB**: Set a limit (e.g., `1000` for 1GB).
+5. Click **Add**.
+
+### SMTP Settings for AksharSync:
+- **Host**: `serveras.digilifes.com`
+- **Port**: `465` (SSL)
+- **Username**: `your-email@aksharsync.com`
+- **Auth**: `Plain`
+
+---
+
 ## 🛠️ Troubleshooting
 - **CORS Errors**: This usually happens when accessing the site via `www`. The `.htaccess` above includes a fix to force non-www and add CORS headers.
 - **404 Errors**: Ensure the `.htaccess` file is present in the correct folder.
