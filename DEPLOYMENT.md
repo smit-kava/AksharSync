@@ -12,6 +12,8 @@ Run the following command in your local terminal:
 ```bash
 npm run build
 ```
+*Note: Ensure `base: '/myapp/'` is set in `vite.config.ts` if you are deploying to a subfolder.*
+
 This will create a `dist` folder in your project root containing all the static files.
 
 ### 2. Upload to CWP Control Panel
@@ -25,16 +27,29 @@ This will create a `dist` folder in your project root containing all the static 
 ### 3. Configure Single Page Application (SPA) Routing
 Since this is a React/Vite application, you need an `.htaccess` file to ensure that page refreshes don't result in 404 errors.
 
-1. In your `public_html` folder on CWP, create a new file named **`.htaccess`**.
+1. In your `public_html/myapp/` folder on CWP, create a new file named **`.htaccess`**.
 2. Paste the following code into it:
 ```apache
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
+  RewriteBase /myapp/
+
+  # Force non-www (Fixes CORS errors)
+  RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+  RewriteRule ^(.*)$ https://%1/myapp/$1 [R=301,L]
+
+  # SPA Routing
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule . /myapp/index.html [L]
+</IfModule>
+
+# Add CORS headers for Assets
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|woff|woff2|svg|png|jpg|jpeg|gif|ico)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
 </IfModule>
 ```
 3. Save the file.
@@ -49,8 +64,9 @@ CWP provides free SSL via Let's Encrypt.
 ---
 
 ## 🛠️ Troubleshooting
-- **404 Errors**: Ensure the `.htaccess` file is present in the `public_html` folder.
-- **Blank Page**: Check if all files from the `dist` folder were uploaded correctly (including the `assets` folder).
+- **CORS Errors**: This usually happens when accessing the site via `www`. The `.htaccess` above includes a fix to force non-www and add CORS headers.
+- **404 Errors**: Ensure the `.htaccess` file is present in the correct folder.
+- **Blank Page**: Check if all files from the `dist` folder were uploaded correctly. Ensure the `base` path in `vite.config.ts` matches your server folder.
 - **Permissions**: Ensure your files have `644` permissions and folders have `755` permissions.
 
 ---
