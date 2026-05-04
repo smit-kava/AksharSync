@@ -1,6 +1,6 @@
 # AksharSync
 
-AksharSync is a premium web platform built with React, TypeScript, and Vite. This repository contains the source code and deployment configurations for the AksharSync website.
+AksharSync is a premium web platform built with React, TypeScript, and Vite.
 
 ## 🚀 Quick Start
 
@@ -25,21 +25,21 @@ npm run build
 
 ## 🌐 Deployment
 
-The project is configured for seamless deployment on **Vercel**. 
+This project is configured for deployment on **CWP (CentOS Web Panel)**.
 
-### Connecting GoDaddy Domain
-For detailed instructions on how to set up your GoDaddy domain with Vercel, please refer to the [Deployment Guide](DEPLOYMENT.md).
+### Deployment Instructions
+For step-by-step instructions on how to build and upload your site to CWP, please refer to the [Deployment Guide](DEPLOYMENT.md).
 
-**Quick DNS Settings:**
-- **A Record**: `@` -> `76.76.21.21`
-- **CNAME Record**: `www` -> `cname.vercel-dns.com`
+**Key Steps:**
+1. Build project: `npm run build`
+2. Upload `dist` content to `public_html` via CWP File Manager.
+3. Configure `.htaccess` for routing.
 
 ## 🛠️ Tech Stack
 - **Framework**: [React](https://reactjs.org/)
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: Vanilla CSS / Custom Components
-- **Hosting**: [Vercel](https://vercel.com/)
 
 ## 📝 License
 Copyright © 2024 AksharSync. All rights reserved.
