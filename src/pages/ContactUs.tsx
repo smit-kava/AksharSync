@@ -92,7 +92,6 @@ const ContactUs = () => {
             });
 
             const data = await response.json();
-            debugger;
             if (response.ok) {
                 setStatus({
                     type: "success",

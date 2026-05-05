@@ -13,7 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// 1. Get JSON Input
+// 1. Load environment variables from .env file
+$env = [];
+$envFile = __DIR__ . '/../../.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        $parts = explode('=', $line, 2);
+        if (count($parts) === 2) {
+            $env[trim($parts[0])] = trim($parts[1], '"\' ');
+        }
+    }
+}
+
+// 2. Get JSON Input
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
@@ -28,12 +42,12 @@ $phone = isset($data['phone']) ? $data['phone'] : 'N/A';
 $countryCode = isset($data['countryCode']) ? $data['countryCode'] : '';
 $website = isset($data['website']) ? $data['website'] : 'N/A';
 
-// 2. Email Configuration (Settings we found earlier)
-$to = "smitkava21@gmail.com";
+// 3. Email Configuration (From .env)
+$to = $env['EMAIL_TO'] ?? "smitkava21@gmail.com";
+$from = $env['EMAIL_USER'] ?? "support@aksharsync.com";
 $subject = "New Consultation Call Request from $name";
-$from = "kavasmit603@gmail.com";
 
-// 3. Prepare Email Content
+// 4. Prepare Email Content
 $message = "
 <html>
 <head>
@@ -50,13 +64,13 @@ $message = "
 </html>
 ";
 
-// 4. Headers for HTML Email
+// 5. Headers for HTML Email
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 $headers .= "From: AksharSync <$from>" . "\r\n";
 $headers .= "Reply-To: $email" . "\r\n";
 
-// 5. Send Email
+// 6. Send Email
 if (mail($to, $subject, $message, $headers)) {
     echo json_encode(["success" => true, "message" => "Email sent successfully!"]);
 } else {
