@@ -1,12 +1,10 @@
-import { Box, Container, Typography, Button, alpha, Zoom } from "@mui/material";
-import { useInView } from "./Shared";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { alpha, Box, Button, Container, Typography, Zoom } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import { ROUTE_PATHS } from "../../routes/paths";
+import { useInView } from "./Shared";
 
 export default function CTA() {
   const [ctaRef, ctaInView] = useInView(0.2);
-  const navigate = useNavigate();
-
   return (
     <Box ref={ctaRef} sx={{ py: 15 }}>
       <Container maxWidth="md">

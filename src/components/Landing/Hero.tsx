@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
-import {
-  Box, Container, Typography, Button, Avatar,
-  AvatarGroup, alpha, Fade
-} from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import {
+  alpha,
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Container,
+  Fade,
+  Typography
+} from "@mui/material";
 import { keyframes } from "@mui/system";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { ROUTE_PATHS } from "../../routes/paths";
-import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon, PushNotificationIcon, RcsIcon } from "../icons";
+import { ChatIcon, EmailIcon, PushNotificationIcon, RcsIcon, TargetIcon, WhatsAppIcon } from "../icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 const pulseGlow = keyframes`
@@ -275,7 +281,7 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
       </Box>
 
       {/* Floating badge: Klaviyo */}
-      <Box 
+      <Box
         component={RouterLink}
         to={ROUTE_PATHS.KLAVIYO_AUDIT}
         sx={{
@@ -328,7 +334,6 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [heroVisible, setHeroVisible] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);

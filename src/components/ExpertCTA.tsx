@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import type { SxProps, Theme } from '@mui/material';
+import { Button } from '@mui/material';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { ROUTE_PATHS } from '../routes/paths';
 
 interface ExpertCTAProps {

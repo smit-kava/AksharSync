@@ -1,16 +1,15 @@
-import React from "react";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import FlashOnIcon from "@mui/icons-material/FlashOn";
 import {
   Box,
   Container,
-  Typography,
   Stack,
-  alpha,
-  useTheme,
+  Typography,
+  alpha
 } from "@mui/material";
 import { motion } from "framer-motion";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import FlashOnIcon from "@mui/icons-material/FlashOn";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { ROUTE_PATHS } from "../routes/paths";
 
 const THEME_COLOR = "#7fd0ff";
@@ -42,9 +41,6 @@ const STATS = [
 ];
 
 const KlaviyoAuditHero: React.FC = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-
   return (
     <Box
       sx={{

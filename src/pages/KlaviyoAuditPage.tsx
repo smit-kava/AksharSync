@@ -1,15 +1,14 @@
-import React from "react";
-import { Box, Container, Typography, Stack, alpha, Button } from "@mui/material";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SpeedIcon from "@mui/icons-material/Speed";
-import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import StarIcon from "@mui/icons-material/Star";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import KlaviyoAuditHero from "../components/KlaviyoAuditHero";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
+import { motion } from "framer-motion";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FAQComponent } from "../components";
+import KlaviyoAuditHero from "../components/KlaviyoAuditHero";
 import { ROUTE_PATHS } from "../routes/paths";
 
 const THEME_COLOR = "#7fd0ff";
