@@ -2,6 +2,8 @@ import { Box, Container, Typography, alpha, Stack, Button } from "@mui/material"
 import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../routes/paths";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -21,6 +23,7 @@ import InsightsIcon from "@mui/icons-material/Insights";
 const THEME_COLOR = "#38bdf8"; // Light Blue/Sky
 
 export default function LifecycleAudit() {
+  const navigate = useNavigate();
   return (
     <Box sx={{ bgcolor: "#060e1a", minHeight: "100vh", pt: 15, pb: 10, color: "#fff" }}>
       <Container maxWidth="lg">
@@ -56,6 +59,7 @@ export default function LifecycleAudit() {
                     variant="contained"
                     size="large"
                     endIcon={<ArrowForwardIcon />}
+                    onClick={() => navigate(ROUTE_PATHS.CONTACT)}
                     sx={{
                       bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, px: 4,
                       fontWeight: 800, fontSize: "1rem", borderRadius: "12px",
@@ -67,6 +71,7 @@ export default function LifecycleAudit() {
                   <Button
                     variant="outlined"
                     size="large"
+                    onClick={() => navigate(ROUTE_PATHS.CONTACT)}
                     sx={{
                       borderColor: alpha(THEME_COLOR, 0.5), color: THEME_COLOR, py: 1.5, px: 4,
                       fontWeight: 700, fontSize: "1rem", borderRadius: "12px",
@@ -334,6 +339,7 @@ export default function LifecycleAudit() {
                     fullWidth
                     size="large"
                     endIcon={<ArrowForwardIcon />}
+                    onClick={() => navigate(ROUTE_PATHS.CONTACT)}
                     sx={{ bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, fontWeight: 800, "&:hover": { bgcolor: alpha(THEME_COLOR, 0.8) } }}
                   >
                     Schedule Audit

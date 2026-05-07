@@ -14,7 +14,7 @@ import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 const services = [
   {
     rotate: -20,
-    spreadX: -600,
+    spreadX: -700,
     icon: <LifecycleIcon sx={{ fontSize: "2.4rem" }} />,
     id: ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT,
     title: "Lifecycle Flow Review",
@@ -26,7 +26,7 @@ const services = [
   },
   {
     rotate: -10,
-    spreadX: -300,
+    spreadX: -350,
     icon: <CreativeIcon sx={{ fontSize: "2.4rem" }} />,
     id: ROUTE_PATHS.SERVICE_CREATIVE_AUDIT,
     title: "Template & Creative",
@@ -50,7 +50,7 @@ const services = [
   },
   {
     rotate: 10,
-    spreadX: 300,
+    spreadX: 350,
     icon: <SyncProblemIcon sx={{ fontSize: "2.4rem" }} />,
     id: ROUTE_PATHS.SERVICE_REVENUE_AUDIT,
     title: "Revenue Opportunity",
@@ -62,7 +62,7 @@ const services = [
   },
   {
     rotate: 20,
-    spreadX: 600,
+    spreadX: 700,
     icon: <MessagingIcon sx={{ fontSize: "2.4rem" }} />,
     id: ROUTE_PATHS.SERVICE_SMS,
     title: "Omnichannel Review",

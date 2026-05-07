@@ -6,6 +6,8 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { keyframes } from "@mui/system";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../routes/paths";
 import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon, PushNotificationIcon, RcsIcon } from "../icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
@@ -314,6 +316,7 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [heroVisible, setHeroVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);
@@ -392,6 +395,8 @@ export default function Hero() {
               <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5, pt: 2 }}>
                 <Button
                   variant="contained"
+                  component={RouterLink}
+                  to={ROUTE_PATHS.RETENTION_AUDIT_BOOKING}
                   endIcon={<ArrowForwardIcon />}
                   sx={{ bgcolor: "#fff", color: "#060e1a", px: 3, py: 1.5, borderRadius: "10px", fontWeight: 800, textTransform: "none", fontSize: "0.95rem", "&:hover": { bgcolor: "#e8f4ff", transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
@@ -399,6 +404,8 @@ export default function Hero() {
                 </Button>
                 <Button
                   variant="outlined"
+                  component={RouterLink}
+                  to={ROUTE_PATHS.CONTACT}
                   sx={{ color: "#fff", borderColor: alpha("#fff", 0.2), px: 3, py: 1.5, borderRadius: "10px", fontWeight: 600, textTransform: "none", fontSize: "0.95rem", "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.05), transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
                   View Case Studies

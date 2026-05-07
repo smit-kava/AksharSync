@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { ClientReviews, ExpertCTA, FAQComponent } from '../../../components';
 import { GradientText, HeroChip } from "../../../components/Landing/Shared";
 import { UserIcons } from '../../../components/icons/Icons';
+import { ROUTE_PATHS } from "../../../routes";
+import { useNavigate } from "react-router-dom";
 
 // ─── Keyframes ────────────────────────────────────────────────────────────────
 
@@ -26,6 +28,8 @@ const floatB = keyframes`
 // ─── Chat Bubble Component ────────────────────────────────────────────────────
 
 const ChatBubble = ({ side, text, isLast }: { side: 'left' | 'right', text: React.ReactNode, isLast?: boolean }) => {
+
+
     return (
         <Box sx={{
             display: 'flex',
@@ -156,6 +160,7 @@ export default function InstagramDM() {
     const [expandedService, setExpandedService] = useState<string | false>('service-0');
 
     useEffect(() => { setReady(true); }, []);
+    const navigate = useNavigate();
 
     const handleServiceChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpandedService(isExpanded ? panel : false);
@@ -221,9 +226,9 @@ export default function InstagramDM() {
                                     Free yourself from constantly answering frequently asked questions that are repeated in private messages and comments on Instagram or other social media. Let our Instagram DM automation services take care of automation by setting everything up quickly, accurately, and efficiently, increasing customer engagement and saving you time.
                                 </Typography>
                                 <Box sx={{ mb: "30px" }}>
-                                    <ExpertCTA text="Talk to Our Expert" sx={{ py: "13px", px: "26px", borderRadius: "13px" }} />
+                                    <ExpertCTA onClick={() => { navigate(ROUTE_PATHS.KLAVIYO_AUDIT) }} text="Talk to Our Expert" sx={{ py: "13px", px: "26px", borderRadius: "13px" }} />
                                 </Box>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap" }}>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: "22px", flexWrap: "  wrap" }}>
                                     {[
                                         { value: "1000+", label: "Trusted Brands", grad: true },
                                         { value: "2025", label: "Inc. 5000 Honoree", grad: false },

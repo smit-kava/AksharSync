@@ -12,3 +12,4 @@ export { default as ExpertCTA } from "./ExpertCTA";
 
 export { default as ClientReviews } from "./ClientReviews";
 export { FAQComponent } from "./FAQComponent";
+export { default as KlaviyoAuditHero } from "./KlaviyoAuditHero";

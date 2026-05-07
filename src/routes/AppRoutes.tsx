@@ -15,6 +15,9 @@ import RevenueAudit from "../pages/services/RevenueAudit";
 import PushNotification from "../pages/services/SocialMediaservices/PushNotification";
 import InstagramDM from "../pages/services/SocialMediaservices/InstagramDM";
 import ContactUs from "../pages/ContactUs";
+import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
+import RetentionAuditBooking from "../pages/RetentionAuditBooking";
+
 
 export function AppRoutes() {
   return (
@@ -61,6 +64,8 @@ export function AppRoutes() {
         <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
         <Route path={ROUTE_PATHS.WHY} element={<WhyPage />} />
         <Route path={ROUTE_PATHS.CONTACT} element={<ContactUs />} />
+        <Route path={ROUTE_PATHS.KLAVIYO_AUDIT} element={<KlaviyoAuditPage />} />
+        <Route path={ROUTE_PATHS.RETENTION_AUDIT_BOOKING} element={<RetentionAuditBooking />} />
         <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
       </Route>
     </Routes>

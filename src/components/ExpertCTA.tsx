@@ -2,23 +2,29 @@ import React from 'react';
 import { Button } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { ROUTE_PATHS } from '../routes/paths';
 
 interface ExpertCTAProps {
     text?: string;
     sx?: SxProps<Theme>;
     onClick?: () => void;
+    to?: string;
 }
 
 const ExpertCTA: React.FC<ExpertCTAProps> = ({
     text = '',
     sx,
-    onClick
+    onClick,
+    to = ROUTE_PATHS.RETENTION_AUDIT_BOOKING
 }) => {
     return (
         <Button
             variant="contained"
-            endIcon={<ArrowForwardIcon />}
+            component={onClick ? "button" : RouterLink}
+            to={onClick ? undefined : to}
             onClick={onClick}
+            endIcon={<ArrowForwardIcon />}
             sx={{
                 background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
                 color: "#060e1a",

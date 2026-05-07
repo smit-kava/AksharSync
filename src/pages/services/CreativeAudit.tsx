@@ -2,6 +2,8 @@ import { Box, Container, Typography, alpha, Stack, Button } from "@mui/material"
 import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../routes/paths";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import TouchAppIcon from "@mui/icons-material/TouchApp";
@@ -14,6 +16,7 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 const THEME_COLOR = "#c084fc"; // Purple-400
 
 export default function CreativeAudit() {
+  const navigate = useNavigate();
   return (
     <Box sx={{ bgcolor: "#060e1a", minHeight: "100vh", pt: 15, pb: 10, color: "#fff" }}>
       <Container maxWidth="lg">
@@ -48,6 +51,7 @@ export default function CreativeAudit() {
                   variant="contained"
                   size="large"
                   endIcon={<ArrowForwardIcon />}
+                  onClick={() => navigate(ROUTE_PATHS.CONTACT)}
                   sx={{
                     bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, px: 4,
                     fontWeight: 800, fontSize: "1rem", borderRadius: "12px",

@@ -2,6 +2,8 @@ import { Box, Container, Typography, alpha, Stack, Button, IconButton } from "@m
 import { FAQComponent } from "../../components";
 import { motion } from "framer-motion";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../routes/paths";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -58,6 +60,7 @@ export default function RevenueAudit() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -138,6 +141,7 @@ export default function RevenueAudit() {
                     variant="contained"
                     size="large"
                     endIcon={<ArrowForwardIcon />}
+                    onClick={() => navigate(ROUTE_PATHS.CONTACT)}
                     sx={{
                       bgcolor: THEME_COLOR, color: "#060e1a", py: 1.5, px: 4,
                       fontWeight: 800, fontSize: "1rem", borderRadius: "12px",
