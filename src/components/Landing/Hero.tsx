@@ -275,17 +275,29 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
       </Box>
 
       {/* Floating badge: Klaviyo */}
-      <Box sx={{
-        position: "absolute", top: -18, right: -18,
-        px: 1.8, py: 1.2, borderRadius: "16px",
-        background: "rgba(10,22,42,0.92)",
-        border: "1px solid rgba(127,208,255,0.18)",
-        backdropFilter: "blur(12px)",
-        boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
-        display: "flex", alignItems: "center", gap: 1.5,
-        animation: `${floatY} 4s ease-in-out infinite 0.5s`,
-      }}>
-        <TargetIcon sx={{ fontSize: 20, color: "#fbbf24", filter: "drop-shadow(0 0 6px rgba(251,191,36,0.3))" }} />
+      <Box 
+        component={RouterLink}
+        to={ROUTE_PATHS.KLAVIYO_AUDIT}
+        sx={{
+          position: "absolute", top: -18, right: -18,
+          px: 1.8, py: 1.2, borderRadius: "16px",
+          background: "rgba(10,22,42,0.92)",
+          border: "1px solid rgba(127,208,255,0.18)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", gap: 1.5,
+          animation: `${floatY} 4s ease-in-out infinite 0.5s`,
+          textDecoration: "none",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            transform: "translateY(-5px) scale(1.05)",
+            border: "1px solid rgba(127,208,255,0.4)",
+            bgcolor: "rgba(10,22,42,1)",
+          }
+        }}
+      >
+        <Box sx={{ fontSize: 20 }}>🇮🇳</Box>
         <Box>
           <Typography sx={{ fontSize: "0.68rem", color: "#fbbf24", fontWeight: 800, lineHeight: 1.1 }}>Klaviyo</Typography>
           <Typography sx={{ fontSize: "0.6rem", color: alpha("#fff", 0.45) }}>Connected</Typography>
