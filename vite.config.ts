@@ -57,6 +57,15 @@ export default defineConfig(({ mode }) => {
         },
       },
     ],
+    server: {
+      proxy: {
+        "/api/reviews": {
+          target: "https://aksharsync.com",
+          changeOrigin: true,
+          secure: true,
+        },
+      },
+    },
     build: {
       rollupOptions: {
         output: {

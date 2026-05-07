@@ -17,6 +17,7 @@ import InstagramDM from "../pages/services/SocialMediaservices/InstagramDM";
 import ContactUs from "../pages/ContactUs";
 import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
 import RetentionAuditBooking from "../pages/RetentionAuditBooking";
+import WriteReview from "../pages/WriteReview";
 
 
 export function AppRoutes() {
@@ -68,6 +69,9 @@ export function AppRoutes() {
         <Route path={ROUTE_PATHS.RETENTION_AUDIT_BOOKING} element={<RetentionAuditBooking />} />
         <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
       </Route>
+
+      {/* Standalone Pages (No Footer/Nav) */}
+      <Route path={ROUTE_PATHS.WRITE_REVIEW} element={<WriteReview />} />
     </Routes>
   );
 }

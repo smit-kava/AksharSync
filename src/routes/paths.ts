@@ -47,4 +47,7 @@ export const ROUTE_PATHS = {
 
   // Booking
   RETENTION_AUDIT_BOOKING: "/book-retention-audit",
+
+  // Review
+  WRITE_REVIEW: "/write-review",
 } as const;
