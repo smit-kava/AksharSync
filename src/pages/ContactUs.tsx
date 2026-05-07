@@ -83,7 +83,7 @@ const ContactUs = () => {
         setStatus({ type: null, message: "" });
 
         try {
-            const response = await fetch("/api/send-email.php", {
+            const response = await fetch("https://aksharsync.com/api/send-email.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
