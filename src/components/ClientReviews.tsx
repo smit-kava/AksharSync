@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 // ── API Base – used for fetching and submitting reviews ──
 const API_BASE = '/api/reviews';
@@ -419,7 +420,7 @@ export const ClientReviews = () => {
         }}>
             {/* Section Header */}
             <Container maxWidth="lg" sx={{ mb: 5, textAlign: 'center' }}>
-                <Typography
+                {/* <Typography
                     component="span"
                     sx={{
                         display: 'inline-block',
@@ -436,7 +437,7 @@ export const ClientReviews = () => {
                     }}
                 >
                     Client Testimonials
-                </Typography>
+                </Typography> */}
 
                 <Typography variant="h2" sx={{
                     fontWeight: 900,
@@ -455,39 +456,9 @@ export const ClientReviews = () => {
                     </Box>
                 </Typography>
 
-                <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', mb: 3 }}>
+                <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', mb: 0 }}>
                     Real results from real brands — unfiltered and verified.
                 </Typography>
-
-                {/* CTA to write review */}
-                <Tooltip title="Share your experience — takes less than 2 minutes" arrow>
-                    <Button
-                        id="write-review-btn"
-                        onClick={() => navigate(ROUTE_PATHS.WRITE_REVIEW)}
-                        variant="outlined"
-                        startIcon={<EditNoteIcon />}
-                        sx={{
-                            borderColor: 'rgba(56,189,248,0.4)',
-                            color: '#38bdf8',
-                            borderRadius: '50px',
-                            px: 3.5,
-                            py: 1,
-                            fontWeight: 700,
-                            textTransform: 'none',
-                            fontSize: '0.9rem',
-                            backdropFilter: 'blur(8px)',
-                            transition: 'all 0.3s',
-                            '&:hover': {
-                                bgcolor: 'rgba(56,189,248,0.1)',
-                                borderColor: '#38bdf8',
-                                transform: 'translateY(-2px)',
-                                boxShadow: '0 8px 25px rgba(56,189,248,0.2)',
-                            },
-                        }}
-                    >
-                        Write a Review
-                    </Button>
-                </Tooltip>
             </Container>
 
             {/* Scrolling Reviews Ticker */}
@@ -515,16 +486,64 @@ export const ClientReviews = () => {
                 </motion.div>
             </Box>
 
-            {/* Stats bar */}
-            <Container maxWidth="lg" sx={{ mt: 5, textAlign: 'center' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
-                    <Rating value={Math.round(avgRating)} readOnly size="small" sx={{ color: '#FBBC05' }} />
-                    <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                        Overall rating:{' '}
-                        <strong style={{ color: 'rgba(255,255,255,0.75)' }}>{avgRating} / 5</strong>
-                        {' '}based on{' '}
-                        <strong style={{ color: 'rgba(255,255,255,0.75)' }}>{totalCount} verified reviews</strong>
-                    </Typography>
+            {/* Stats bar & CTA */}
+            <Container maxWidth="lg" sx={{ mt: 7 }}>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 3,
+                    bgcolor: 'rgba(255,255,255,0.02)',
+                    p: { xs: 3, md: 2.5 },
+                    px: { md: 5 },
+                    borderRadius: '24px',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    backdropFilter: 'blur(10px)',
+                }}>
+                    <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 2, 
+                        flexWrap: 'wrap', 
+                        justifyContent: { xs: 'center', md: 'flex-start' } 
+                    }}>
+                        <Rating value={Math.round(avgRating)} readOnly size="small" sx={{ color: '#FBBC05' }} />
+                        <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem' }}>
+                            Overall rating:{' '}
+                            <strong style={{ color: '#fff' }}>{avgRating} / 5</strong>
+                            {' '}based on{' '}
+                            <strong style={{ color: '#fff' }}>{totalCount} verified reviews</strong>
+                        </Typography>
+                    </Box>
+
+                    <Tooltip title="Share your experience — takes less than 2 minutes" arrow>
+                        <Button
+                            id="write-review-btn"
+                            onClick={() => navigate(ROUTE_PATHS.WRITE_REVIEW)}
+                            variant="contained"
+                            startIcon={<FavoriteIcon sx={{ fontSize: 18 }} />}
+                            sx={{
+                                background: 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)',
+                                color: '#fff',
+                                borderRadius: '50px',
+                                px: 4,
+                                py: 1.4,
+                                fontWeight: 800,
+                                textTransform: 'none',
+                                fontSize: '0.95rem',
+                                boxShadow: '0 8px 25px rgba(56,189,248,0.25)',
+                                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                '&:hover': {
+                                    transform: 'scale(1.05) translateY(-2px)',
+                                    boxShadow: '0 12px 30px rgba(56,189,248,0.4)',
+                                    background: 'linear-gradient(135deg, #0ea5e9 0%, #4f46e5 100%)',
+                                },
+                            }}
+                        >
+                            Write a Review
+                        </Button>
+                    </Tooltip>
                 </Box>
             </Container>
 
