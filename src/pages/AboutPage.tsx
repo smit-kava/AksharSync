@@ -1,6 +1,6 @@
 import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { keyframes, styled } from "@mui/system";
-import { ExpertCTA as CommonExpertCTA } from "../components";
+import { ExpertCTA as CommonExpertCTA, CountUp } from "../components";
 import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
 import {
@@ -99,11 +99,11 @@ const TimelineDot = styled(Box)<{ color?: string }>(({ color = "#7fd0ff" }) => (
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const stats = [
-    { n: "2014", l: "Founded" },
-    { n: "10+", l: "Years of expertise" },
-    { n: "7", l: "ESP platforms" },
-    { n: "5+", l: "Global regions" },
-    { n: "100%", l: "White-label ready" },
+    { n: 2014, suffix: "", l: "Founded" },
+    { n: 10, suffix: "+", l: "Years of expertise" },
+    { n: 7, suffix: "", l: "ESP platforms" },
+    { n: 5, suffix: "+", l: "Global regions" },
+    { n: 100, suffix: "%", l: "White-label ready" },
 ];
 
 const values = [
@@ -244,7 +244,9 @@ const AboutPage = () => {
                         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
                             {stats.map((s, i) => (
                                 <StatCard key={i}>
-                                    <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, mb: 0.5, background: "linear-gradient(135deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{s.n}</Typography>
+                                    <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, mb: 0.5, background: "linear-gradient(135deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                                        <CountUp to={s.n} suffix={s.suffix} duration={2} />
+                                    </Typography>
                                     <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), textTransform: "uppercase", letterSpacing: "0.1em" }}>{s.l}</Typography>
                                 </StatCard>
                             ))}
@@ -289,7 +291,9 @@ const AboutPage = () => {
                                                 <Box key={item.label}>
                                                     <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                                                         <Typography sx={{ fontSize: "0.82rem", fontWeight: 600, color: alpha("#fff", 0.75) }}>{item.label}</Typography>
-                                                        <Typography sx={{ fontSize: "0.82rem", fontWeight: 700, color: item.color }}>{item.pct}%</Typography>
+                                                        <Typography sx={{ fontSize: "0.82rem", fontWeight: 700, color: item.color }}>
+                                                            <CountUp to={item.pct} suffix="%" duration={1.5} />
+                                                        </Typography>
                                                     </Box>
                                                     <Box sx={{ height: 6, borderRadius: "999px", bgcolor: "rgba(255,255,255,0.05)", overflow: "hidden" }}>
                                                         <Box sx={{ height: "100%", width: `${item.pct}%`, borderRadius: "999px", background: `linear-gradient(90deg, ${item.color}88, ${item.color})`, transition: "width 1s ease" }} />
