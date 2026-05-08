@@ -1,5 +1,7 @@
 import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { keyframes, styled } from "@mui/system";
+import { animate, motion, useInView, useMotionValue, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { ExpertCTA as CommonExpertCTA } from "../components";
 import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
@@ -59,12 +61,82 @@ const PTag = styled(Box)(({ }) => ({
     }
 }));
 
+// ─── Animated Stat Card ───────────────────────────────────────────────────────
+function StatCard({ n, l, color, delay }: { n: string; l: string; color: string; delay: number }) {
+    const numericStr = n.replace(/[^0-9]/g, "");
+    const suffix = n.replace(/[0-9]/g, "");
+    const target = parseInt(numericStr, 10) || 0;
+
+    const motionVal = useMotionValue(0);
+    // Round to nearest integer for display
+    const displayVal = useTransform(motionVal, (v) => Math.round(v));
+
+    const ref = useRef<HTMLDivElement>(null);
+    const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+    useEffect(() => {
+        if (isInView) {
+            const controls = animate(motionVal, target, {
+                duration: 1.8,
+                ease: [0.25, 0.1, 0.25, 1],
+                delay: delay,
+            });
+            return () => controls.stop();
+        }
+    }, [isInView]);
+
+    return (
+        <motion.div
+            ref={ref as any}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, delay, ease: "easeOut" }}
+            style={{ flex: 1 }}
+        >
+            <Box sx={{
+                textAlign: "center", py: { xs: 3, md: 4 }, px: 2,
+                position: "relative",
+                "&:after": {
+                    content: '""',
+                    position: "absolute", bottom: 0, left: "10%", right: "10%",
+                    height: "1px",
+                    background: `linear-gradient(90deg, transparent, ${color}33, transparent)`
+                }
+            }}>
+                <Typography component="div" sx={{
+                    fontSize: { xs: "2rem", md: "2.6rem" },
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    mb: 0.8,
+                    background: `linear-gradient(135deg, #fff 0%, ${color} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontVariantNumeric: "tabular-nums",
+                    letterSpacing: "-0.03em",
+                }}>
+                    <motion.span>{displayVal}</motion.span>{suffix}
+                </Typography>
+                <Typography sx={{
+                    fontSize: "0.7rem",
+                    color: alpha("#fff", 0.35),
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em",
+                    fontWeight: 600
+                }}>
+                    {l}
+                </Typography>
+            </Box>
+        </motion.div>
+    );
+}
+
 const WhyPage = () => {
     const stats = [
-        { n: "10+", l: "Years since 2014" },
-        { n: "7", l: "ESP platforms" },
-        { n: "5+", l: "Global regions" },
-        { n: "100%", l: "White-label ready" }
+        { n: "10+", l: "Years since 2014", color: "#7fd0ff" },
+        { n: "7", l: "ESP platforms", color: "#a78bfa" },
+        { n: "5+", l: "Global regions", color: "#34d399" },
+        { n: "100%", l: "White-label ready", color: "#fbbf24" }
     ];
 
     const coreAdvantages = [
@@ -149,22 +221,29 @@ const WhyPage = () => {
 
             {/* ── STATS BAR ── */}
             <Box sx={{
-                display: "flex",
-                justifyContent: "center",
                 borderTop: "1px solid rgba(255,255,255,0.05)",
                 borderBottom: "1px solid rgba(255,255,255,0.05)",
-                overflowX: "auto",
-                bgcolor: "rgba(255,255,255,0.01)"
+                bgcolor: "rgba(255,255,255,0.01)",
+                position: "relative",
+                overflow: "hidden"
             }}>
-                {stats.map((s, i) => (
-                    <Box key={i} sx={{
-                        flex: 1, minWidth: 140, textAlign: "center", py: 3, px: 2,
-                        borderRight: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none"
-                    }}>
-                        <Typography sx={{ fontSize: "1.6rem", fontWeight: 700, mb: 0.2, color: "#fff" }}>{s.n}</Typography>
-                        <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.3), textTransform: "uppercase", letterSpacing: "0.1em" }}>{s.l}</Typography>
-                    </Box>
-                ))}
+                {/* subtle shimmer glow behind the bar */}
+                <Box sx={{
+                    position: "absolute", inset: 0,
+                    background: "radial-gradient(ellipse at 50% 50%, rgba(127,208,255,0.04) 0%, transparent 70%)",
+                    pointerEvents: "none"
+                }} />
+                <Box sx={{ display: "flex", flexWrap: { xs: "wrap", sm: "nowrap" } }}>
+                    {stats.map((s, i) => (
+                        <Box key={i} sx={{
+                            flex: "1 1 140px",
+                            borderRight: { sm: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" },
+                            borderBottom: { xs: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none", sm: "none" }
+                        }}>
+                            <StatCard n={s.n} l={s.l} color={s.color} delay={i * 0.12} />
+                        </Box>
+                    ))}
+                </Box>
             </Box>
 
             {/* ── CORE ADVANTAGES (STAGGERED VERTICAL LAYOUT) ── */}

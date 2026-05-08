@@ -41,4 +41,13 @@ export const ROUTE_PATHS = {
   ABOUT: "/about",
   WHY: "/why",
   CONTACT: "/contact",
+
+  // Free Tools
+  KLAVIYO_AUDIT: "/klaviyo-self-audit",
+
+  // Booking
+  RETENTION_AUDIT_BOOKING: "/book-retention-audit",
+
+  // Review
+  WRITE_REVIEW: "/write-review",
 } as const;

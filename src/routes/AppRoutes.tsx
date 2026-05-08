@@ -1,5 +1,6 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { CommonLayout } from "../components";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import { CommonLayout, PageTransition } from "../components";
 import LandingPage from "../pages/LandingPage";
 import ServicesPage from "../pages/ServicesPage";
 import ServiceDetailPage from "../pages/services/ServiceDetailPage";
@@ -15,54 +16,66 @@ import RevenueAudit from "../pages/services/RevenueAudit";
 import PushNotification from "../pages/services/SocialMediaservices/PushNotification";
 import InstagramDM from "../pages/services/SocialMediaservices/InstagramDM";
 import ContactUs from "../pages/ContactUs";
+import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
+import RetentionAuditBooking from "../pages/RetentionAuditBooking";
+import WriteReview from "../pages/WriteReview";
 
 export function AppRoutes() {
+  const location = useLocation();
+
   return (
-    <Routes>
-      <Route element={<CommonLayout />}>
-        <Route path={ROUTE_PATHS.HOME} element={<LandingPage />} />
-        <Route path={ROUTE_PATHS.SERVICES} element={<ServicesPage />} />
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route element={<CommonLayout />}>
+          <Route path={ROUTE_PATHS.HOME} element={<PageTransition><LandingPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICES} element={<PageTransition><ServicesPage /></PageTransition>} />
 
-        {/* Lifecycle & Automation */}
-        <Route path={ROUTE_PATHS.SERVICE_EMAIL_FLOWS} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION} element={<ServiceDetailPage />} />
+          {/* Lifecycle & Automation */}
+          <Route path={ROUTE_PATHS.SERVICE_EMAIL_FLOWS} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_CUSTOMER_JOURNEYS} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_MULTICHANNEL_AUTOMATION} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
 
-        {/* Technical Architecture */}
-        <Route path={ROUTE_PATHS.SERVICE_ESP_MIGRATION} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_CRM_DATA_SYNC} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT} element={<ServiceDetailPage />} />
+          {/* Technical Architecture */}
+          <Route path={ROUTE_PATHS.SERVICE_ESP_MIGRATION} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_CRM_DATA_SYNC} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDITS} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_LIQUID_AMPSCRIPT} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
 
-        {/* Creative Production */}
-        <Route path={ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_UX_UI_DESIGN} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS} element={<ServiceDetailPage />} />
+          {/* Creative Production */}
+          <Route path={ROUTE_PATHS.SERVICE_MODULAR_TEMPLATES} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_UX_UI_DESIGN} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_WHITE_LABEL_SOLUTIONS} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
 
-        {/* Additional Services */}
-        <Route path={ROUTE_PATHS.SERVICE_DIGITAL_STRATEGY} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_SEO} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_CONTENT} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_WEB_DEV} element={<ServiceDetailPage />} />
+          {/* Additional Services */}
+          <Route path={ROUTE_PATHS.SERVICE_DIGITAL_STRATEGY} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_SEO} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_CONTENT} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_WEB_DEV} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
 
-        {/* Messaging & Engagement Channels */}
-        <Route path={ROUTE_PATHS.SERVICE_SMS} element={<SMSService />} />
-        <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<PushNotification />} />
-        <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<WhatsappService />} />
-        <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<ServiceDetailPage />} />
-        <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<InstagramDM />} />
+          {/* Messaging & Engagement Channels */}
+          <Route path={ROUTE_PATHS.SERVICE_SMS} element={<PageTransition><SMSService /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<PageTransition><PushNotification /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<PageTransition><WhatsappService /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<PageTransition><InstagramDM /></PageTransition>} />
 
-        {/* Audit Services */}
-        <Route path={ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT} element={<LifecycleAudit />} />
-        <Route path={ROUTE_PATHS.SERVICE_CREATIVE_AUDIT} element={<CreativeAudit />} />
-        <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT} element={<DeliverabilityAudit />} />
-        <Route path={ROUTE_PATHS.SERVICE_REVENUE_AUDIT} element={<RevenueAudit />} />
+          {/* Audit Services */}
+          <Route path={ROUTE_PATHS.SERVICE_LIFECYCLE_AUDIT} element={<PageTransition><LifecycleAudit /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_CREATIVE_AUDIT} element={<PageTransition><CreativeAudit /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT} element={<PageTransition><DeliverabilityAudit /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_REVENUE_AUDIT} element={<PageTransition><RevenueAudit /></PageTransition>} />
 
-        <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
-        <Route path={ROUTE_PATHS.WHY} element={<WhyPage />} />
-        <Route path={ROUTE_PATHS.CONTACT} element={<ContactUs />} />
-        <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
-      </Route>
-    </Routes>
+          <Route path={ROUTE_PATHS.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.WHY} element={<PageTransition><WhyPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.CONTACT} element={<PageTransition><ContactUs /></PageTransition>} />
+          <Route path={ROUTE_PATHS.KLAVIYO_AUDIT} element={<PageTransition><KlaviyoAuditPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.RETENTION_AUDIT_BOOKING} element={<PageTransition><RetentionAuditBooking /></PageTransition>} />
+          <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
+        </Route>
+
+        {/* Standalone Pages (No Footer/Nav) */}
+        <Route path={ROUTE_PATHS.WRITE_REVIEW} element={<PageTransition><WriteReview /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
   );
 }

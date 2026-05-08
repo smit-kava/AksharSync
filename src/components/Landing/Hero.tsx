@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
-import {
-  Box, Container, Typography, Button, Avatar,
-  AvatarGroup, alpha, Fade
-} from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import {
+  alpha,
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Container,
+  Fade,
+  Typography
+} from "@mui/material";
 import { keyframes } from "@mui/system";
-import { WhatsAppIcon, EmailIcon, ChatIcon, TargetIcon, PushNotificationIcon, RcsIcon } from "../icons";
+import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { ROUTE_PATHS } from "../../routes/paths";
+import { ChatIcon, EmailIcon, PushNotificationIcon, RcsIcon, TargetIcon, WhatsAppIcon } from "../icons";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 const pulseGlow = keyframes`
@@ -273,17 +281,29 @@ function HeroVisualPanel({ visible }: { visible: boolean }) {
       </Box>
 
       {/* Floating badge: Klaviyo */}
-      <Box sx={{
-        position: "absolute", top: -18, right: -18,
-        px: 1.8, py: 1.2, borderRadius: "16px",
-        background: "rgba(10,22,42,0.92)",
-        border: "1px solid rgba(127,208,255,0.18)",
-        backdropFilter: "blur(12px)",
-        boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
-        display: "flex", alignItems: "center", gap: 1.5,
-        animation: `${floatY} 4s ease-in-out infinite 0.5s`,
-      }}>
-        <TargetIcon sx={{ fontSize: 20, color: "#fbbf24", filter: "drop-shadow(0 0 6px rgba(251,191,36,0.3))" }} />
+      <Box
+        component={RouterLink}
+        to={ROUTE_PATHS.KLAVIYO_AUDIT}
+        sx={{
+          position: "absolute", top: -18, right: -18,
+          px: 1.8, py: 1.2, borderRadius: "16px",
+          background: "rgba(10,22,42,0.92)",
+          border: "1px solid rgba(127,208,255,0.18)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", gap: 1.5,
+          animation: `${floatY} 4s ease-in-out infinite 0.5s`,
+          textDecoration: "none",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            transform: "translateY(-5px) scale(1.05)",
+            border: "1px solid rgba(127,208,255,0.4)",
+            bgcolor: "rgba(10,22,42,1)",
+          }
+        }}
+      >
+        <Box sx={{ fontSize: 20 }}>🇮🇳</Box>
         <Box>
           <Typography sx={{ fontSize: "0.68rem", color: "#fbbf24", fontWeight: 800, lineHeight: 1.1 }}>Klaviyo</Typography>
           <Typography sx={{ fontSize: "0.6rem", color: alpha("#fff", 0.45) }}>Connected</Typography>
@@ -392,6 +412,8 @@ export default function Hero() {
               <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5, pt: 2 }}>
                 <Button
                   variant="contained"
+                  component={RouterLink}
+                  to={ROUTE_PATHS.RETENTION_AUDIT_BOOKING}
                   endIcon={<ArrowForwardIcon />}
                   sx={{ bgcolor: "#fff", color: "#060e1a", px: 3, py: 1.5, borderRadius: "10px", fontWeight: 800, textTransform: "none", fontSize: "0.95rem", "&:hover": { bgcolor: "#e8f4ff", transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
@@ -399,6 +421,8 @@ export default function Hero() {
                 </Button>
                 <Button
                   variant="outlined"
+                  component={RouterLink}
+                  to={ROUTE_PATHS.CONTACT}
                   sx={{ color: "#fff", borderColor: alpha("#fff", 0.2), px: 3, py: 1.5, borderRadius: "10px", fontWeight: 600, textTransform: "none", fontSize: "0.95rem", "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.05), transform: "translateY(-2px)" }, transition: "all 0.2s" }}
                 >
                   View Case Studies

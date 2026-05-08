@@ -1,0 +1,17 @@
+# CORS headers for the reviews API
+# Enforced at server level to handle cases where nginx/PHP-FPM strips headers
+
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With"
+
+# Handle OPTIONS preflight requests immediately
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=204,L]
+
+# Block direct browser access to db.php
+<Files "db.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
