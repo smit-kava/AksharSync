@@ -704,12 +704,6 @@ export default function InstagramDM() {
                     </Box>
                 </Container>
             </Box>
-
-
-
-            <Box sx={{ py: 8 }}>
-                <ClientReviews />
-            </Box>
             <FAQComponent
                 title={<>Frequently Asked <GradientText>Questions</GradientText></>}
                 items={[

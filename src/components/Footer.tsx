@@ -24,18 +24,8 @@ const legalLinks = [
 
 const socialLinks = [
   {
-    label: "LinkedIn",
-    to: "#",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
-        <circle cx="4" cy="4" r="2" />
-      </svg>
-    ),
-  },
-  {
     label: "Twitter / X",
-    to: "#",
+    to: "https://x.com/Aksharsync",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -44,7 +34,7 @@ const socialLinks = [
   },
   {
     label: "Instagram",
-    to: "#",
+    to: "https://www.instagram.com/aksharsync?igsh=MXh5cnB5eDJ6a2IyOQ==",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -53,16 +43,8 @@ const socialLinks = [
       </svg>
     ),
   },
-  {
-    label: "Facebook",
-    to: "#",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
 ];
+
 
 // ─── Link component (swap with react-router Link if needed) ─────────────────────────────
 // (Removed unused 'A' component)
@@ -172,24 +154,7 @@ export function Footer() {
           transform: translateY(-2px);
         }
 
-        .footer-fb-btn {
-          display: inline-flex; align-items: center; gap: 9px;
-          padding: 11px 22px; border-radius: 10px;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.2);
-          color: rgba(255,255,255,0.85);
-          font-size: 0.88rem; font-weight: 600;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-          cursor: pointer; transition: all 0.25s ease;
-          text-decoration: none;
-          white-space: nowrap;
-        }
-        .footer-fb-btn:hover {
-          background: rgba(255,255,255,0.06);
-          border-color: rgba(255,255,255,0.45);
-          color: white;
-          transform: translateY(-1px);
-        }
+
 
         .legal-link {
           color: rgba(255,255,255,0.3);
@@ -297,12 +262,6 @@ export function Footer() {
 
                 {/* Socials */}
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <a href="#" className="footer-fb-btn" style={{ padding: "8px 16px", fontSize: "0.8rem" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                    </svg>
-                    Community
-                  </a>
                   <div style={{ display: "flex", gap: 6 }}>
                     {socialLinks.map((s) => (
                       <a key={s.label} href={s.to} className="footer-social-btn" title={s.label} style={{ width: 32, height: 32 }}>

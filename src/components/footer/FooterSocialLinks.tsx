@@ -1,16 +1,10 @@
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import XIcon from "@mui/icons-material/X";
-import YouTubeIcon from "@mui/icons-material/YouTube";
 import { IconButton, Stack } from "@mui/material";
 
 const socialItems = [
-  { label: "YouTube", icon: <YouTubeIcon />, href: "#" },
-  { label: "LinkedIn", icon: <LinkedInIcon />, href: "#" },
-  { label: "Instagram", icon: <InstagramIcon />, href: "#" },
-  { label: "Facebook", icon: <FacebookOutlinedIcon />, href: "#" },
-  { label: "X", icon: <XIcon />, href: "#" },
+  { label: "Instagram", icon: <InstagramIcon />, href: "https://www.instagram.com/aksharsync?igsh=MXh5cnB5eDJ6a2IyOQ==" },
+  { label: "X", icon: <XIcon />, href: "https://x.com/Aksharsync" },
 ];
 
 export function FooterSocialLinks() {
