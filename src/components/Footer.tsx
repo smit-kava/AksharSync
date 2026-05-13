@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import logo from "../assets/Logo.svg";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const serviceLinks = [
@@ -226,13 +227,17 @@ export function Footer() {
               <div className="footer-brand-col" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
                 {/* Logo */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 10,
-                    background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1rem", fontWeight: 800, color: "#06101e",
-                    flexShrink: 0,
-                  }}>A</div>
+                  <img
+                    src={logo}
+                    alt="AksharSync Logo"
+                    style={{
+                      width: 64,
+                      height: 64,
+                      objectFit: "contain",
+                      flexShrink: 0,
+                      filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
+                    }}
+                  />
                   <span style={{
                     fontSize: "1.2rem", fontWeight: 800, color: "white",
                     letterSpacing: "-0.03em",

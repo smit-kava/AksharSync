@@ -22,6 +22,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import { ROUTE_PATHS } from "../routes/paths";
+import logo from "../assets/Logo.svg";
 import {
   LifecycleIcon,
   ArchitectureIcon,
@@ -294,37 +295,32 @@ export function Header() {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1.5,
+              gap: 1,
               cursor: "pointer",
               "&:hover .logo-icon": { transform: "rotate(-10deg) scale(1.1)" },
             }}
           >
             <Box
+              component="img"
+              src={logo}
+              alt="AksharSync Logo"
               className="logo-icon"
               sx={{
-                width: 34,
-                height: 34,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #0D3B66 0%, #472187 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.9rem",
-                fontWeight: 800,
-                color: "common.white",
-                border: "1px solid rgba(255,255,255,0.2)",
-                transition: "all 0.3s ease",
+                width: 80,
+                height: 80,
+                objectFit: "contain",
+                transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                filter: "drop-shadow(0 0 12px rgba(127, 208, 255, 0.2))",
               }}
-            >
-              A
-            </Box>
+            />
             <Typography
               variant="h6"
               sx={{
                 fontFamily: "'Anta', sans-serif",
-                fontSize: "1.35rem",
+                fontSize: "1.5rem",
                 color: "common.white",
                 letterSpacing: "-0.02em",
+                fontWeight: 700,
                 "& span": { color: "#7fd0ff" },
               }}
             >
@@ -686,15 +682,16 @@ export function Header() {
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <Box
+                component="img"
+                src={logo}
+                alt="Logo"
                 sx={{
-                  width: 30, height: 30, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #0D3B66 0%, #472187 100%)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#fff", fontWeight: 800, fontSize: "0.8rem",
+                  width: 50,
+                  height: 50,
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 0 8px rgba(127, 208, 255, 0.15))"
                 }}
-              >
-                A
-              </Box>
+              />
               <Typography variant="h6" sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}>
                 Akshar<span style={{ color: "#7fd0ff" }}>Sync</span>
               </Typography>
