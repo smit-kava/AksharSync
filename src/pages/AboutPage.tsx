@@ -1,4 +1,5 @@
 import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
+import logo from "../assets/Logo.svg";
 import { keyframes, styled } from "@mui/system";
 import { ExpertCTA as CommonExpertCTA, CountUp } from "../components";
 import { GradientText } from "../components/Landing/Shared";
@@ -27,6 +28,38 @@ const float = keyframes`
 const spin = keyframes`
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+`;
+
+const spinReverse = keyframes`
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+`;
+
+const shimmer = keyframes`
+  0%   { background-position: -400% center; }
+  100% { background-position:  400% center; }
+`;
+
+const logoGlow = keyframes`
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(50,245,245,0.3)) drop-shadow(0 0 30px rgba(50,245,245,0.1)); }
+  50%       { filter: drop-shadow(0 0 22px rgba(50,245,245,0.7)) drop-shadow(0 0 55px rgba(127,208,255,0.3)); }
+`;
+
+const scanline = keyframes`
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.4; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(800%); opacity: 0; }
+`;
+
+const textReveal = keyframes`
+  0%   { clip-path: inset(0 100% 0 0); opacity: 0; }
+  100% { clip-path: inset(0 0% 0 0);   opacity: 1; }
+`;
+
+const ringPulse = keyframes`
+  0%   { transform: scale(1);    opacity: 0.6; }
+  100% { transform: scale(1.55); opacity: 0; }
 `;
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -146,36 +179,11 @@ const values = [
 ];
 
 const timeline = [
-    {
-        year: "2014",
-        label: "Founded",
-        desc: "AksharSync was established with a focus on email development and lifecycle marketing.",
-        color: "#7fd0ff",
-    },
-    {
-        year: "2017",
-        label: "ESP Expansion",
-        desc: "Extended capabilities across Klaviyo, HubSpot, Braze, and Salesforce Marketing Cloud.",
-        color: "#a78bfa",
-    },
-    {
-        year: "2020",
-        label: "Global Reach",
-        desc: "Launched operations across UK, EU, Netherlands, and international ecommerce markets.",
-        color: "#34d399",
-    },
-    {
-        year: "2022",
-        label: "Omnichannel",
-        desc: "Rolled out SMS, WhatsApp, push notification, and RCS retention systems.",
-        color: "#fbbf24",
-    },
-    {
-        year: "2024",
-        label: "White-label Agency",
-        desc: "Became the trusted silent partner for 20+ digital agencies and enterprise brands.",
-        color: "#f472b6",
-    },
+    { year: "2014", label: "Founded", desc: "AksharSync was established with a focus on email development and lifecycle marketing.", color: "#7fd0ff" },
+    { year: "2017", label: "ESP Expansion", desc: "Extended capabilities across Klaviyo, HubSpot, Braze, and Salesforce Marketing Cloud.", color: "#a78bfa" },
+    { year: "2020", label: "Global Reach", desc: "Launched operations across UK, EU, Netherlands, and international ecommerce markets.", color: "#34d399" },
+    { year: "2022", label: "Omnichannel", desc: "Rolled out SMS, WhatsApp, push notification, and RCS retention systems.", color: "#fbbf24" },
+    { year: "2024", label: "White-label Agency", desc: "Became the trusted silent partner for 20+ digital agencies and enterprise brands.", color: "#f472b6" },
 ];
 
 const team = [
@@ -201,29 +209,230 @@ const AboutPage = () => {
     return (
         <Box sx={{ bgcolor: "#060e1a", color: "#fff", minHeight: "100vh", overflowX: "hidden" }}>
 
-            {/* ── HERO ── */}
+            {/* ══ HERO ══ */}
             <Box sx={{ pt: { xs: 14, md: 20 }, pb: 10, textAlign: "center", position: "relative" }}>
+
                 <OrbGlow sx={{ top: "-80px", left: "50%", transform: "translateX(-50%)", width: 700, height: 500, background: "radial-gradient(ellipse, rgba(99,102,241,0.14) 0%, transparent 65%)" }} />
                 <OrbGlow sx={{ top: 100, left: "10%", width: 300, height: 300, background: "radial-gradient(ellipse, rgba(127,208,255,0.07) 0%, transparent 70%)", animation: `${pulse} 4s ease infinite` }} />
                 <OrbGlow sx={{ top: 60, right: "8%", width: 240, height: 240, background: "radial-gradient(ellipse, rgba(167,139,250,0.07) 0%, transparent 70%)", animation: `${pulse} 5s ease infinite 1s` }} />
 
-                {/* ── Circular emblem badge ── */}
-                <Box sx={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", height: 160, mb: 3, zIndex: 1 }}>
-                    {/* Outer dashed ring 160px — spinning 12s blue dot */}
-                    <Box sx={{ position: "absolute", width: 160, height: 160, borderRadius: "50%", border: "1px dashed rgba(127,208,255,0.22)", animation: `${spin} 12s linear infinite` }}>
-                        <Box sx={{ position: "absolute", top: -4, left: "50%", transform: "translateX(-50%)", width: 8, height: 8, borderRadius: "50%", bgcolor: "#7fd0ff", boxShadow: "0 0 12px #7fd0ff" }} />
+                {/* ══ CENTERED BRAND LOCKUP: Logo on top, Text below ══ */}
+                <Box sx={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2.5,
+                    mb: 6,
+                }}>
+
+                    {/* ── Logo ── */}
+                    <Box sx={{
+                        position: "relative",
+                        width: 160,
+                        height: 160,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}>
+                        {/* Sonar pulse rings */}
+                        {[0, 1].map((n) => (
+                            <Box key={n} sx={{
+                                position: "absolute",
+                                width: 148,
+                                height: 148,
+                                borderRadius: "50%",
+                                border: "1px solid rgba(50,245,245,0.4)",
+                                animation: `${ringPulse} 2.8s ease-out infinite`,
+                                animationDelay: `${n * 1.4}s`,
+                            }} />
+                        ))}
+
+                        {/* Outer dashed orbit — CW, cyan dot */}
+                        <Box sx={{
+                            position: "absolute",
+                            width: 148,
+                            height: 148,
+                            borderRadius: "50%",
+                            border: "1px dashed rgba(127,208,255,0.28)",
+                            animation: `${spin} 10s linear infinite`,
+                        }}>
+                            <Box sx={{
+                                position: "absolute",
+                                top: -5,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                bgcolor: "#32f5f5",
+                                boxShadow: "0 0 14px 4px rgba(50,245,245,0.8)",
+                            }} />
+                        </Box>
+
+                        {/* Inner orbit — CCW, purple dot */}
+                        <Box sx={{
+                            position: "absolute",
+                            width: 108,
+                            height: 108,
+                            borderRadius: "50%",
+                            border: "1px solid rgba(167,139,250,0.22)",
+                            animation: `${spinReverse} 7s linear infinite`,
+                        }}>
+                            <Box sx={{
+                                position: "absolute",
+                                bottom: -4,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                width: 7,
+                                height: 7,
+                                borderRadius: "50%",
+                                bgcolor: "#a78bfa",
+                                boxShadow: "0 0 10px 3px rgba(167,139,250,0.7)",
+                            }} />
+                        </Box>
+
+                        {/* Glass disc */}
+                        <Box sx={{
+                            position: "absolute",
+                            width: 86,
+                            height: 86,
+                            borderRadius: "50%",
+                            background: "rgba(6,14,26,0.92)",
+                            border: "1px solid rgba(50,245,245,0.18)",
+                            backdropFilter: "blur(16px)",
+                            boxShadow: "0 0 40px rgba(50,245,245,0.08), inset 0 0 20px rgba(50,245,245,0.03)",
+                        }} />
+
+                        {/* Logo */}
+                        <Box
+                            component="img"
+                            src={logo}
+                            alt="AksharSync"
+                            sx={{
+                                position: "relative",
+                                zIndex: 2,
+                                width: 60,
+                                height: 60,
+                                objectFit: "contain",
+                                animation: `${logoGlow} 3s ease-in-out infinite`,
+                            }}
+                        />
+
+                        {/* Scanline sweep inside the disc */}
+                        <Box sx={{
+                            position: "absolute",
+                            zIndex: 3,
+                            width: 86,
+                            height: 86,
+                            borderRadius: "50%",
+                            overflow: "hidden",
+                            pointerEvents: "none",
+                        }}>
+                            <Box sx={{
+                                position: "absolute",
+                                left: 0,
+                                right: 0,
+                                height: "14%",
+                                background: "linear-gradient(to bottom, transparent, rgba(50,245,245,0.18), transparent)",
+                                animation: `${scanline} 3.5s ease-in-out infinite`,
+                            }} />
+                        </Box>
                     </Box>
-                    {/* Inner ring 120px — counter-spinning 8s purple dot */}
-                    <Box sx={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", border: "1px solid rgba(167,139,250,0.25)", animation: `${spin} 8s linear infinite reverse` }}>
-                        <Box sx={{ position: "absolute", bottom: -4, left: "50%", transform: "translateX(-50%)", width: 6, height: 6, borderRadius: "50%", bgcolor: "#a78bfa", boxShadow: "0 0 10px #a78bfa" }} />
-                    </Box>
-                    {/* Center glass circle — perfectly centered */}
-                    <Box sx={{ width: 80, height: 80, borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(6,14,26,0.9)", border: "1px solid rgba(127,208,255,0.15)", backdropFilter: "blur(12px)", boxShadow: "0 0 30px rgba(127,208,255,0.08)", position: "relative", zIndex: 1 }}>
-                        <Typography sx={{ fontSize: "1.4rem", fontWeight: 900, lineHeight: 1, background: "linear-gradient(135deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", userSelect: "none" }}>A</Typography>
-                        <Typography sx={{ fontSize: "0.38rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(127,208,255,0.6)", mt: 0.5, userSelect: "none" }}>AksharSync</Typography>
+
+                    {/* ── Text — perfectly centered below logo ── */}
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 1,
+                    }}>
+                        {/* "AksharSync" wordmark */}
+                        <Box sx={{ display: "flex", alignItems: "baseline", lineHeight: 1 }}>
+                            <Typography
+                                component="span"
+                                sx={{
+                                    fontSize: { xs: "2.6rem", md: "3.2rem" },
+                                    fontWeight: 800,
+                                    letterSpacing: "-0.05em",
+                                    color: "#fff",
+                                    fontFamily: "'Anta', sans-serif",
+                                    lineHeight: 1,
+                                    animation: `${textReveal} 0.7s ease forwards`,
+                                }}
+                            >
+                                Akshar
+                            </Typography>
+                            <Typography
+                                component="span"
+                                sx={{
+                                    fontSize: { xs: "2.6rem", md: "3.2rem" },
+                                    fontWeight: 800,
+                                    letterSpacing: "-0.05em",
+                                    fontFamily: "'Anta', sans-serif",
+                                    lineHeight: 1,
+                                    background: "linear-gradient(135deg, #32f5f5 0%, #7fd0ff 40%, #32f5f5 70%, #a78bfa 100%)",
+                                    backgroundSize: "300% auto",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "transparent",
+                                    animation: `${shimmer} 5s linear infinite, ${textReveal} 0.7s ease 0.15s both`,
+                                }}
+                            >
+                                Sync
+                            </Typography>
+                        </Box>
+
+                        {/* Decorative rule + tagline */}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                            <Box sx={{ width: 32, height: "1px", background: "linear-gradient(to right, transparent, rgba(50,245,245,0.4))" }} />
+                            <Typography sx={{
+                                fontSize: "0.6rem",
+                                letterSpacing: "0.26em",
+                                textTransform: "uppercase",
+                                color: "rgba(255,255,255,0.22)",
+                                fontWeight: 500,
+                                whiteSpace: "nowrap",
+                            }}>
+                                Retention · CRM · Lifecycle
+                            </Typography>
+                            <Box sx={{ width: 32, height: "1px", background: "linear-gradient(to left, transparent, rgba(50,245,245,0.4))" }} />
+                        </Box>
+
+                        {/* Est. badge */}
+                        <Box sx={{
+                            mt: 0.5,
+                            px: 1.5,
+                            py: 0.4,
+                            borderRadius: "999px",
+                            border: "1px solid rgba(50,245,245,0.14)",
+                            background: "rgba(50,245,245,0.04)",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 0.8,
+                        }}>
+                            <Box sx={{
+                                width: 5,
+                                height: 5,
+                                borderRadius: "50%",
+                                bgcolor: "#32f5f5",
+                                boxShadow: "0 0 6px rgba(50,245,245,0.8)",
+                                animation: `${pulse} 2s ease infinite`,
+                            }} />
+                            <Typography sx={{
+                                fontSize: "0.58rem",
+                                letterSpacing: "0.18em",
+                                textTransform: "uppercase",
+                                color: "rgba(50,245,245,0.55)",
+                                fontWeight: 600,
+                            }}>
+                                Est. 2014
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
 
+                {/* Headline + CTA */}
                 <Container maxWidth="md">
                     <RevealOnScroll>
                         <Typography variant="h1" sx={{ fontSize: { xs: "2.4rem", md: "4rem" }, fontWeight: 800, mb: 2.5, letterSpacing: "-0.04em", lineHeight: 1.1 }}>
@@ -261,9 +470,7 @@ const AboutPage = () => {
                     <Grid container spacing={6} sx={{ alignItems: "center" }}>
                         <Grid size={{ xs: 12, md: 6 }}>
                             <RevealOnScroll>
-                                <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>
-                                    Our Mission
-                                </Typography>
+                                <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>Our Mission</Typography>
                                 <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, mb: 3, letterSpacing: "-0.03em", lineHeight: 1.2 }}>
                                     We make retention <GradientText>systematic</GradientText>
                                 </Typography>
@@ -278,7 +485,6 @@ const AboutPage = () => {
                         <Grid size={{ xs: 12, md: 6 }}>
                             <RevealOnScroll delay={0.15}>
                                 <Box sx={{ position: "relative", animation: `${float} 5s ease infinite` }}>
-                                    {/* Visual element */}
                                     <Box sx={{ borderRadius: "28px", border: "1px solid rgba(255,255,255,0.07)", background: "linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))", p: 4, position: "relative", overflow: "hidden" }}>
                                         <OrbGlow sx={{ top: -60, right: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(127,208,255,0.12) 0%, transparent 70%)" }} />
                                         <Stack spacing={2.5}>
@@ -314,9 +520,7 @@ const AboutPage = () => {
                 <Container maxWidth="lg">
                     <RevealOnScroll>
                         <Box sx={{ textAlign: "center", mb: 8 }}>
-                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>
-                                What We Stand For
-                            </Typography>
+                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>What We Stand For</Typography>
                             <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
                                 Our core <GradientText>values</GradientText>
                             </Typography>
@@ -346,16 +550,13 @@ const AboutPage = () => {
                 <Container maxWidth="lg">
                     <RevealOnScroll>
                         <Box sx={{ textAlign: "center", mb: 8 }}>
-                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>
-                                Our Journey
-                            </Typography>
+                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>Our Journey</Typography>
                             <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
                                 A decade of <GradientText>milestones</GradientText>
                             </Typography>
                         </Box>
                     </RevealOnScroll>
                     <Box sx={{ position: "relative" }}>
-                        {/* Vertical connector line */}
                         <Box sx={{ position: "absolute", left: { xs: 20, md: "50%" }, top: 0, bottom: 0, width: "1px", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.07) 15%, rgba(255,255,255,0.07) 85%, transparent)", display: { xs: "none", md: "block" } }} />
                         <Stack spacing={8}>
                             {timeline.map((item, i) => {
@@ -392,24 +593,20 @@ const AboutPage = () => {
                 <Container maxWidth="lg">
                     <RevealOnScroll>
                         <Box sx={{ textAlign: "center", mb: 8 }}>
-                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>
-                                Who We Are
-                            </Typography>
+                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>Who We Are</Typography>
                             <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
                                 Meet the <GradientText>team</GradientText>
                             </Typography>
                         </Box>
                     </RevealOnScroll>
                     <Grid container spacing={4} sx={{ justifyContent: "space-around" }}>
-
                         {team.map((member, i) => (
                             <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
                                 <RevealOnScroll delay={i * 0.1}>
                                     <TeamCard>
-                                        {/* Top colored band */}
                                         <Box sx={{ height: 6, background: member.gradient }} />
-                                        <Box sx={{ p: 3.5, }}>
-                                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2.5, }}>
+                                        <Box sx={{ p: 3.5 }}>
+                                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2.5 }}>
                                                 <Box sx={{ width: 52, height: 52, borderRadius: "16px", background: member.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", fontWeight: 800, color: "#060e1a", flexShrink: 0 }}>
                                                     {member.initials}
                                                 </Box>
