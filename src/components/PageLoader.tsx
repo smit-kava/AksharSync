@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/Logo.svg";
 
 export default function PageLoader() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const [phase, setPhase] = useState<"in" | "pulse" | "out">("in");
+  const [_phase, setPhase] = useState<"in" | "pulse" | "out">("in");
 
   useEffect(() => {
     setLoading(true);
