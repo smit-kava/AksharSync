@@ -27,13 +27,13 @@ require __DIR__ . '/phpmailer/Exception.php';
 require __DIR__ . '/phpmailer/PHPMailer.php';
 require __DIR__ . '/phpmailer/SMTP.php';
 
-// 2. DIRECT SETTINGS (Google Workspace SMTP)
-$smtp_host = "smtp.gmail.com";
-$smtp_port = 587; 
+// 2. DIRECT SETTINGS (CWP SMTP)
+$smtp_host = "46.250.235.27"; // Server IP
+$smtp_port = 465;
 $smtp_user = "support@aksharsync.com";
-$smtp_pass = "gtjunbdmannooida"; 
-$email_to  = "kavasmit603@gmail.com";
-
+$smtp_pass = "9KRF-@%@t@Se"; // Using password from .env which seems more like a server password
+$email_to = "support@aksharsync.com";
+$email_gmail = "kavasmit603@gmail.com";
 // 3. Get JSON Input
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
@@ -55,12 +55,12 @@ $mail = new PHPMailer(true);
 try {
     // Server settings
     $mail->isSMTP();
-    $mail->Host       = $smtp_host;
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $smtp_user;
-    $mail->Password   = $smtp_pass;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
-    $mail->Port       = $smtp_port;
+    $mail->Host = $smtp_host;
+    $mail->SMTPAuth = true;
+    $mail->Username = $smtp_user;
+    $mail->Password = $smtp_pass;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // For port 465
+    $mail->Port = $smtp_port;
     $mail->SMTPAutoTLS = true;
 
     // Optional: Bypass SSL verification for non-secure testing
@@ -75,12 +75,13 @@ try {
     // Recipients
     $mail->setFrom($smtp_user, 'AksharSync Contact Form');
     $mail->addAddress($email_to);
+    $mail->addAddress($email_gmail); // Redirect to Gmail
     $mail->addReplyTo($userEmail, $name);
 
     // Content
     $mail->isHTML(true);
     $mail->Subject = "New Consultation Call Request from $name";
-    
+
     $mail->Body = "
         <div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
             <h2 style='color: #472187;'>New Consultation Call Request</h2>
