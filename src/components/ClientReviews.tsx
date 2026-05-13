@@ -1,17 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ROUTE_PATHS } from '../routes/paths';
-import {
-    Box, Container, Typography, Avatar, Rating,
-    Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, Button, CircularProgress, Snackbar, Alert,
-    IconButton, Tooltip,
-} from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
-import StarIcon from '@mui/icons-material/Star';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import StarIcon from '@mui/icons-material/Star';
+import {
+    Alert,
+    Avatar,
+    Box,
+    Button, CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Rating,
+    Snackbar,
+    TextField,
+    Typography
+} from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
 
 // ── API Base – used for fetching and submitting reviews ──
 const API_BASE = '/api/reviews';
@@ -369,7 +376,7 @@ export const ClientReviews = () => {
     const [totalCount, setTotalCount] = useState(64);
     const [modalOpen, setModalOpen] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const fetchReviews = useCallback(async () => {
         try {
