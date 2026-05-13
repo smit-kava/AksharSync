@@ -487,26 +487,25 @@ export const ClientReviews = () => {
             </Box>
 
             {/* Stats bar & CTA */}
-            <Container maxWidth="lg" sx={{ mt: 7 }}>
+            <Container maxWidth="lg" sx={{ mt: 5 }}>
                 <Box sx={{
                     display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
+                    // justifyContent: 'space-between',
                     alignItems: 'center',
-                    gap: 3,
                     bgcolor: 'rgba(255,255,255,0.02)',
-                    p: { xs: 3, md: 2.5 },
-                    px: { md: 5 },
+                    p: { xs: 2, md: 2.5 },
+                    px: { md: 2 },
                     borderRadius: '24px',
                     border: '1px solid rgba(255,255,255,0.05)',
                     backdropFilter: 'blur(10px)',
                 }}>
-                    <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: 2, 
-                        flexWrap: 'wrap', 
-                        justifyContent: { xs: 'center', md: 'flex-start' } 
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        flexWrap: 'wrap',
+                        justifyContent: { xs: 'center', md: 'flex-start' }
                     }}>
                         <Rating value={Math.round(avgRating)} readOnly size="small" sx={{ color: '#FBBC05' }} />
                         <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem' }}>
@@ -517,7 +516,7 @@ export const ClientReviews = () => {
                         </Typography>
                     </Box>
 
-                    <Tooltip title="Share your experience — takes less than 2 minutes" arrow>
+                    {/* <Tooltip title="Share your experience — takes less than 2 minutes" arrow>
                         <Button
                             id="write-review-btn"
                             onClick={() => navigate(ROUTE_PATHS.WRITE_REVIEW)}
@@ -542,8 +541,8 @@ export const ClientReviews = () => {
                             }}
                         >
                             Write a Review
-                        </Button>
-                    </Tooltip>
+                        </Button> */}
+                    {/* </Tooltip> */}
                 </Box>
             </Container>
 
