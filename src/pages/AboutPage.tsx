@@ -504,7 +504,7 @@ const AboutPage = () => {
                                                         </Typography>
                                                     </Box>
                                                     <Box sx={{ height: 6, borderRadius: "999px", bgcolor: "rgba(255,255,255,0.05)", overflow: "hidden" }}>
-                                                        <Box sx={{ height: "100%", width: `${item.pct}%`, borderRadius: "999px", background: `linear-gradient(90deg, ${item.color}88, ${item.color})`, transition: "width 1s ease" }} />
+                                                        <Box sx={{ height: "100%", width: `${item.pct}%`, borderRadius: "999px", background: `linear-gradient(90deg, ${item.color}88, ${item.color})`, transition: "width 1.8s cubic-bezier(0.34, 1.56, 0.64, 1)" }} />
                                                     </Box>
                                                 </Box>
                                             ))}

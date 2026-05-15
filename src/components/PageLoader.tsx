@@ -12,9 +12,9 @@ export default function PageLoader() {
     setLoading(true);
     setPhase("in");
 
-    const t1 = setTimeout(() => setPhase("pulse"), 400);
-    const t2 = setTimeout(() => setPhase("out"), 1800);
-    const t3 = setTimeout(() => setLoading(false), 2400);
+    const t1 = setTimeout(() => setPhase("pulse"), 300);
+    const t2 = setTimeout(() => setPhase("out"), 1400);
+    const t3 = setTimeout(() => setLoading(false), 1900);
 
     return () => {
       clearTimeout(t1);
@@ -292,13 +292,13 @@ export default function PageLoader() {
               <motion.div
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
-                transition={{ duration: 1.8, delay: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 1.2, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   height: "100%",
-                  background: "linear-gradient(90deg, #32f5f5, #7fd0ff, #32f5f5)",
+                  background: "linear-gradient(90deg, #32f5f5, #7fd0ff, #a78bfa, #32f5f5)",
                   backgroundSize: "200% 100%",
                   borderRadius: 2,
-                  boxShadow: "0 0 8px rgba(50,245,245,0.8)",
+                  boxShadow: "0 0 15px rgba(50,245,245,0.6), 0 0 5px rgba(127,208,255,0.4)",
                 }}
               />
             </div>
@@ -320,7 +320,7 @@ export default function PageLoader() {
                   key={i}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + i * 0.06 }}
+                  transition={{ delay: 0.2 + i * 0.04 }}
                   style={{ display: "inline-block" }}
                 >
                   {ch}
@@ -331,7 +331,7 @@ export default function PageLoader() {
                   key={`s-${i}`}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.85 + i * 0.06 }}
+                  transition={{ delay: 0.45 + i * 0.04 }}
                   style={{ display: "inline-block", color: "#32f5f5" }}
                 >
                   {ch}

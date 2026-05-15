@@ -12,6 +12,7 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
+    LinearProgress,
     Rating,
     Snackbar,
     TextField,
@@ -235,7 +236,20 @@ const SubmitReviewModal = ({
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.2, pt: 2 }}>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.2, pt: 2, position: 'relative' }}>
+                {loading && (
+                    <LinearProgress 
+                        sx={{ 
+                            position: 'absolute', 
+                            top: 0, left: 0, right: 0, 
+                            height: 3, 
+                            bgcolor: 'rgba(56,189,248,0.1)',
+                            '& .MuiLinearProgress-bar': {
+                                background: 'linear-gradient(90deg, #38bdf8, #818cf8)',
+                            }
+                        }} 
+                    />
+                )}
                 {/* Rating stars */}
                 <Box>
                     <Typography sx={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.82rem', mb: 0.8 }}>
@@ -481,7 +495,7 @@ export const ClientReviews = () => {
                         x: {
                             repeat: Infinity,
                             repeatType: 'loop',
-                            duration: reviews.length * 4.5,
+                            duration: reviews.length * 2.8,
                             ease: 'linear',
                         },
                     }}
