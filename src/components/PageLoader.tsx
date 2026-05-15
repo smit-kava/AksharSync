@@ -259,7 +259,7 @@ export default function PageLoader() {
                 <img
                   src={logo}
                   alt="AksharSync"
-                  style={{ width: 140, height: 140, objectFit: "contain", display: "block" }}
+                  style={{ width: 140, height: 140, objectFit: "contain", display: "block", border: "none", outline: "none" }}
                 />
               </motion.div>
             </motion.div>

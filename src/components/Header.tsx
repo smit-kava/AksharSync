@@ -185,7 +185,6 @@ const PillContainer = styled(Box, {
     easing: theme.transitions.easing.easeInOut,
     duration: 400,
   }),
-  borderBlockEnd: 'aliceblue',
   boxShadow: scrolled ? "0 8px 32px 0 rgba(0, 0, 0, 0.37)" : "none",
   color: theme.palette.text.primary,
 
@@ -309,6 +308,9 @@ export function Header() {
                 width: 80,
                 height: 80,
                 objectFit: "contain",
+                border: "none",
+                outline: "none",
+                background: "transparent",
                 transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 filter: "drop-shadow(0 0 12px rgba(127, 208, 255, 0.2))",
               }}
@@ -686,10 +688,13 @@ export function Header() {
                 src={logo}
                 alt="Logo"
                 sx={{
-                  width: 50,
-                  height: 50,
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 0 8px rgba(127, 208, 255, 0.15))"
+                      width: 64,
+                      height: 64,
+                      objectFit: "contain",
+                      flexShrink: 0,
+                      border: "none",
+                      outline: "none",
+                      filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
                 }}
               />
               <Typography variant="h6" sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}>

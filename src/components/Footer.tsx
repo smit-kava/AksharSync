@@ -235,6 +235,8 @@ export function Footer() {
                       height: 64,
                       objectFit: "contain",
                       flexShrink: 0,
+                      border: "none",
+                      outline: "none",
                       filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
                     }}
                   />

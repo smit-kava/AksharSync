@@ -213,7 +213,7 @@ export default function CreativeAudit() {
                     {/* Simulated Good Email */}
                     <Box sx={{ width: "75%", height: "90%", bgcolor: "#fff", borderRadius: "12px", p: 3, display: "flex", flexDirection: "column", boxShadow: "0 15px 35px rgba(0,0,0,0.4)", overflow: "hidden", position: "relative", zIndex: 1 }}>
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                      <img src={logo} alt="Brand Logo" style={{ height: 48, objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(127, 208, 255, 0.1))" }} />
+                      <img src={logo} alt="Brand Logo" style={{ height: 48, objectFit: "contain", border: "none", outline: "none", filter: "drop-shadow(0 0 12px rgba(127, 208, 255, 0.1))" }} />
                     </Box>
                       <Typography sx={{ color: "#111827", fontSize: "1.4rem", fontWeight: 900, mb: 1, textAlign: "center", lineHeight: 1.2 }}>Exclusive Offer</Typography>
                       <Typography sx={{ color: "#4b5563", fontSize: "0.85rem", mb: 4, textAlign: "center", lineHeight: 1.5 }}>A clear, concise message that gets straight to the point using live text.</Typography>

@@ -316,6 +316,8 @@ const AboutPage = () => {
                                 width: 60,
                                 height: 60,
                                 objectFit: "contain",
+                                border: "none",
+                                outline: "none",
                                 animation: `${logoGlow} 3s ease-in-out infinite`,
                             }}
                         />
