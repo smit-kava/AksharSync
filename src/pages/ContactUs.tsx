@@ -91,8 +91,17 @@ const ContactUs = () => {
                 body: JSON.stringify(formData),
             });
 
-            const data = await response.json();
-            if (response.ok) {
+            const responseClone = response.clone();
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                const text = await responseClone.text();
+                console.error("Non-JSON response:", text);
+                throw new Error("Server returned an invalid format. Check console for details.");
+            }
+
+            if (data.success) {
                 setStatus({
                     type: "success",
                     message: "Thank you! Your request has been sent successfully. We'll be in touch soon.",
@@ -107,14 +116,56 @@ const ContactUs = () => {
             } else {
                 setStatus({
                     type: "error",
-                    message: data.error || "Something went wrong. Please try again later.",
+                    message: data.message || "The server encountered an error while processing your request.",
                 });
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Submission error:", error);
             setStatus({
                 type: "error",
-                message: "Failed to connect to the server. Please check your internet connection.",
+                message: error.message || "Failed to connect to the server. Please check your internet connection.",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleTestConnection = async () => {
+        setLoading(true);
+        setStatus({ type: null, message: "" });
+
+        try {
+            const response = await fetch("https://aksharsync.com/api/test-connection.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const responseClone = response.clone();
+            
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                const text = await responseClone.text();
+                throw new Error("Invalid response from server: " + text.substring(0, 100));
+            }
+
+            if (data.success) {
+                setStatus({
+                    type: "success",
+                    message: "Connection Test Successful: " + data.message,
+                });
+            } else {
+                setStatus({
+                    type: "error",
+                    message: "Connection Test Failed: " + data.message + (data.detail ? " (" + data.detail + ")" : ""),
+                });
+            }
+        } catch (error: any) {
+            setStatus({
+                type: "error",
+                message: "Failed to connect to the test script: " + error.message,
             });
         } finally {
             setLoading(false);
@@ -373,6 +424,23 @@ const ContactUs = () => {
                                                 ) : (
                                                     "Book Your Consultation Call"
                                                 )}
+                                            </Button>
+                                            <Button
+                                                fullWidth
+                                                size="small"
+                                                variant="text"
+                                                onClick={handleTestConnection}
+                                                disabled={loading}
+                                                sx={{
+                                                    mt: 1,
+                                                    color: alpha("#7fd0ff", 0.7),
+                                                    "&:hover": {
+                                                        color: "#7fd0ff",
+                                                        bgcolor: alpha("#7fd0ff", 0.05),
+                                                    }
+                                                }}
+                                            >
+                                                Test Server Connection
                                             </Button>
                                         </Box>
 
