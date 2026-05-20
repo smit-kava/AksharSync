@@ -3,7 +3,6 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import StarIcon from '@mui/icons-material/Star';
 import {
     Alert,
-    Avatar,
     Box,
     Button, CircularProgress,
     Container,
@@ -83,6 +82,99 @@ const GoogleIcon = () => (
     </svg>
 );
 
+// ── Brand Avatar — shows company logo or styled initials ─────
+const GRADIENT_PAIRS: [string, string][] = [
+    ['#7fd0ff', '#472187'],
+    ['#38bdf8', '#6366f1'],
+    ['#f472b6', '#a855f7'],
+    ['#34d399', '#0ea5e9'],
+    ['#fb923c', '#f43f5e'],
+    ['#fbbf24', '#ef4444'],
+];
+
+function getInitials(name: string): string {
+    return name
+        .split(' ')
+        .slice(0, 2)
+        .map(w => w[0]?.toUpperCase() ?? '')
+        .join('');
+}
+
+function getGradient(name: string): [string, string] {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return GRADIENT_PAIRS[Math.abs(hash) % GRADIENT_PAIRS.length];
+}
+
+// Converts "company name" → best-guess domain for logo lookup
+function companyToDomain(company: string): string {
+    return company
+        .toLowerCase()
+        .replace(/\s+(pvt|ltd|llc|inc|co|corp|private|limited|consultancy|consulting|solutions|services|technologies|tech|group|studio|agency|digital|media|ventures)\.?$/gi, '')
+        .trim()
+        .replace(/[^a-z0-9]/g, '')
+        + '.com';
+}
+
+const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
+    const [logoOk, setLogoOk] = useState(false);
+    const [logoLoaded, setLogoLoaded] = useState(false);
+
+    // Use company for domain + initials + gradient when available
+    const displayName = company?.trim() || name;
+    const domain = company?.trim() ? companyToDomain(company) : '';
+    const logoUrl = domain ? `https://logo.clearbit.com/${domain}` : '';
+    const initials = getInitials(displayName);
+    const [from, to] = getGradient(displayName);
+
+    return (
+        <Box
+            sx={{
+                width: 44,
+                height: 44,
+                borderRadius: '12px',
+                overflow: 'hidden',
+                flexShrink: 0,
+                position: 'relative',
+                background: logoOk ? '#fff' : `linear-gradient(135deg, ${from}, ${to})`,
+                border: '1px solid rgba(255,255,255,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 12px ${from}33`,
+            }}
+        >
+            {/* Initials fallback (always rendered, hidden when logo loads) */}
+            {!logoOk && (
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', lineHeight: 1, userSelect: 'none' }}>
+                    {initials}
+                </Typography>
+            )}
+
+            {/* Company logo attempt */}
+            {logoUrl && (
+                <Box
+                    component="img"
+                    src={logoUrl}
+                    alt={company}
+                    onLoad={() => { setLogoOk(true); setLogoLoaded(true); }}
+                    onError={() => { setLogoOk(false); setLogoLoaded(true); }}
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        p: '6px',
+                        opacity: logoOk && logoLoaded ? 1 : 0,
+                        transition: 'opacity 0.3s',
+                    }}
+                />
+            )}
+        </Box>
+    );
+};
+
 // ── Review Card ───────────────────────────────────────────────
 const ReviewCard = ({ review }: { review: Review }) => (
     <Box sx={{
@@ -106,10 +198,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
     }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center' }}>
-                <Avatar
-                    src={review.avatar_url}
-                    sx={{ width: 42, height: 42, border: '1px solid rgba(255,255,255,0.1)' }}
-                />
+                <BrandAvatar name={review.name} company={review.company} />
                 <Box>
                     <Typography sx={{ fontWeight: 700, color: '#fff', fontSize: '0.9rem' }}>
                         {review.name}
@@ -143,6 +232,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
         </Typography>
     </Box>
 );
+
 
 // ── Submit Review Modal ───────────────────────────────────────
 const initialForm = { name: '', email: '', company: '', rating: 5, review: '' };
@@ -238,16 +328,16 @@ const SubmitReviewModal = ({
 
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.2, pt: 2, position: 'relative' }}>
                 {loading && (
-                    <LinearProgress 
-                        sx={{ 
-                            position: 'absolute', 
-                            top: 0, left: 0, right: 0, 
-                            height: 3, 
+                    <LinearProgress
+                        sx={{
+                            position: 'absolute',
+                            top: 0, left: 0, right: 0,
+                            height: 3,
                             bgcolor: 'rgba(56,189,248,0.1)',
                             '& .MuiLinearProgress-bar': {
                                 background: 'linear-gradient(90deg, #38bdf8, #818cf8)',
                             }
-                        }} 
+                        }}
                     />
                 )}
                 {/* Rating stars */}
