@@ -1,121 +1,58 @@
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+/**
+ * CustomCursor
+ *
+ * Replaces native OS cursors with brand-themed SVG cursors.
+ * Uses raw SVG strings embedded directly as data URIs (no encodeURIComponent
+ * double-encoding bug). Colors are written with %23 for # directly.
+ *
+ * Cursors:
+ *  • Arrow   → Windows-style, #7fd0ff fill with dark outline
+ *  • Pointer → Gradient hand (#7fd0ff → #a78bfa) for links/buttons
+ *  • Text    → Blue I-beam for editable content
+ */
 
-const CustomCursor = () => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+// ─── Raw data URIs (# already written as %23) ─────────────────────────────────
 
-  // Motion values for smooth tracking
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+/** Windows-style arrow — hotspot (2, 2) */
+const ARROW = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M4 2 L4 19 L8 14 L12 21 L14.5 20 L10.5 13 L17 13 Z' fill='%237fd0ff' stroke='%23060e1a' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/></svg>`;
 
-  // Smooth springs for the outer circle
-  const springConfig = { damping: 25, stiffness: 250 };
-  const cursorX = useSpring(mouseX, springConfig);
-  const cursorY = useSpring(mouseY, springConfig);
+/** Gradient hand pointer — hotspot (8, 2) */
+const POINTER = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='28' viewBox='0 0 22 28'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%237fd0ff'/><stop offset='100%25' stop-color='%23a78bfa'/></linearGradient></defs><rect x='7.5' y='1' width='3.5' height='13' rx='1.75' fill='url(%23g)' stroke='%23060e1a' stroke-width='1'/><rect x='11' y='5' width='3' height='11' rx='1.5' fill='url(%23g)' stroke='%23060e1a' stroke-width='1'/><rect x='4.5' y='7' width='3' height='9' rx='1.5' fill='url(%23g)' stroke='%23060e1a' stroke-width='1'/><rect x='14' y='8' width='2.8' height='8' rx='1.4' fill='url(%23g)' stroke='%23060e1a' stroke-width='1'/><path d='M4.5 14 Q3.5 20 5.5 23 L17 23 Q19 20 18 14 Z' fill='url(%23g)' stroke='%23060e1a' stroke-width='1'/></svg>`;
 
-  useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
+/** I-beam — hotspot (6, 11) */
+const TEXT = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='22' viewBox='0 0 13 22'><line x1='6.5' y1='0' x2='6.5' y2='22' stroke='%237fd0ff' stroke-width='1.5' stroke-linecap='round'/><line x1='2' y1='0' x2='11' y2='0' stroke='%237fd0ff' stroke-width='1.5' stroke-linecap='round'/><line x1='2' y1='22' x2='11' y2='22' stroke='%237fd0ff' stroke-width='1.5' stroke-linecap='round'/></svg>`;
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "BUTTON" ||
-        target.tagName === "A" ||
-        target.closest("button") ||
-        target.closest("a") ||
-        target.style.cursor === "pointer"
-      ) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
+// ─── Component ────────────────────────────────────────────────────────────────
+const CustomCursor = () => (
+  <style>{`
+    /* ── Default arrow ─────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      cursor: url("${ARROW}") 2 2, auto !important;
+    }
+
+    /* ── Pointer hand ──────────────────────────────────────────────────── */
+    a, button,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"]),
+    label[for],
+    select,
+    summary {
+      cursor: url("${POINTER}") 8 2, pointer !important;
+    }
+
+    /* ── Text I-beam ───────────────────────────────────────────────────── */
+    input, textarea, [contenteditable] {
+      cursor: url("${TEXT}") 6 11, text !important;
+    }
+
+    /* ── Restore native on touch / mobile ──────────────────────────────── */
+    @media (max-width: 768px) {
+      *, *::before, *::after,
+      a, button, [role="button"], input, textarea {
+        cursor: auto !important;
       }
-    };
-
-    const handleMouseDown = () => setIsClicked(true);
-    const handleMouseUp = () => setIsClicked(false);
-
-    window.addEventListener("mousemove", moveCursor);
-    window.addEventListener("mouseover", handleMouseOver);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("mouseover", handleMouseOver);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [mouseX, mouseY]);
-
-  return (
-    <>
-      <style>
-        {`
-          * {
-            cursor: none !important;
-          }
-          @media (max-width: 768px) {
-            * {
-              cursor: auto !important;
-            }
-            .custom-cursor-container {
-              display: none;
-            }
-          }
-        `}
-      </style>
-      <div className="custom-cursor-container" style={{ position: "fixed", top: 0, left: 0, pointerEvents: "none", zIndex: 100000 }}>
-        {/* Main Dot */}
-        <motion.div
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            x: mouseX,
-            y: mouseY,
-            width: 8,
-            height: 8,
-            backgroundColor: "#7fd0ff",
-            borderRadius: "50%",
-            translateX: "-50%",
-            translateY: "-50%",
-            zIndex: 100001,
-          }}
-          animate={{
-            scale: isClicked ? 0.8 : 1,
-            opacity: isHovered ? 0 : 1,
-          }}
-        />
-
-        {/* Outer Ring */}
-        <motion.div
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            x: cursorX,
-            y: cursorY,
-            width: 40,
-            height: 40,
-            border: "1.5px solid #7fd0ff",
-            borderRadius: "50%",
-            translateX: "-50%",
-            translateY: "-50%",
-            zIndex: 100000,
-          }}
-          animate={{
-            scale: isHovered ? 1.5 : isClicked ? 0.9 : 1,
-            backgroundColor: isHovered ? "rgba(127, 208, 255, 0.15)" : "rgba(127, 208, 255, 0)",
-            borderColor: isHovered ? "rgba(127, 208, 255, 0.8)" : "rgba(127, 208, 255, 0.5)",
-          }}
-        />
-      </div>
-    </>
-  );
-};
+    }
+  `}</style>
+);
 
 export default CustomCursor;

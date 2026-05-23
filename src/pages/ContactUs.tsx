@@ -50,6 +50,8 @@ const ContactUs = () => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        phone: "",
+        website: "",
         message: "",
     });
     const [loading, setLoading] = useState(false);
@@ -77,9 +79,9 @@ const ContactUs = () => {
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
-                    phone: "",
+                    phone: formData.phone,
                     countryCode: "",
-                    website: "",
+                    website: formData.website,
                     message: formData.message,
                     type: "contact_inquiry",
                 }),
@@ -89,7 +91,7 @@ const ContactUs = () => {
 
             if (data.success) {
                 setStatus({ type: "success", message: "Message sent! We'll get back to you within 24 hours." });
-                setFormData({ name: "", email: "", message: "" });
+                setFormData({ name: "", email: "", phone: "", website: "", message: "" });
             } else {
                 setStatus({ type: "error", message: data.message || "Something went wrong. Please try again." });
             }
@@ -322,6 +324,25 @@ const ContactUs = () => {
                                                 onChange={handleChange}
                                                 required
                                                 placeholder="jane@company.com"
+                                                sx={inputStyles}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                label="Phone Number"
+                                                name="phone"
+                                                type="tel"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                placeholder="+91 98765 43210"
+                                                sx={inputStyles}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                label="Website"
+                                                name="website"
+                                                value={formData.website}
+                                                onChange={handleChange}
+                                                placeholder="https://yourcompany.com"
                                                 sx={inputStyles}
                                             />
                                             <TextField
