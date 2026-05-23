@@ -12,42 +12,33 @@ export default defineConfig(({ mode }) => {
       react(),
       babel({ presets: [reactCompilerPreset()] }),
       {
-        name: "api-handler",
+        // ─── Local PHP-equivalent API handler ──────────────────────────────
+        // Intercepts POST /api/send-email.php and runs api/send-email.js
+        // (Node.js + Nodemailer) using .env.local credentials.
+        // Production uses the real PHP file served by Apache.
+        name: "php-email-api",
         configureServer(server) {
           server.middlewares.use(async (req, res, next) => {
             if (req.url === "/api/send-email.php" && req.method === "POST") {
-              // Read the body
               let body = "";
-              req.on("data", (chunk) => {
-                body += chunk;
-              });
-
+              req.on("data", (chunk) => { body += chunk; });
               req.on("end", async () => {
                 try {
-                  // Inject env vars into process.env for the local handler
                   Object.assign(process.env, env);
-
                   const data = JSON.parse(body);
-                  // Import the handler dynamically
                   // @ts-ignore
                   const { default: handler } = await import("./api/send-email.js");
-                  
-                  // Mock req/res for the handler
                   const mockRes = {
-                    status(code: number) {
-                      res.statusCode = code;
-                      return this;
-                    },
-                    json(payload: any) {
+                    status(code: number) { res.statusCode = code; return this; },
+                    json(payload: unknown) {
                       res.setHeader("Content-Type", "application/json");
                       res.end(JSON.stringify(payload));
                     },
                   };
-
                   await handler({ method: "POST", body: data }, mockRes);
                 } catch (error: any) {
                   res.statusCode = 500;
-                  res.end(JSON.stringify({ error: error.message }));
+                  res.end(JSON.stringify({ success: false, error: error.message }));
                 }
               });
               return;
@@ -59,6 +50,7 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       proxy: {
+        // Reviews always fetched from production
         "/api/reviews": {
           target: "https://aksharsync.com",
           changeOrigin: true,
@@ -71,15 +63,9 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
-              if (id.includes("@mui")) {
-                return "vendor-mui";
-              }
-              if (id.includes("framer-motion")) {
-                return "vendor-framer";
-              }
-              if (id.includes("react")) {
-                return "vendor-react";
-              }
+              if (id.includes("@mui"))          return "vendor-mui";
+              if (id.includes("framer-motion")) return "vendor-framer";
+              if (id.includes("react"))         return "vendor-react";
               return "vendor";
             }
           },

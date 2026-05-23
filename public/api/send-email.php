@@ -1,9 +1,8 @@
 <?php
 
 // ========================================
-// ERROR REPORTING (disable in production)
+// ERROR REPORTING
 // ========================================
-
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
@@ -11,26 +10,24 @@ error_reporting(E_ALL);
 // ========================================
 // HEADERS
 // ========================================
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
+  http_response_code(200);
+  exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(["success" => false, "message" => "Only POST method allowed"]);
-    exit;
+  echo json_encode(["success" => false, "message" => "Only POST method allowed"]);
+  exit;
 }
 
 // ========================================
-// LOAD PHPMailer
+// LOAD PHPMailer & EMAIL TEMPLATES
 // ========================================
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -38,33 +35,33 @@ use PHPMailer\PHPMailer\SMTP;
 require __DIR__ . '/phpmailer/Exception.php';
 require __DIR__ . '/phpmailer/PHPMailer.php';
 require __DIR__ . '/phpmailer/SMTP.php';
+require __DIR__ . '/emailTemplates.php';
 
 // ========================================
-// SMTP CONFIGURATION
+// SMTP CONFIGURATION — Gmail
 // ========================================
-// Your CWP routes mail through: serveras.digilifes.com
-// Auth username = support@aksharsync.com (your webmail account)
-// NOT localhost — that's why you were getting "Connection refused"
-// ========================================
+$smtp_host = 'smtp.gmail.com';           // Gmail SMTP server
+$smtp_user = 'smitkava21@gmail.com';    // Gmail address (SMTP login)
+$smtp_pass = str_replace(' ', '', 'ajco jaqg vcxn pkap'); // Google App Password — spaces stripped automatically
+$from_email = 'smitkava21@gmail.com';    // From address (must match Gmail account)
+$from_name = 'AksharSync';
+$admin_email = 'smitkava21@gmail.com';   // All lead alerts delivered here
 
-$smtp_host = "smtp.gmail.com";           // ✅ Google SMTP Server
-$smtp_port = 465;                        // Try 465 first (SSL)
-$smtp_user = "kavasmit603@gmail.com";    // ✅ Your Gmail address
-$smtp_pass = "sxcn veug mmsz rlhc";   // ✅ Your 16-character Google App Password
-$from_email = "kavasmit603@gmail.com";   // ✅ Gmail requires this to match your user email
-$from_name = "Akshar Sync Contact Form"; // ✅ Clear display name
-$email_to = "kavasmit603@gmail.com";     // ✅ All emails will be sent here
+// Gmail: port 587 + STARTTLS is the standard recommended config
+$configs = [
+  ['port' => 587, 'secure' => PHPMailer::ENCRYPTION_STARTTLS],
+  ['port' => 465, 'secure' => PHPMailer::ENCRYPTION_SMTPS],   // fallback
+];
 
 // ========================================
 // GET & VALIDATE JSON INPUT
 // ========================================
-
 $rawData = file_get_contents("php://input");
 $data = json_decode($rawData, true);
 
 if (!$data) {
-    echo json_encode(["success" => false, "message" => "Invalid JSON request"]);
-    exit;
+  echo json_encode(["success" => false, "message" => "Invalid JSON request"]);
+  exit;
 }
 
 $name = trim($data['name'] ?? '');
@@ -74,116 +71,106 @@ $countryCode = trim($data['countryCode'] ?? '');
 $website = trim($data['website'] ?? '');
 
 if (empty($name)) {
-    echo json_encode(["success" => false, "message" => "Name is required"]);
-    exit;
+  echo json_encode(["success" => false, "message" => "Name is required"]);
+  exit;
 }
-
 if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(["success" => false, "message" => "Valid email is required"]);
-    exit;
+  echo json_encode(["success" => false, "message" => "Valid email is required"]);
+  exit;
 }
 
 // ========================================
-// BUILD EMAIL CONTENT
+// HELPER: build a configured PHPMailer instance
 // ========================================
+function buildMailer(array $cfg, string $smtp_host, string $smtp_user, string $smtp_pass, string $from_email, string $from_name, string &$debugLog): PHPMailer
+{
+  $mail = new PHPMailer(true);
+  $mail->isSMTP();
+  $mail->Host = $smtp_host;
+  $mail->SMTPAuth = true;
+  $mail->Username = $smtp_user;
+  $mail->Password = $smtp_pass;
+  $mail->SMTPSecure = $cfg['secure'];
+  $mail->Port = $cfg['port'];
+  $mail->CharSet = 'UTF-8';
+  $mail->Timeout = 15;
 
-$subject = "New Consultation Call Request";
+  // Capture SMTP conversation into $debugLog (never printed to screen)
+  $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+  $mail->Debugoutput = function (string $str) use (&$debugLog): void {
+    $debugLog .= $str . "\n";
+  };
 
-$html_body = '
-<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e0e0e0;border-radius:8px;">
-    <h2 style="color:#472187;margin-top:0;">New Consultation Call Request</h2>
-    <hr style="border:none;border-top:1px solid #e0e0e0;margin:16px 0;">
-    <table style="width:100%;border-collapse:collapse;">
-        <tr>
-            <td style="padding:8px 0;font-weight:bold;color:#555;width:110px;">Name:</td>
-            <td style="padding:8px 0;color:#222;">' . htmlspecialchars($name) . '</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0;font-weight:bold;color:#555;">Email:</td>
-            <td style="padding:8px 0;color:#222;">' . htmlspecialchars($userEmail) . '</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0;font-weight:bold;color:#555;">Phone:</td>
-            <td style="padding:8px 0;color:#222;">' . htmlspecialchars($countryCode . ' ' . $phone) . '</td>
-        </tr>
-        <tr>
-            <td style="padding:8px 0;font-weight:bold;color:#555;">Website:</td>
-            <td style="padding:8px 0;color:#222;">' . htmlspecialchars($website) . '</td>
-        </tr>
-    </table>
-    <hr style="border:none;border-top:1px solid #e0e0e0;margin:16px 0;">
-    <p style="font-size:12px;color:#999;margin:0;">Sent from aksharsync.com contact form</p>
-</div>';
-
-$plain_body = "New Consultation Call Request\n\n"
-    . "Name: $name\n"
-    . "Email: $userEmail\n"
-    . "Phone: $countryCode $phone\n"
-    . "Website: $website\n";
+  // Gmail uses a valid trusted certificate
+  $mail->SMTPOptions = [
+    'ssl' => [
+      'verify_peer' => true,
+      'verify_peer_name' => true,
+      'allow_self_signed' => false,
+    ]
+  ];
+  $mail->setFrom($from_email, $from_name);
+  return $mail;
+}
 
 // ========================================
-// SEND VIA PHPMailer
-// Tries 465/SMTPS first, then 587/STARTTLS
+// BUILD EMAIL PAYLOADS (via emailTemplates.php)
 // ========================================
-
-$configs = [
-    ['port' => 465, 'secure' => PHPMailer::ENCRYPTION_SMTPS],    // SSL — try first
-    ['port' => 587, 'secure' => PHPMailer::ENCRYPTION_STARTTLS], // TLS — fallback
+$formData = [
+  'name' => $name,
+  'email' => $userEmail,
+  'phone' => $phone,
+  'countryCode' => $countryCode,
+  'website' => $website,
 ];
 
+$userPayload = buildUserConfirmationEmail($formData);
+$adminPayload = buildAdminNotificationEmail($formData);
+
+// ========================================
+// SEND BOTH EMAILS
+// ========================================
 $last_error = '';
+$debugLog = '';
 
 foreach ($configs as $cfg) {
+  try {
+    // --- Admin notification ---
+    $mail1 = buildMailer($cfg, $smtp_host, $smtp_user, $smtp_pass, $from_email, $from_name, $debugLog);
+    $mail1->addAddress($admin_email);
+    $mail1->addReplyTo($userEmail, $name);
+    $mail1->isHTML(true);
+    $mail1->Subject = $adminPayload['subject'];
+    $mail1->Body = $adminPayload['html'];
+    $mail1->AltBody = $adminPayload['plain'];
+    $mail1->send();
 
-    $mail = new PHPMailer(true);
+    // --- User confirmation ---
+    $mail2 = buildMailer($cfg, $smtp_host, $smtp_user, $smtp_pass, $from_email, $from_name, $debugLog);
+    $mail2->addAddress($userEmail, $name);
+    $mail2->isHTML(true);
+    $mail2->Subject = $userPayload['subject'];
+    $mail2->Body = $userPayload['html'];
+    $mail2->AltBody = $userPayload['plain'];
+    $mail2->send();
 
-    try {
+    echo json_encode(["success" => true, "message" => "Email sent successfully"]);
+    exit;
 
-        $mail->isSMTP();
-        $mail->Host = $smtp_host;
-        $mail->SMTPAuth = true;
-        $mail->Username = $smtp_user;
-        $mail->Password = $smtp_pass;
-        $mail->SMTPSecure = $cfg['secure'];
-        $mail->Port = $cfg['port'];
-        $mail->CharSet = 'UTF-8';
-        $mail->Timeout = 15;
-        $mail->SMTPDebug = SMTP::DEBUG_OFF;
+  } catch (Exception $e) {
+    $last_error = isset($mail1) ? $mail1->ErrorInfo : $e->getMessage();
+  } catch (\Throwable $e) {
+    $last_error = $e->getMessage();
+  }
 
-        $mail->SMTPOptions = [
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true,
-            ]
-        ];
-
-        $mail->setFrom($from_email, $from_name);
-        $mail->addAddress($email_to);
-        $mail->addReplyTo($userEmail, $name);
-
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body = $html_body;
-        $mail->AltBody = $plain_body;
-
-        $mail->send();
-
-        // Success
-        echo json_encode(["success" => true, "message" => "Email sent successfully"]);
-        exit;
-
-    } catch (Exception $e) {
-        $last_error = $mail->ErrorInfo;
-    }
-
-    unset($mail);
+  unset($mail1, $mail2);
 }
 
-// All configs failed
+// All configs failed — return the SMTP error for diagnosis
 echo json_encode([
-    "success" => false,
-    "message" => "Could not send email. Please contact us at support@aksharsync.com",
-    "debug" => $last_error  // ← Remove this line once working
+  "success" => false,
+  "message" => "Could not send email. Please contact us at support@aksharsync.com",
+  "smtp_error" => $last_error,
+  "smtp_debug" => substr($debugLog, 0, 2000),
 ]);
 ?>

@@ -20,6 +20,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 
+
 // ── API Base – used for fetching and submitting reviews ──
 const API_BASE = '/api/reviews';
 
@@ -117,15 +118,27 @@ function companyToDomain(company: string): string {
 }
 
 const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
-    const [logoOk, setLogoOk] = useState(false);
-    const [logoLoaded, setLogoLoaded] = useState(false);
+    const [logoUrl, setLogoUrl] = useState('');
 
-    // Use company for domain + initials + gradient when available
     const displayName = company?.trim() || name;
-    const domain = company?.trim() ? companyToDomain(company) : '';
-    const logoUrl = domain ? `https://logo.clearbit.com/${domain}` : '';
     const initials = getInitials(displayName);
     const [from, to] = getGradient(displayName);
+
+    useEffect(() => {
+        if (!company?.trim()) return;
+
+        const domain = companyToDomain(company);
+        // Only attempt if domain root is at least 4 chars (avoids "ak.com", "abc.com" guesses)
+        const root = domain.replace(/\.com$/, '');
+        if (root.length < 4) return;
+
+        const url = `https://logo.clearbit.com/${domain}`;
+
+        // Pre-validate silently — avoids browser net::ERR_FAILED noise
+        fetch(url, { method: 'HEAD', mode: 'no-cors' })
+            .then(() => setLogoUrl(url))
+            .catch(() => { /* logo unavailable — show initials */ });
+    }, [company]);
 
     return (
         <Box
@@ -136,7 +149,7 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
                 overflow: 'hidden',
                 flexShrink: 0,
                 position: 'relative',
-                background: logoOk ? '#fff' : `linear-gradient(135deg, ${from}, ${to})`,
+                background: logoUrl ? '#fff' : `linear-gradient(135deg, ${from}, ${to})`,
                 border: '1px solid rgba(255,255,255,0.1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -144,21 +157,17 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
                 boxShadow: `0 4px 12px ${from}33`,
             }}
         >
-            {/* Initials fallback (always rendered, hidden when logo loads) */}
-            {!logoOk && (
+            {!logoUrl && (
                 <Typography sx={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', lineHeight: 1, userSelect: 'none' }}>
                     {initials}
                 </Typography>
             )}
-
-            {/* Company logo attempt */}
             {logoUrl && (
                 <Box
                     component="img"
                     src={logoUrl}
                     alt={company}
-                    onLoad={() => { setLogoOk(true); setLogoLoaded(true); }}
-                    onError={() => { setLogoOk(false); setLogoLoaded(true); }}
+                    onError={() => setLogoUrl('')}
                     sx={{
                         position: 'absolute',
                         inset: 0,
@@ -166,14 +175,13 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
                         height: '100%',
                         objectFit: 'contain',
                         p: '6px',
-                        opacity: logoOk && logoLoaded ? 1 : 0,
-                        transition: 'opacity 0.3s',
                     }}
                 />
             )}
         </Box>
     );
 };
+
 
 // ── Review Card ───────────────────────────────────────────────
 const ReviewCard = ({ review }: { review: Review }) => (

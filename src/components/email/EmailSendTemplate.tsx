@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
 import { Box, Typography, alpha } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
 import logoSrc from "../../assets/Logo.svg";
 
 interface EmailSendTemplateProps {
@@ -32,21 +32,7 @@ const FloatingParticle = ({ delay, x, y }: { delay: number; x: number; y: number
   />
 );
 
-const DotTrail = ({ index }: { index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, scaleX: 0 }}
-    animate={{ opacity: [0, 1, 0], scaleX: [0, 1, 0] }}
-    transition={{ delay: 0.3 + index * 0.08, duration: 0.6 }}
-    style={{
-      width: 4,
-      height: 4,
-      borderRadius: "50%",
-      background: alpha("#7fd0ff", 0.6),
-      margin: "0 3px",
-      display: "inline-block",
-    }}
-  />
-);
+
 
 const EmailSendTemplate: React.FC<EmailSendTemplateProps> = ({
   recipientName,

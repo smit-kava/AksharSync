@@ -1,91 +1,140 @@
-import nodemailer from "nodemailer";
+/**
+ * api/send-email.js
+ * Local dev email handler — imports professional templates from emailTemplates.js
+ */
 
+import nodemailer from 'nodemailer';
+import {
+  contactCustomerEmail,
+  contactAdminEmail,
+  bookingCustomerEmail,
+  bookingAdminEmail,
+  reviewFollowUpEmail,
+  firstName,
+} from './emailTemplates.js';
+
+// ─── Build transporter from .env.local ───────────────────────────────────────
+function createTransporter() {
+  return nodemailer.createTransport({
+    host:   process.env.EMAIL_HOST ?? 'smtp.gmail.com',
+    port:   parseInt(process.env.EMAIL_PORT ?? '465'),
+    secure: (process.env.EMAIL_SECURE ?? 'true') === 'true',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    connectionTimeout: 15000,
+  });
+}
+
+// ─── Send helper ──────────────────────────────────────────────────────────────
+async function send(transporter, { from, to, replyTo, subject, html, text }) {
+  return transporter.sendMail({ from, to, replyTo, subject, html, text });
+}
+
+const FROM = () => `"AksharSync" <${process.env.EMAIL_USER}>`;
+const ADMIN = () => process.env.EMAIL_TO ?? process.env.EMAIL_USER;
+
+// ─── 2-day follow-up scheduler ────────────────────────────────────────────────
+// Sends a review request email 48 hours after the initial contact.
+// Note: uses setTimeout — works for local dev. For production, use a cron job.
+function scheduleReviewEmail(transporter, { name, email }) {
+  const TWO_DAYS_MS = 48 * 60 * 60 * 1000;
+  setTimeout(async () => {
+    try {
+      const tpl = reviewFollowUpEmail({ name });
+      await send(transporter, {
+        from: FROM(), to: email,
+        subject: tpl.subject, html: tpl.html, text: tpl.text,
+      });
+      console.log(`📬 2-day review email sent → ${email}`);
+    } catch (err) {
+      console.error('❌ Review follow-up failed:', err.message);
+    }
+  }, TWO_DAYS_MS);
+  console.log(`⏰ Review follow-up scheduled in 48h → ${email}`);
+}
+
+// ─── Handler ──────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  // Only allow POST
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { name, email, phone, website, countryCode } = req.body;
+    const {
+      name        = '',
+      email       = '',
+      phone       = '',
+      countryCode = '',
+      website     = '',
+      message     = '',
+      bookingDate = '',
+      bookingTime = '',
+    } = req.body ?? {};
 
-    // Validation
-    if (!name || !email) {
-      return res.status(400).json({
-        success: false,
-        error: "Name and Email are required",
-      });
+    if (!name.trim() || !email.trim()) {
+      return res.status(400).json({ success: false, message: 'Name and Email are required' });
     }
 
-    // Create transporter (CWP SMTP)
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT),
-      secure: process.env.EMAIL_SECURE === "true", // TRUE for 465
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      connectionTimeout: 10000,
-    });
-
-    // Verify connection (IMPORTANT DEBUG)
+    const transporter = createTransporter();
     await transporter.verify();
-    console.log("✅ SMTP Connected Successfully");
+    console.log('✅ SMTP Connected');
 
-    // Format website
-    const websiteUrl = website
-      ? website.startsWith("http")
-        ? website
-        : "https://" + website
-      : "N/A";
+    const isBooking = !!bookingDate && !!bookingTime;
+    const data = { name, email, phone, countryCode, website, message, bookingDate, bookingTime };
 
-    // Email content
-    const mailOptions = {
-      from: `"${name}" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_TO,
-      replyTo: email,
-      subject: `New Contact from ${name}`,
-      text: `
-Name: ${name}
-Email: ${email}
-Phone: ${countryCode || ""} ${phone || ""}
-Website: ${websiteUrl}
-      `,
-      html: `
-<div style="font-family: Arial; padding:20px;">
-  <h2 style="color:#472187;">New Contact Request</h2>
-  <p><strong>Name:</strong> ${name}</p>
-  <p><strong>Email:</strong> ${email}</p>
-  <p><strong>Phone:</strong> ${countryCode || ""} ${phone || ""}</p>
-  <p><strong>Website:</strong> ${websiteUrl}</p>
-</div>
-      `,
-    };
+    if (isBooking) {
+      // ── Booking flow ─────────────────────────────────────────────────────────
+      const customerTpl = bookingCustomerEmail(data);
+      const adminTpl    = bookingAdminEmail(data);
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
+      await send(transporter, {
+        from: FROM(), to: email,
+        subject: customerTpl.subject, html: customerTpl.html, text: customerTpl.text,
+      });
+      await send(transporter, {
+        from: FROM(), to: ADMIN(), replyTo: email,
+        subject: adminTpl.subject, html: adminTpl.html, text: adminTpl.text,
+      });
 
-    console.log("📧 Email Sent:", info.messageId);
+      // Schedule review follow-up 48 hours later
+      scheduleReviewEmail(transporter, { name, email });
 
-    return res.status(200).json({
-      success: true,
-      message: "Email sent successfully",
-    });
-  } catch (error) {
-    console.error("❌ ERROR:", error);
+      console.log(`📧 Booking emails sent → customer(${email}) + admin`);
 
-    let message = error.message;
+    } else {
+      // ── Contact inquiry flow ─────────────────────────────────────────────────
+      const customerTpl = contactCustomerEmail({ name, email });
+      const adminTpl    = contactAdminEmail({ name, email, message });
 
-    if (error.code === "EAUTH") {
-      message = "Authentication failed (check email & password)";
-    } else if (error.code === "ESOCKET") {
-      message = "Connection failed (port blocked or wrong host)";
+      await send(transporter, {
+        from: FROM(), to: email,
+        subject: customerTpl.subject, html: customerTpl.html, text: customerTpl.text,
+      });
+      await send(transporter, {
+        from: FROM(), to: ADMIN(), replyTo: email,
+        subject: adminTpl.subject, html: adminTpl.html, text: adminTpl.text,
+      });
+
+      // Schedule review follow-up 48 hours later
+      scheduleReviewEmail(transporter, { name, email });
+
+      console.log(`📧 Contact emails sent → customer(${email}) + admin`);
     }
 
+    return res.status(200).json({ success: true, message: 'Email sent successfully' });
+
+  } catch (error) {
+    console.error('❌ SMTP ERROR:', error);
+    let msg = error.message;
+    if (error.code === 'EAUTH')   msg = 'Authentication failed — check EMAIL_USER/EMAIL_PASS in .env.local';
+    if (error.code === 'ESOCKET') msg = 'Connection failed — port blocked or wrong host';
     return res.status(500).json({
       success: false,
-      error: message,
+      message: 'Could not send email. Please contact us at support@aksharsync.com',
+      error: msg,
+      code: error.code ?? null,
     });
   }
 }
