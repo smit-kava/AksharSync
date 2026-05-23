@@ -16,11 +16,14 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
+import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import { LiquidGlassMenuButton } from "./LiquidGlassMenuButton";
+import { LiquidGlassContactButton } from "./LiquidGlassContactButton";
 import { ROUTE_PATHS } from "../routes/paths";
 import logo from "../assets/Logo.svg";
 import {
@@ -174,20 +177,44 @@ const PillContainer = styled(Box, {
   justifyContent: "space-between",
   padding: scrolled ? "0 8px 0 28px" : "0 40px",
   borderRadius: scrolled ? "999px" : "0",
-  background: scrolled ? alpha("#06101e", 0.45) : alpha("#06101e", 0.15),
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: `1px solid ${alpha("#fff", 0.15)}`,
-  borderTop: scrolled ? undefined : "none",
-  borderLeft: scrolled ? undefined : "none",
-  borderRight: scrolled ? undefined : "none",
+
+  // ── Liquid Glass body ─────────────────────────────────────────────────
+  background: scrolled
+    ? "linear-gradient(145deg, rgba(127,208,255,0.13) 0%, rgba(6,14,26,0.72) 55%, rgba(127,208,255,0.06) 100%)"
+    : "linear-gradient(180deg, rgba(127,208,255,0.07) 0%, rgba(6,14,26,0.45) 100%)",
+
+  backdropFilter: "blur(28px) saturate(200%)",
+  WebkitBackdropFilter: "blur(28px) saturate(200%)",
+
+  // ── Liquid Glass borders ──────────────────────────────────────────────
+  // Scrolled pill: full blue-tinted border with bright top specular
+  // Full-width bar: only bottom border visible
+  border: scrolled ? "1px solid rgba(127,208,255,0.20)" : "none",
+  borderTop: scrolled ? "1.5px solid rgba(127,208,255,0.40)" : "none",
+  borderBottom: scrolled
+    ? "1px solid rgba(6,14,26,0.60)"
+    : "1px solid rgba(127,208,255,0.10)",
+
+  // ── Liquid Glass shadows ──────────────────────────────────────────────
+  boxShadow: scrolled
+    ? [
+      "0 8px 32px rgba(0,0,0,0.45)",
+      "0 2px 12px rgba(127,208,255,0.15)",        // brand blue ambient lift
+      "inset 0 1px 1px rgba(127,208,255,0.25)",   // inner top highlight
+      "inset 0 -1px 1px rgba(0,0,0,0.30)",        // inner bottom shadow
+    ].join(", ")
+    : "none",
+
+  color: theme.palette.text.primary,
+
   transition: theme.transitions.create(["all"], {
     easing: theme.transitions.easing.easeInOut,
     duration: 400,
   }),
-  boxShadow: scrolled ? "0 8px 32px 0 rgba(0, 0, 0, 0.37)" : "none",
-  color: theme.palette.text.primary,
 
+  [theme.breakpoints.down("sm")]: {
+    padding: scrolled ? "0 6px 0 18px" : "0 16px",
+  },
 }));
 
 const MegaMenu = styled(Box, {
@@ -365,33 +392,12 @@ export function Header() {
           </Box>
 
           {/* CTA & Toggle */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px', }}>
-            <Button
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px' }}>
+            {/* Desktop: Liquid Glass Contact button */}
+            <LiquidGlassContactButton />
 
-              component={RouterLink}
-              to={ROUTE_PATHS.CONTACT}
-              sx={{
-                display: { xs: "none", sm: "inline-flex" },
-                borderRadius: "999px",
-                bgcolor: alpha("#fff", 0.05),
-                color: "common.white",
-                border: "1px solid rgba(255,255,255,0.2)",
-                px: 3,
-                height: 40,
-                fontSize: "0.85rem",
-                fontWeight: 700,
-                textTransform: "none",
-                "&:hover": { bgcolor: alpha("#fff", 0.1), borderColor: alpha("#fff", 0.4) },
-              }}
-            >
-              Contact us
-            </Button>
-            <IconButton
-              onClick={() => setMobileOpen(true)}
-              sx={{ display: { md: "none" }, color: "common.white" }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {/* Mobile: Liquid Glass hamburger */}
+            <LiquidGlassMenuButton onClick={() => setMobileOpen(true)} />
           </Stack>
         </PillContainer>
 
@@ -688,13 +694,13 @@ export function Header() {
                 src={logo}
                 alt="Logo"
                 sx={{
-                      width: 64,
-                      height: 64,
-                      objectFit: "contain",
-                      flexShrink: 0,
-                      border: "none",
-                      outline: "none",
-                      filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
+                  width: 64,
+                  height: 64,
+                  objectFit: "contain",
+                  flexShrink: 0,
+                  border: "none",
+                  outline: "none",
+                  filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
                 }}
               />
               <Typography variant="h6" sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}>
@@ -768,6 +774,84 @@ export function Header() {
           </List>
         </Stack>
       </Drawer>
+
+      {/* ── Premium Split Bottom Action Bar (mobile only) ── */}
+      <Box
+        sx={{
+          display: { xs: "flex", sm: "none" },
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1300,
+          px: 2,
+          py: 1.25,
+          gap: 1.25,
+          alignItems: "center",
+          bgcolor: "rgba(4, 10, 20, 0.92)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderTop: "1px solid rgba(127,208,255,0.1)",
+          boxShadow: "0 -4px 40px rgba(0,0,0,0.5), 0 -1px 0 rgba(127,208,255,0.08)",
+        }}
+      >
+        {/* Left CTA: Free Audit – gradient primary */}
+        <Button
+          component={RouterLink}
+          to={ROUTE_PATHS.CONTACT}
+          startIcon={<HeadsetMicIcon sx={{ fontSize: "1rem !important" }} />}
+          sx={{
+            flex: 1,
+            borderRadius: "12px",
+            background: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
+            color: "#060e1a",
+            py: 1.25,
+            fontSize: "0.82rem",
+            fontWeight: 800,
+            textTransform: "none",
+            letterSpacing: "0.01em",
+            boxShadow: "0 4px 18px rgba(127,208,255,0.35)",
+            transition: "all 0.22s ease",
+            "&:hover": {
+              background: "linear-gradient(135deg, #a0daff 0%, #c4b5fd 100%)",
+              boxShadow: "0 6px 28px rgba(127,208,255,0.5)",
+              transform: "translateY(-1px)",
+            },
+          }}
+        >
+          Free Audit
+        </Button>
+
+        {/* Divider */}
+        <Box sx={{ width: "1px", height: 32, bgcolor: "rgba(255,255,255,0.08)", flexShrink: 0 }} />
+
+        {/* Right CTA: Schedule Call – ghost secondary */}
+        <Button
+          component={RouterLink}
+          to={ROUTE_PATHS.CONTACT}
+          startIcon={<CalendarMonthOutlinedIcon sx={{ fontSize: "1rem !important" }} />}
+          sx={{
+            flex: 1,
+            borderRadius: "12px",
+            bgcolor: "rgba(127,208,255,0.07)",
+            color: "#7fd0ff",
+            border: "1px solid rgba(127,208,255,0.2)",
+            py: 1.25,
+            fontSize: "0.82rem",
+            fontWeight: 700,
+            textTransform: "none",
+            letterSpacing: "0.01em",
+            transition: "all 0.22s ease",
+            "&:hover": {
+              bgcolor: "rgba(127,208,255,0.14)",
+              borderColor: "rgba(127,208,255,0.4)",
+              transform: "translateY(-1px)",
+            },
+          }}
+        >
+          Contact Us
+        </Button>
+      </Box>
     </>
   );
 }

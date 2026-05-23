@@ -150,7 +150,7 @@ export default function RetentionAuditBooking() {
     };
 
     try {
-      const res = await fetch("https://aksharsync.com/api/send-email.php", {
+      const res = await fetch("/api/send-email.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
