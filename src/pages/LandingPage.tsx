@@ -8,31 +8,20 @@ import WhyUs from "../components/Landing/WhyUs";
 import Culture from "../components/Landing/Culture";
 
 const PageWrapper = styled(Box)(({ theme }) => ({
-  background: "#060e1a",
-  color: theme.palette.common.white,
+  background: theme.palette.background.default,
+  color: theme.palette.text.primary,
   overflowX: "hidden",
-  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  fontFamily: theme.typography.fontFamily,
 }));
 
 export default function LandingPage() {
   return (
     <PageWrapper>
-      {/* ── HERO SECTION ── */}
       <Hero />
-
-      {/* ── STRATEGIC SERVICES (Section I) ── */}
       <Services />
-
-      {/* ── PLATFORM ECOSYSTEM (Section II) ── */}
       <WhyUs />
-
-      {/* ── CULTURE SECTION ── */}
       <Culture />
-
-      {/* ── CLIENT REVIEWS ── */}
       <ClientReviews />
-
-      {/* ── CTA BANNER ── */}
       <CTA />
     </PageWrapper>
   );

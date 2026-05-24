@@ -36,15 +36,15 @@ export default function Culture() {
         <Box
             sx={{
                 py: 12,
-                bgcolor: "#060e1a",
+                bgcolor: "background.default",
                 position: "relative",
                 overflow: "hidden",
-                borderTop: "1px solid rgba(255,255,255,0.04)",
+                borderTop: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.04)}`,
             }}
         >
             {/* Ambient orbs */}
-            <Box sx={{ position: "absolute", top: "10%", left: "-5%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(127,208,255,0.06) 0%, transparent 70%)", animation: `${pulse} 5s ease infinite`, pointerEvents: "none" }} />
-            <Box sx={{ position: "absolute", bottom: "10%", right: "-5%", width: 350, height: 350, borderRadius: "50%", background: "radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%)", animation: `${pulse} 5s ease infinite 1.5s`, pointerEvents: "none" }} />
+            <Box sx={{ position: "absolute", top: "10%", left: "-5%", width: 400, height: 400, borderRadius: "50%", background: (theme) => `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.06)} 0%, transparent 70%)`, animation: `${pulse} 5s ease infinite`, pointerEvents: "none" }} />
+            <Box sx={{ position: "absolute", bottom: "10%", right: "-5%", width: 350, height: 350, borderRadius: "50%", background: (theme) => `radial-gradient(circle, ${alpha(theme.palette.primary.light || '#a78bfa', 0.06)} 0%, transparent 70%)`, animation: `${pulse} 5s ease infinite 1.5s`, pointerEvents: "none" }} />
 
             <Container maxWidth="lg">
                 <Box
@@ -71,7 +71,7 @@ export default function Culture() {
                         {/* Heading */}
                         <Typography
                             variant="h2"
-                            sx={{ fontSize: { xs: "1.9rem", md: "2.5rem" }, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, color: "#fff", mb: 3 }}
+                            sx={{ fontSize: { xs: "1.9rem", md: "2.5rem" }, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, color: "text.primary", mb: 3 }}
                         >
                             A global team built{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -80,10 +80,10 @@ export default function Culture() {
                         </Typography>
 
                         {/* Body copy */}
-                        <Typography sx={{ color: alpha("#fff", 0.48), fontSize: "0.97rem", lineHeight: 1.85, mb: 2.5 }}>
+                        <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.48), fontSize: "0.97rem", lineHeight: 1.85, mb: 2.5 }}>
                             The AksharSync team is an international group of professionals spread across the globe. Our diverse backgrounds bring unique ideas and fresh perspectives — contributing to industry-leading retention innovation.
                         </Typography>
-                        <Typography sx={{ color: alpha("#fff", 0.35), fontSize: "0.92rem", lineHeight: 1.85, mb: 5 }}>
+                        <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.35), fontSize: "0.92rem", lineHeight: 1.85, mb: 5 }}>
                             Despite our differences, we're a tight-knit group with extraordinary communication. We work together to go the extra mile for every client — every send, every flow, every campaign.
                         </Typography>
 
@@ -122,13 +122,13 @@ export default function Culture() {
                         <Box
                             sx={{
                                 borderRadius: "24px",
-                                border: "1px solid rgba(255,255,255,0.07)",
-                                background: "linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))",
+                                border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.07)}`,
+                                background: (theme) => `linear-gradient(145deg, ${alpha(theme.palette.text.primary, 0.03)}, ${alpha(theme.palette.text.primary, 0.01)})`,
                                 p: 3.5,
                                 mb: 2,
                             }}
                         >
-                            <Typography sx={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.25), mb: 2.5 }}>
+                            <Typography sx={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: (theme) => alpha(theme.palette.text.primary, 0.25), mb: 2.5 }}>
                                 Who's behind AksharSync
                             </Typography>
                             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
@@ -138,16 +138,19 @@ export default function Culture() {
                                         sx={{
                                             display: "flex", alignItems: "center", gap: 1.5,
                                             p: 1.5, borderRadius: "14px",
-                                            background: "rgba(255,255,255,0.02)",
-                                            border: "1px solid rgba(255,255,255,0.05)",
+                                            background: (theme) => alpha(theme.palette.text.primary, 0.02),
+                                            border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.05)}`,
                                             transition: "all 0.25s",
-                                            "&:hover": { background: "rgba(255,255,255,0.04)", borderColor: "rgba(127,208,255,0.15)" },
+                                            "&:hover": {
+                                                background: (theme) => alpha(theme.palette.text.primary, 0.04),
+                                                borderColor: (theme) => alpha(theme.palette.primary.main, 0.15)
+                                            },
                                         }}
                                     >
-                                        <Box sx={{ width: 38, height: 38, borderRadius: "11px", background: h.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 800, color: "#060e1a", flexShrink: 0 }}>
+                                        <Box sx={{ width: 38, height: 38, borderRadius: "11px", background: h.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 800, color: "background.default", flexShrink: 0 }}>
                                             {h.initials}
                                         </Box>
-                                        <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: alpha("#fff", 0.65), lineHeight: 1.3 }}>
+                                        <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: (theme) => alpha(theme.palette.text.primary, 0.65), lineHeight: 1.3 }}>
                                             {h.label}
                                         </Typography>
                                     </Box>
@@ -158,11 +161,11 @@ export default function Culture() {
                         {/* Stats row */}
                         <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1 }}>
                             {stats.map((s, i) => (
-                                <Box key={i} sx={{ textAlign: "center", p: 1.5, borderRadius: "14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                                <Box key={i} sx={{ textAlign: "center", p: 1.5, borderRadius: "14px", background: (theme) => alpha(theme.palette.text.primary, 0.02), border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.05)}` }}>
                                     <Typography sx={{ fontSize: "1.1rem", fontWeight: 900, background: "linear-gradient(135deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.1 }}>
                                         {s.value}
                                     </Typography>
-                                    <Typography sx={{ fontSize: "0.55rem", color: alpha("#fff", 0.3), mt: 0.5, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
+                                    <Typography sx={{ fontSize: "0.55rem", color: (theme) => alpha(theme.palette.text.primary, 0.3), mt: 0.5, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
                                         {s.label}
                                     </Typography>
                                 </Box>

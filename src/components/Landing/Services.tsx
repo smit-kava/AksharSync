@@ -356,8 +356,8 @@ export default function Services() {
         py: { xs: 8, md: 12 },
         position: "relative",
         overflow: "hidden",
-        background:
-          "linear-gradient(180deg, #060e1a 0%, #0b1a32 50%, #060e1a 100%)",
+        background: (theme) =>
+          `linear-gradient(180deg, ${theme.palette.background.default} 0%, ${alpha(theme.palette.primary.dark || '#0D3B66', 0.15)} 50%, ${theme.palette.background.default} 100%)`,
         "&::before": {
           content: '""',
           position: "absolute",
@@ -397,7 +397,7 @@ export default function Services() {
               </Typography>
               <Typography
                 sx={{
-                  color: alpha("#fff", 0.4),
+                  color: (theme) => alpha(theme.palette.text.primary, 0.4),
                   mt: 2,
                   maxWidth: 640,
                   mx: "auto",
@@ -421,7 +421,7 @@ export default function Services() {
               fontSize: "0.65rem",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: alpha("#fff", 0.2),
+              color: (theme) => alpha(theme.palette.text.primary, 0.2),
               mb: 3,
               display: { xs: "none", md: "block" },
             }}

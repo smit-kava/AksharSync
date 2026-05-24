@@ -3,6 +3,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import StarIcon from '@mui/icons-material/Star';
 import {
     Alert,
+    alpha,
     Box,
     Button, CircularProgress,
     Container,
@@ -149,8 +150,8 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
                 overflow: 'hidden',
                 flexShrink: 0,
                 position: 'relative',
-                background: logoUrl ? '#fff' : `linear-gradient(135deg, ${from}, ${to})`,
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: (theme) => logoUrl ? theme.palette.common.white : `linear-gradient(135deg, ${from}, ${to})`,
+                border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -158,7 +159,7 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
             }}
         >
             {!logoUrl && (
-                <Typography sx={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', lineHeight: 1, userSelect: 'none' }}>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 800, color: 'common.white', lineHeight: 1, userSelect: 'none' }}>
                     {initials}
                 </Typography>
             )}
@@ -188,18 +189,18 @@ const ReviewCard = ({ review }: { review: Review }) => (
     <Box sx={{
         minWidth: { xs: 260, md: 320 },
         maxWidth: { xs: 260, md: 320 },
-        bgcolor: 'rgba(255,255,255,0.02)',
+        bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
         borderRadius: '20px',
         p: 3,
         mx: 1.5,
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.06)}`,
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
         height: '100%',
         transition: 'all 0.3s',
         '&:hover': {
-            bgcolor: 'rgba(255,255,255,0.04)',
+            bgcolor: (theme) => alpha(theme.palette.text.primary, 0.04),
             borderColor: 'rgba(56, 189, 248, 0.3)',
             transform: 'translateY(-5px)',
         },
@@ -208,7 +209,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
             <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center' }}>
                 <BrandAvatar name={review.name} company={review.company} />
                 <Box>
-                    <Typography sx={{ fontWeight: 700, color: '#fff', fontSize: '0.9rem' }}>
+                    <Typography sx={{ fontWeight: 700, color: 'text.primary', fontSize: '0.9rem' }}>
                         {review.name}
                     </Typography>
                     {review.company && (
@@ -216,7 +217,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
                             {review.company}
                         </Typography>
                     )}
-                    <Typography sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>
+                    <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.4), fontSize: '0.72rem' }}>
                         {review.date}
                     </Typography>
                 </Box>
@@ -227,7 +228,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
         <Rating value={review.rating} readOnly size="small" sx={{ color: '#FBBC05' }} />
 
         <Typography sx={{
-            color: 'rgba(255,255,255,0.65)',
+            color: (theme) => alpha(theme.palette.text.primary, 0.65),
             fontSize: '0.85rem',
             lineHeight: 1.65,
             flexGrow: 1,
@@ -287,13 +288,13 @@ const SubmitReviewModal = ({
 
     const inputSx = {
         '& .MuiOutlinedInput-root': {
-            color: '#fff',
+            color: 'text.primary',
             borderRadius: '10px',
-            '& fieldset': { borderColor: 'rgba(255,255,255,0.12)' },
+            '& fieldset': { borderColor: (theme: any) => alpha(theme.palette.text.primary, 0.12) },
             '&:hover fieldset': { borderColor: 'rgba(56,189,248,0.4)' },
             '&.Mui-focused fieldset': { borderColor: '#38bdf8' },
         },
-        '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.45)' },
+        '& .MuiInputLabel-root': { color: (theme: any) => alpha(theme.palette.text.primary, 0.45) },
         '& .MuiInputLabel-root.Mui-focused': { color: '#38bdf8' },
     };
 
@@ -306,11 +307,11 @@ const SubmitReviewModal = ({
             slotProps={{
                 paper: {
                     sx: {
-                        bgcolor: '#0d1b2e',
+                        bgcolor: 'background.paper',
                         backgroundImage: 'linear-gradient(135deg, rgba(56,189,248,0.04) 0%, rgba(99,102,241,0.04) 100%)',
                         border: '1px solid rgba(56,189,248,0.15)',
                         borderRadius: '20px',
-                        color: '#fff',
+                        color: 'text.primary',
                         boxShadow: '0 25px 80px rgba(0,0,0,0.6)',
                     },
                 },
@@ -325,11 +326,11 @@ const SubmitReviewModal = ({
                     }}>
                         <EditNoteIcon sx={{ color: '#38bdf8', fontSize: 20 }} />
                     </Box>
-                    <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: '#fff' }}>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: 'text.primary' }}>
                         Share Your Experience
                     </Typography>
                 </Box>
-                <IconButton onClick={onClose} sx={{ color: 'rgba(255,255,255,0.4)', '&:hover': { color: '#fff' } }}>
+                <IconButton onClick={onClose} sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.4), '&:hover': { color: 'text.primary' } }}>
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -350,7 +351,7 @@ const SubmitReviewModal = ({
                 )}
                 {/* Rating stars */}
                 <Box>
-                    <Typography sx={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.82rem', mb: 0.8 }}>
+                    <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.55), fontSize: '0.82rem', mb: 0.8 }}>
                         Your Rating *
                     </Typography>
                     <Rating
@@ -358,7 +359,7 @@ const SubmitReviewModal = ({
                         onChange={(_, val) => val && setForm(prev => ({ ...prev, rating: val }))}
                         size="large"
                         icon={<StarIcon sx={{ color: '#FBBC05' }} />}
-                        emptyIcon={<StarIcon sx={{ color: 'rgba(255,255,255,0.15)' }} />}
+                        emptyIcon={<StarIcon sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.15) }} />}
                     />
                 </Box>
 
@@ -389,7 +390,7 @@ const SubmitReviewModal = ({
                     onChange={handleChange('email')}
                     sx={inputSx}
                     helperText={
-                        <Typography component="span" sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.73rem' }}>
+                        <Typography component="span" sx={{ color: (theme: any) => alpha(theme.palette.text.primary, 0.3), fontSize: '0.73rem' }}>
                             Not displayed publicly — used for Gravatar avatar only.
                         </Typography>
                     }
@@ -405,7 +406,7 @@ const SubmitReviewModal = ({
                     sx={inputSx}
                     slotProps={{ htmlInput: { maxLength: 2000 } }}
                     helperText={
-                        <Typography component="span" sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.73rem' }}>
+                        <Typography component="span" sx={{ color: (theme: any) => alpha(theme.palette.text.primary, 0.3), fontSize: '0.73rem' }}>
                             {form.review.length}/2000 characters
                         </Typography>
                     }
@@ -434,7 +435,7 @@ const SubmitReviewModal = ({
                     )}
                 </AnimatePresence>
 
-                <Typography sx={{ color: 'rgba(255,255,255,0.28)', fontSize: '0.75rem' }}>
+                <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.28), fontSize: '0.75rem' }}>
                     ✦ Reviews are verified by our team before they appear publicly.
                 </Typography>
             </DialogContent>
@@ -444,12 +445,12 @@ const SubmitReviewModal = ({
                     onClick={onClose}
                     disabled={loading}
                     sx={{
-                        color: 'rgba(255,255,255,0.45)',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        color: (theme) => alpha(theme.palette.text.primary, 0.45),
+                        border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
                         borderRadius: '10px',
                         px: 3,
                         textTransform: 'none',
-                        '&:hover': { borderColor: 'rgba(255,255,255,0.25)', color: '#fff' },
+                        '&:hover': { borderColor: (theme) => alpha(theme.palette.text.primary, 0.25), color: 'text.primary' },
                     }}
                 >
                     Cancel
@@ -532,10 +533,10 @@ export const ClientReviews = () => {
     return (
         <Box sx={{
             py: 8,
-            bgcolor: '#060e1a',
+            bgcolor: 'background.default',
             overflow: 'hidden',
             position: 'relative',
-            borderTop: '1px solid rgba(255,255,255,0.04)',
+            borderTop: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.04)}`,
         }}>
             {/* Section Header */}
             <Container maxWidth="lg" sx={{ mb: 5, textAlign: 'center' }}>
@@ -561,7 +562,7 @@ export const ClientReviews = () => {
                 <Typography variant="h2" sx={{
                     fontWeight: 900,
                     fontSize: { xs: '1.8rem', md: '2.5rem' },
-                    color: '#fff',
+                    color: 'text.primary',
                     mb: 1.5,
                     lineHeight: 1.2,
                 }}>
@@ -575,7 +576,7 @@ export const ClientReviews = () => {
                     </Box>
                 </Typography>
 
-                <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', mb: 0 }}>
+                <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.45), fontSize: '0.95rem', mb: 0 }}>
                     Real results from real brands — unfiltered and verified.
                 </Typography>
             </Container>
@@ -612,11 +613,11 @@ export const ClientReviews = () => {
                     justifyContent: 'center',
                     // justifyContent: 'space-between',
                     alignItems: 'center',
-                    bgcolor: 'rgba(255,255,255,0.02)',
+                    bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
                     p: { xs: 2, md: 2.5 },
                     px: { md: 2 },
                     borderRadius: '24px',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    border: (theme) => `1px solid ${alpha(theme.palette.text.primary, 0.05)}`,
                     backdropFilter: 'blur(10px)',
                 }}>
                     <Box sx={{
@@ -627,11 +628,11 @@ export const ClientReviews = () => {
                         justifyContent: { xs: 'center', md: 'flex-start' }
                     }}>
                         <Rating value={Math.round(avgRating)} readOnly size="small" sx={{ color: '#FBBC05' }} />
-                        <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem' }}>
+                        <Typography sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.5), fontSize: '0.88rem' }}>
                             Overall rating:{' '}
-                            <strong style={{ color: '#fff' }}>{avgRating} / 5</strong>
+                            <strong style={{ color: 'text.primary' }}>{avgRating} / 5</strong>
                             {' '}based on{' '}
-                            <strong style={{ color: '#fff' }}>{totalCount} verified reviews</strong>
+                            <strong style={{ color: 'text.primary' }}>{totalCount} verified reviews</strong>
                         </Typography>
                     </Box>
 
