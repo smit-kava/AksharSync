@@ -135,7 +135,7 @@ const mainServices: ServiceCategory[] = [
       { label: "SMS Automation", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
       { label: "WhatsApp Retention Systems", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
       { label: "Push Notifications", to: ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS, icon: "pushNotification" },
-      { label: "RCS Messaging", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
+      // { label: "RCS Messaging", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
       { label: "Direct Mail Opportunities", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
       { label: "Instagram DM Automation", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, icon: "instagramDm" },
     ],

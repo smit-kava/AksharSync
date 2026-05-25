@@ -33,13 +33,13 @@ const TIME_SLOTS = [
 ];
 
 const COUNTRY_CODES = [
-  { code: "+91", label: "IN", flag: "🇮🇳" },
-  { code: "+1", label: "US", flag: "🇺🇸" },
-  { code: "+44", label: "UK", flag: "🇬🇧" },
-  { code: "+61", label: "AU", flag: "🇦🇺" },
-  { code: "+971", label: "UAE", flag: "🇦🇪" },
-  { code: "+49", label: "DE", flag: "🇩🇪" },
-  { code: "+33", label: "FR", flag: "🇫🇷" },
+  { code: "+91", country: "in" },
+  { code: "+1", country: "us" },
+  { code: "+44", country: "gb" },
+  { code: "+61", country: "au" },
+  { code: "+971", country: "ae" },
+  { code: "+49", country: "de" },
+  { code: "+33", country: "fr" },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -425,15 +425,49 @@ export default function RetentionAuditBooking() {
 
                   <Stack direction="row" spacing={1}>
                     <TextField
-                      select label="Code" name="countryCode"
-                      value={form.countryCode} onChange={handleInput}
-                      size="small" sx={{ ...inputSx, minWidth: 100 }}
+                      select
+                      label="Code"
+                      name="countryCode"
+                      value={form.countryCode}
+                      onChange={handleInput}
+                      size="small"
+                      slotProps={{
+                        select: {
+                          renderValue: (selected) => {
+                            const item = COUNTRY_CODES.find((c) => c.code === selected);
+                            if (!item) return selected as string;
+                            return (
+                              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                <Box
+                                  component="img"
+                                  src={`https://flagcdn.com/w20/${item.country}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${item.country}.png 2x`}
+                                  width="20"
+                                  height="15"
+                                  alt={item.country}
+                                  sx={{ borderRadius: "2px", objectFit: "cover" }}
+                                />
+                                <span style={{ color: "#fff", marginLeft: "4px" }}>{item.code}</span>
+                              </Box>
+                            );
+                          }
+                        }
+                      }}
+                      sx={{ ...inputSx, minWidth: 100 }}
                     >
-                      {COUNTRY_CODES.map(c => (
-                        <MenuItem key={c.code} value={c.code}>
-                          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                            <span>{c.flag}</span>
-                            <span style={{ fontSize: "0.82rem" }}>{c.code}</span>
+                      {COUNTRY_CODES.map((c) => (
+                        <MenuItem key={c.country} value={c.code}>
+                          <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+                            <Box
+                              component="img"
+                              src={`https://flagcdn.com/w20/${c.country}.png`}
+                              srcSet={`https://flagcdn.com/w40/${c.country}.png 2x`}
+                              width="20"
+                              height="15"
+                              alt={c.country}
+                              sx={{ borderRadius: "2px", objectFit: "cover" }}
+                            />
+                            <span style={{ fontSize: "0.82rem", color: "#fff" }}>{c.code}</span>
                           </Box>
                         </MenuItem>
                       ))}

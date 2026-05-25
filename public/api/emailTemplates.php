@@ -103,10 +103,20 @@ function buildUserConfirmationHtml(array $data): string
     $website = !empty($data['website']) ? htmlspecialchars($data['website']) : '—';
     $year    = date('Y');
 
+    $isAudit = !empty($data['bookingDate']);
+
     $details  = darkDetailRow('👤', 'Name',    $name);
     $details .= darkDetailRow('✉️', 'Email',   $email,  BRAND_PRIMARY_BLUE);
     $details .= darkDetailRow('📞', 'Phone',   $phone);
-    $details .= darkDetailRow('🌐', 'Website', $website, '#ffffff', true);
+    $details .= darkDetailRow('🌐', 'Website', $website, '#ffffff', !$isAudit && empty($data['notes']));
+
+    if ($isAudit) {
+        $details .= darkDetailRow('📅', 'Booking Date', htmlspecialchars($data['bookingDate']));
+        $details .= darkDetailRow('⏰', 'Booking Time', htmlspecialchars($data['bookingTime']), '#ffffff', empty($data['notes']));
+    }
+    if (!empty($data['notes'])) {
+        $details .= darkDetailRow('📝', 'Notes', htmlspecialchars($data['notes']), '#ffffff', true);
+    }
 
     $step1 = stepBadge(1);
     $step2 = stepBadge(2);
@@ -120,13 +130,18 @@ function buildUserConfirmationHtml(array $data): string
     $co = BRAND_COMPANY;
     $su = BRAND_SITE_URL;
 
+    $subjectText = $isAudit ? 'Retention Audit Booked!' : 'Consultation Booked!';
+    $subTitle = $isAudit
+        ? "Hi <strong style=\"color:{$b};\">{$fn}</strong> 👋 — we've locked in your Free Retention Audit slot. Get ready to discover your hidden revenue opportunities!"
+        : "Hi <strong style=\"color:{$b};\">{$fn}</strong> 👋 — we've received your request and we're excited to connect with you!";
+
     return <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Consultation Confirmed — {$co}</title>
+  <title>{$subjectText} — {$co}</title>
 </head>
 <body style="margin:0;padding:0;background-color:{$bg};font-family:'Segoe UI',Arial,sans-serif;">
 
@@ -185,12 +200,11 @@ function buildUserConfirmationHtml(array $data): string
               </div>
               <h1 style="margin:0 0 10px;font-size:26px;font-weight:800;color:#ffffff;
                          letter-spacing:-0.5px;line-height:1.2;">
-                Consultation Booked!
+                {$subjectText}
               </h1>
               <p style="margin:0 auto;font-size:15px;color:rgba(255,255,255,0.5);
                         line-height:1.6;max-width:400px;">
-                Hi <strong style="color:{$b};">{$fn}</strong> 👋 —
-                we've received your request and we're excited to connect with you!
+                {$subTitle}
               </p>
             </td>
           </tr>
@@ -331,17 +345,33 @@ function buildUserConfirmationPlain(array $data): string
     $fn      = emailFirstName($data['name']);
     $phone   = !empty($data['phone']) ? ($data['countryCode'] . ' ' . $data['phone']) : '—';
     $website = !empty($data['website']) ? $data['website'] : '—';
+    $isAudit = !empty($data['bookingDate']);
 
-    return implode("\n", [
+    $msg = $isAudit 
+        ? 'Your Free Retention Audit booking has been received and confirmed!' 
+        : 'Your ' . BRAND_COMPANY . ' consultation request has been received!';
+
+    $lines = [
         "Hi {$fn},",
         '',
-        'Your ' . BRAND_COMPANY . ' consultation request has been received!',
+        $msg,
         '',
         "Here's what you submitted:",
         "  Name:    {$data['name']}",
         "  Email:   {$data['email']}",
         "  Phone:   {$phone}",
         "  Website: {$website}",
+    ];
+
+    if ($isAudit) {
+        $lines[] = "  Date:    {$data['bookingDate']}";
+        $lines[] = "  Time:    {$data['bookingTime']}";
+    }
+    if (!empty($data['notes'])) {
+        $lines[] = "  Notes:   {$data['notes']}";
+    }
+
+    $lines = array_merge($lines, [
         '',
         'What happens next:',
         '  1. Our team will review your details within 24 hours.',
@@ -353,17 +383,24 @@ function buildUserConfirmationPlain(array $data): string
         '— The ' . BRAND_COMPANY . ' Team',
         BRAND_SITE_URL,
     ]);
+
+    return implode("\n", $lines);
 }
 
 /**
  * Returns ['subject' => string, 'html' => string, 'plain' => string]
  *
- * @param array{name:string, email:string, phone:string, countryCode:string, website:string} $data
+ * @param array $data
  */
 function buildUserConfirmationEmail(array $data): array
 {
+    $isAudit = !empty($data['bookingDate']);
+    $subject = $isAudit 
+        ? '✅ Your Free Retention Audit is Booked!' 
+        : '✅ Your ' . BRAND_COMPANY . ' Consultation is Confirmed!';
+
     return [
-        'subject' => '✅ Your ' . BRAND_COMPANY . ' Consultation is Confirmed!',
+        'subject' => $subject,
         'html'    => buildUserConfirmationHtml($data),
         'plain'   => buildUserConfirmationPlain($data),
     ];
@@ -382,15 +419,29 @@ function buildAdminNotificationHtml(array $data, string $receivedTimestamp): str
     $website = !empty($data['website']) ? htmlspecialchars($data['website']) : '—';
     $year    = date('Y');
 
+    $isAudit = !empty($data['bookingDate']);
+
     $rows  = adminTableRow('👤 Name',     $name,               false);
     $rows .= adminTableRow('✉️ Email',    $email,              true,  'font-size:14px;font-weight:700;color:' . BRAND_PRIMARY_PURPLE . ';');
     $rows .= adminTableRow('📞 Phone',    $phone,              false, 'font-size:14px;color:#1a1a2e;');
     $rows .= adminTableRow('🌐 Website',  $website,            true,  'font-size:14px;color:#1a1a2e;');
-    $rows .= adminTableRow('🕐 Received', $receivedTimestamp,  false, 'font-size:13px;color:#888;');
+
+    if ($isAudit) {
+        $rows .= adminTableRow('📅 Date', htmlspecialchars($data['bookingDate']), false, 'font-size:14px;font-weight:700;color:#28c840;');
+        $rows .= adminTableRow('⏰ Time', htmlspecialchars($data['bookingTime']), true, 'font-size:14px;font-weight:700;color:#28c840;');
+    }
+    if (!empty($data['notes'])) {
+        $rows .= adminTableRow('📝 Notes', htmlspecialchars($data['notes']), false, 'font-size:13px;color:#555;');
+    }
+
+    $rows .= adminTableRow('🕐 Received', $receivedTimestamp,  true, 'font-size:13px;color:#888;');
 
     $b  = BRAND_PRIMARY_BLUE;
     $p  = BRAND_PRIMARY_PURPLE;
     $co = BRAND_COMPANY;
+
+    $headingTitle = $isAudit ? 'Retention Audit Booking' : 'Consultation Request';
+    $subAlert = $isAudit ? '🔔 Audit Booking' : '🔔 Action Required';
 
     return <<<HTML
 <!DOCTYPE html>
@@ -425,12 +476,12 @@ function buildAdminNotificationHtml(array $data, string $receivedTimestamp): str
                            text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">
                 New Lead Alert
               </div>
-              <h2 style="margin:0;font-size:20px;font-weight:800;color:#1a1a2e;">Consultation Request</h2>
+              <h2 style="margin:0;font-size:20px;font-weight:800;color:#1a1a2e;">{$headingTitle}</h2>
             </td>
             <td align="right" valign="top">
               <span style="display:inline-block;background:#f0f9ff;border:1px solid {$b};
                            border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;color:{$p};">
-                🔔 Action Required
+                {$subAlert}
               </span>
             </td>
           </tr>
@@ -483,22 +534,35 @@ function buildAdminNotificationPlain(array $data, string $receivedTimestamp): st
 {
     $phone   = !empty($data['phone']) ? ($data['countryCode'] . ' ' . $data['phone']) : '—';
     $website = !empty($data['website']) ? $data['website'] : '—';
+    $isAudit = !empty($data['bookingDate']);
 
-    return implode("\n", [
-        'New Consultation Request',
+    $title = $isAudit ? 'New Free Retention Audit Booking' : 'New Consultation Request';
+
+    $lines = [
+        $title,
         '',
         "Name:     {$data['name']}",
         "Email:    {$data['email']}",
         "Phone:    {$phone}",
         "Website:  {$website}",
-        "Received: {$receivedTimestamp}",
-    ]);
+    ];
+
+    if ($isAudit) {
+        $lines[] = "Booking:  {$data['bookingDate']} at {$data['bookingTime']}";
+    }
+    if (!empty($data['notes'])) {
+        $lines[] = "Notes:    {$data['notes']}";
+    }
+
+    $lines[] = "Received: {$receivedTimestamp}";
+
+    return implode("\n", $lines);
 }
 
 /**
  * Returns ['subject' => string, 'html' => string, 'plain' => string]
  *
- * @param array{name:string, email:string, phone:string, countryCode:string, website:string} $data
+ * @param array $data
  * @param string $receivedTimestamp  Human-readable timestamp (defaults to now)
  */
 function buildAdminNotificationEmail(array $data, string $receivedTimestamp = ''): array
@@ -507,8 +571,13 @@ function buildAdminNotificationEmail(array $data, string $receivedTimestamp = ''
         $receivedTimestamp = date('D, d M Y — H:i:s T');
     }
 
+    $isAudit = !empty($data['bookingDate']);
+    $subject = $isAudit 
+        ? '🔔 New Free Retention Audit Booking — ' . $data['name']
+        : '🔔 New Consultation Request — ' . $data['name'];
+
     return [
-        'subject' => '🔔 New Consultation Request — ' . $data['name'],
+        'subject' => $subject,
         'html'    => buildAdminNotificationHtml($data, $receivedTimestamp),
         'plain'   => buildAdminNotificationPlain($data, $receivedTimestamp),
     ];

@@ -19,12 +19,70 @@ require __DIR__ . '/phpmailer/PHPMailer.php';
 require __DIR__ . '/phpmailer/SMTP.php';
 
 // ========================================
+// ENV / DIRECT CONFIGURATION LOADER
+// ========================================
+function getEnvValue(string $key, string $default): string
+{
+    // 1. Check system environment variables first
+    $val = getenv($key);
+    if ($val !== false && $val !== '') {
+        return $val;
+    }
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return $_ENV[$key];
+    }
+    
+    // 2. Check local/root .env file
+    static $envData = null;
+    if ($envData === null) {
+        $envData = [];
+        $possiblePaths = [
+            dirname(__DIR__, 2) . '/.env.local',
+            dirname(__DIR__, 2) . '/.env',
+            dirname(__DIR__) . '/.env.local',
+            dirname(__DIR__) . '/.env',
+            __DIR__ . '/.env'
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path) && is_readable($path)) {
+                $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    if (empty($line) || strpos($line, '#') === 0) {
+                        continue;
+                    }
+                    if (strpos($line, '=') !== false) {
+                        list($name, $value) = explode('=', $line, 2);
+                        $name = trim($name);
+                        $value = trim($value);
+                        // Strip quotes if present
+                        if ((strpos($value, '"') === 0 && strrpos($value, '"') === strlen($value) - 1) ||
+                            (strpos($value, "'") === 0 && strrpos($value, "'") === strlen($value) - 1)) {
+                            $value = substr($value, 1, -1);
+                        }
+                        $envData[$name] = $value;
+                    }
+                }
+                break; // Stop at the first successfully parsed file
+            }
+        }
+    }
+    
+    if (isset($envData[$key]) && $envData[$key] !== '') {
+        return $envData[$key];
+    }
+    
+    return $default;
+}
+
+// ========================================
 // YOUR CREDENTIALS
 // ========================================
 
-$host = "smtp.gmail.com";
-$user = "kavasmit603@gmail.com";
-$pass = "sxcn veug mmsz rlhc";
+$host = getEnvValue('EMAIL_HOST', 'smtp.gmail.com');
+$user = getEnvValue('EMAIL_USER', 'support@aksharsync.com');
+$pass = getEnvValue('EMAIL_PASS', 'uhpr hwdc rohi ypgj');
 
 // ========================================
 // TEST ALL PORT/ENCRYPTION COMBOS

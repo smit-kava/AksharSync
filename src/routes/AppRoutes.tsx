@@ -56,7 +56,7 @@ export function AppRoutes() {
           <Route path={ROUTE_PATHS.SERVICE_SMS} element={<PageTransition><SMSService /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<PageTransition><PushNotification /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING} element={<PageTransition><WhatsappService /></PageTransition>} />
-          <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+          {/* <Route path={ROUTE_PATHS.SERVICE_RCS_MARKETING} element={<PageTransition><ServiceDetailPage /></PageTransition>} /> */}
           <Route path={ROUTE_PATHS.SERVICE_INSTAGRAM_DM} element={<PageTransition><InstagramDM /></PageTransition>} />
 
           {/* Audit Services */}

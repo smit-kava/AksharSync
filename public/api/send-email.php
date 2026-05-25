@@ -38,20 +38,91 @@ require __DIR__ . '/phpmailer/SMTP.php';
 require __DIR__ . '/emailTemplates.php';
 
 // ========================================
+// ENV / DIRECT CONFIGURATION LOADER
+// ========================================
+function getEnvValue(string $key, string $default): string
+{
+    // 1. Check system environment variables first
+    $val = getenv($key);
+    if ($val !== false && $val !== '') {
+        return $val;
+    }
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return $_ENV[$key];
+    }
+    
+    // 2. Check local/root .env file
+    static $envData = null;
+    if ($envData === null) {
+        $envData = [];
+        $possiblePaths = [
+            dirname(__DIR__, 2) . '/.env.local',
+            dirname(__DIR__, 2) . '/.env',
+            dirname(__DIR__) . '/.env.local',
+            dirname(__DIR__) . '/.env',
+            __DIR__ . '/.env'
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path) && is_readable($path)) {
+                $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    if (empty($line) || strpos($line, '#') === 0) {
+                        continue;
+                    }
+                    if (strpos($line, '=') !== false) {
+                        list($name, $value) = explode('=', $line, 2);
+                        $name = trim($name);
+                        $value = trim($value);
+                        // Strip quotes if present
+                        if ((strpos($value, '"') === 0 && strrpos($value, '"') === strlen($value) - 1) ||
+                            (strpos($value, "'") === 0 && strrpos($value, "'") === strlen($value) - 1)) {
+                            $value = substr($value, 1, -1);
+                        }
+                        $envData[$name] = $value;
+                    }
+                }
+                break; // Stop at the first successfully parsed file
+            }
+        }
+    }
+    
+    if (isset($envData[$key]) && $envData[$key] !== '') {
+        return $envData[$key];
+    }
+    
+    return $default;
+}
+
+// ========================================
 // SMTP CONFIGURATION — Gmail
 // ========================================
-$smtp_host = 'smtp.gmail.com';           // Gmail SMTP server
-$smtp_user = 'smitkava21@gmail.com';    // Gmail address (SMTP login)
-$smtp_pass = str_replace(' ', '', 'ajco jaqg vcxn pkap'); // Google App Password — spaces stripped automatically
-$from_email = 'smitkava21@gmail.com';    // From address (must match Gmail account)
+$smtp_host = getEnvValue('EMAIL_HOST', 'smtp.gmail.com');
+$smtp_user = getEnvValue('EMAIL_USER', 'support@aksharsync.com');
+$smtp_pass = str_replace(' ', '', getEnvValue('EMAIL_PASS', 'uhpr hwdc rohi ypgj'));
+$from_email = getEnvValue('EMAIL_USER', 'support@aksharsync.com');
 $from_name = 'AksharSync';
-$admin_email = 'smitkava21@gmail.com';   // All lead alerts delivered here
+$admin_email = getEnvValue('EMAIL_TO', 'support@aksharsync.com');
 
-// Gmail: port 587 + STARTTLS is the standard recommended config
+// Dynamic port loader & secure protocol resolver (supports Gmail + custom SMTP hosts like mail.etechinter.com)
+$env_port = (int)getEnvValue('EMAIL_PORT', '465');
+$env_secure_str = strtolower(getEnvValue('EMAIL_SECURE', 'true'));
+$env_secure = ($env_secure_str === 'true' || $env_secure_str === 'ssl' || $env_port === 465) 
+  ? PHPMailer::ENCRYPTION_SMTPS 
+  : PHPMailer::ENCRYPTION_STARTTLS;
+
 $configs = [
-  ['port' => 587, 'secure' => PHPMailer::ENCRYPTION_STARTTLS],
-  ['port' => 465, 'secure' => PHPMailer::ENCRYPTION_SMTPS],   // fallback
+  ['port' => $env_port, 'secure' => $env_secure]
 ];
+
+// Fallback configs to try standard secure ports if different from the primary env port
+if ($env_port !== 587) {
+  $configs[] = ['port' => 587, 'secure' => PHPMailer::ENCRYPTION_STARTTLS];
+}
+if ($env_port !== 465) {
+  $configs[] = ['port' => 465, 'secure' => PHPMailer::ENCRYPTION_SMTPS];
+}
 
 // ========================================
 // GET & VALIDATE JSON INPUT
@@ -69,6 +140,9 @@ $userEmail = trim($data['email'] ?? '');
 $phone = trim($data['phone'] ?? '');
 $countryCode = trim($data['countryCode'] ?? '');
 $website = trim($data['website'] ?? '');
+$bookingDate = trim($data['bookingDate'] ?? '');
+$bookingTime = trim($data['bookingTime'] ?? '');
+$notes = trim($data['notes'] ?? '');
 
 if (empty($name)) {
   echo json_encode(["success" => false, "message" => "Name is required"]);
@@ -101,12 +175,14 @@ function buildMailer(array $cfg, string $smtp_host, string $smtp_user, string $s
     $debugLog .= $str . "\n";
   };
 
-  // Gmail uses a valid trusted certificate
+  // Bypass peer-verification. This is CRITICAL for custom corporate mail servers
+  // (like etechinter.com or aksharsync.com on shared/CWP hosting) which may use self-signed certificates
+  // or face local PHP trust-bundle configuration issues.
   $mail->SMTPOptions = [
     'ssl' => [
-      'verify_peer' => true,
-      'verify_peer_name' => true,
-      'allow_self_signed' => false,
+      'verify_peer' => false,
+      'verify_peer_name' => false,
+      'allow_self_signed' => true,
     ]
   ];
   $mail->setFrom($from_email, $from_name);
@@ -122,6 +198,9 @@ $formData = [
   'phone' => $phone,
   'countryCode' => $countryCode,
   'website' => $website,
+  'bookingDate' => $bookingDate,
+  'bookingTime' => $bookingTime,
+  'notes' => $notes,
 ];
 
 $userPayload = buildUserConfirmationEmail($formData);

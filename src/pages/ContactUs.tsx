@@ -1,6 +1,9 @@
 import EmailIcon from "@mui/icons-material/Email";
 import LanguageIcon from "@mui/icons-material/Language";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import MessageIcon from "@mui/icons-material/Message";
 import SendIcon from "@mui/icons-material/Send";
 import {
     Alert,
@@ -9,6 +12,8 @@ import {
     CircularProgress,
     Container,
     Grid,
+    InputAdornment,
+    MenuItem,
     Paper,
     Snackbar,
     Stack,
@@ -43,11 +48,41 @@ const CONTACT_ITEMS = [
     },
 ];
 
+// ─── Country dialing codes list ────────────────────────────────────────────
+const COUNTRY_CODES = [
+    { code: "+1", country: "us" },
+    { code: "+91", country: "in" },
+    { code: "+44", country: "gb" },
+    { code: "+61", country: "au" },
+    { code: "+971", country: "ae" },
+    { code: "+65", country: "sg" },
+    { code: "+49", country: "de" },
+    { code: "+33", country: "fr" },
+    { code: "+81", country: "jp" },
+    { code: "+86", country: "cn" },
+    { code: "+92", country: "pk" },
+    { code: "+880", country: "bd" },
+    { code: "+27", country: "za" },
+    { code: "+31", country: "nl" },
+    { code: "+34", country: "es" },
+    { code: "+39", country: "it" },
+    { code: "+7", country: "ru" },
+    { code: "+55", country: "br" },
+];
+
 /* ─── Component ───────────────────────────────────────────────────────────── */
 const ContactUs = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        countryCode: "+91",
+        website: "",
+        message: "",
+    });
+    const [errors, setErrors] = useState({
         name: "",
         email: "",
         phone: "",
@@ -63,11 +98,74 @@ const ContactUs = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        if (errors[name as keyof typeof errors]) {
+            setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
+    };
+
+    const validateForm = (): boolean => {
+        const newErrors = {
+            name: "",
+            email: "",
+            phone: "",
+            website: "",
+            message: "",
+        };
+        let isValid = true;
+
+        if (!formData.name.trim()) {
+            newErrors.name = "Name is required.";
+            isValid = false;
+        } else if (formData.name.trim().length < 2) {
+            newErrors.name = "Name must be at least 2 characters.";
+            isValid = false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formData.email.trim()) {
+            newErrors.email = "Email is required.";
+            isValid = false;
+        } else if (!emailRegex.test(formData.email.trim())) {
+            newErrors.email = "Please enter a valid email address.";
+            isValid = false;
+        }
+
+        const phoneRegex = /^[0-9\s\-()]{5,15}$/;
+        if (!formData.phone.trim()) {
+            newErrors.phone = "Phone number is required.";
+            isValid = false;
+        } else if (!phoneRegex.test(formData.phone.trim())) {
+            newErrors.phone = "Please enter a valid phone number.";
+            isValid = false;
+        }
+
+        const webRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
+        if (!formData.website.trim()) {
+            newErrors.website = "Website URL is required.";
+            isValid = false;
+        } else if (!webRegex.test(formData.website.trim())) {
+            newErrors.website = "Please enter a valid website URL.";
+            isValid = false;
+        }
+
+        if (!formData.message.trim()) {
+            newErrors.message = "Message is required.";
+            isValid = false;
+        } else if (formData.message.trim().length < 10) {
+            newErrors.message = "Message must be at least 10 characters.";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.name.trim() || !formData.email.trim()) return;
+        if (!validateForm()) {
+            setStatus({ type: "error", message: "Please correct the errors in the form before submitting." });
+            return;
+        }
 
         setLoading(true);
         setStatus({ type: null, message: "" });
@@ -80,7 +178,7 @@ const ContactUs = () => {
                     name: formData.name,
                     email: formData.email,
                     phone: formData.phone,
-                    countryCode: "",
+                    countryCode: formData.countryCode,
                     website: formData.website,
                     message: formData.message,
                     type: "contact_inquiry",
@@ -91,7 +189,8 @@ const ContactUs = () => {
 
             if (data.success) {
                 setStatus({ type: "success", message: "Message sent! We'll get back to you within 24 hours." });
-                setFormData({ name: "", email: "", phone: "", website: "", message: "" });
+                setFormData({ name: "", email: "", phone: "", countryCode: "+91", website: "", message: "" });
+                setErrors({ name: "", email: "", phone: "", website: "", message: "" });
             } else {
                 setStatus({ type: "error", message: data.message || "Something went wrong. Please try again." });
             }
@@ -312,7 +411,18 @@ const ContactUs = () => {
                                                 value={formData.name}
                                                 onChange={handleChange}
                                                 required
+                                                error={!!errors.name}
+                                                helperText={errors.name}
                                                 placeholder="Jane Smith"
+                                                slotProps={{
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <PersonIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
                                                 sx={inputStyles}
                                             />
                                             <TextField
@@ -323,26 +433,134 @@ const ContactUs = () => {
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 required
+                                                error={!!errors.email}
+                                                helperText={errors.email}
                                                 placeholder="jane@company.com"
+                                                slotProps={{
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <EmailIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
                                                 sx={inputStyles}
                                             />
-                                            <TextField
-                                                fullWidth
-                                                label="Phone Number"
-                                                name="phone"
-                                                type="tel"
-                                                value={formData.phone}
-                                                onChange={handleChange}
-                                                placeholder="+91 98765 43210"
-                                                sx={inputStyles}
-                                            />
+                                            <Box sx={{ display: "flex", gap: 1.5 }}>
+                                                <TextField
+                                                    select
+                                                    label="Code"
+                                                    name="countryCode"
+                                                    value={formData.countryCode}
+                                                    onChange={handleChange}
+                                                    slotProps={{
+                                                        select: {
+                                                            renderValue: (selected) => {
+                                                                const item = COUNTRY_CODES.find((c) => c.code === selected);
+                                                                if (!item) return selected as string;
+                                                                return (
+                                                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                                                        <Box
+                                                                            component="img"
+                                                                            src={`https://flagcdn.com/w20/${item.country}.png`}
+                                                                            srcSet={`https://flagcdn.com/w40/${item.country}.png 2x`}
+                                                                            width="20"
+                                                                            height="15"
+                                                                            alt={item.country}
+                                                                            sx={{ borderRadius: "2px", objectFit: "cover" }}
+                                                                        />
+                                                                        <span style={{ color: "#fff", marginLeft: "4px" }}>{item.code}</span>
+                                                                    </Box>
+                                                                );
+                                                            }
+                                                        }
+                                                    }}
+                                                    sx={{
+                                                        width: 140,
+                                                        flexShrink: 0,
+                                                        "& .MuiOutlinedInput-root": {
+                                                            bgcolor: "rgba(255,255,255,0.02)",
+                                                            borderRadius: "12px",
+                                                            transition: "all 0.3s ease",
+                                                            "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+                                                            "&:hover fieldset": { borderColor: "rgba(127,208,255,0.3)" },
+                                                            "&.Mui-focused fieldset": { borderColor: "#7fd0ff", borderWidth: "1px" },
+                                                        },
+                                                        "& .MuiInputLabel-root": {
+                                                            color: "rgba(255,255,255,0.5)",
+                                                            "&.Mui-focused": { color: "#7fd0ff" },
+                                                        },
+                                                        "& .MuiSelect-select": {
+                                                            color: "#fff",
+                                                            py: 2,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                        },
+                                                        "& .MuiSvgIcon-root": {
+                                                            color: "rgba(255,255,255,0.5)"
+                                                        }
+                                                    }}
+                                                >
+                                                    {COUNTRY_CODES.map((item) => (
+                                                        <MenuItem key={item.code} value={item.code} sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                                                            <Box
+                                                                component="img"
+                                                                src={`https://flagcdn.com/w20/${item.country}.png`}
+                                                                srcSet={`https://flagcdn.com/w40/${item.country}.png 2x`}
+                                                                width="20"
+                                                                height="15"
+                                                                alt={item.country}
+                                                                sx={{ borderRadius: "2px", objectFit: "cover" }}
+                                                            />
+                                                            <Typography sx={{ color: "#fff", fontSize: "0.9rem" }}>
+                                                                {item.code}
+                                                            </Typography>
+                                                        </MenuItem>
+                                                    ))}
+                                                </TextField>
+                                                <TextField
+                                                    fullWidth
+                                                    label="Phone Number"
+                                                    name="phone"
+                                                    type="tel"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
+                                                    required
+                                                    error={!!errors.phone}
+                                                    helperText={errors.phone}
+                                                    placeholder="98765 43210"
+                                                    slotProps={{
+                                                        input: {
+                                                            startAdornment: (
+                                                                <InputAdornment position="start">
+                                                                    <PhoneIcon />
+                                                                </InputAdornment>
+                                                            ),
+                                                        },
+                                                    }}
+                                                    sx={inputStyles}
+                                                />
+                                            </Box>
                                             <TextField
                                                 fullWidth
                                                 label="Website"
                                                 name="website"
                                                 value={formData.website}
                                                 onChange={handleChange}
+                                                required
+                                                error={!!errors.website}
+                                                helperText={errors.website}
                                                 placeholder="https://yourcompany.com"
+                                                slotProps={{
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <LanguageIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
                                                 sx={inputStyles}
                                             />
                                             <TextField
@@ -351,9 +569,21 @@ const ContactUs = () => {
                                                 name="message"
                                                 value={formData.message}
                                                 onChange={handleChange}
+                                                required
                                                 multiline
                                                 rows={5}
+                                                error={!!errors.message}
+                                                helperText={errors.message}
                                                 placeholder="Tell us about your project, question, or idea…"
+                                                slotProps={{
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 1.5 }}>
+                                                                <MessageIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
                                                 sx={inputStyles}
                                             />
 
@@ -408,7 +638,8 @@ const ContactUs = () => {
                 open={status.type !== null}
                 autoHideDuration={6000}
                 onClose={() => setStatus({ ...status, type: null })}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                sx={{ top: "90px !important" }}
             >
                 <Alert
                     onClose={() => setStatus({ ...status, type: null })}
@@ -439,6 +670,14 @@ const inputStyles = {
     },
     "& .MuiInputBase-input": { color: "#fff" },
     "& .MuiInputBase-inputMultiline": { color: "#fff" },
+    // Adornment dynamic colors
+    "& .MuiInputAdornment-root .MuiSvgIcon-root": {
+        color: "rgba(255,255,255,0.3)",
+        transition: "color 0.3s ease",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiInputAdornment-root .MuiSvgIcon-root": {
+        color: "#7fd0ff",
+    },
 };
 
 export default ContactUs;
