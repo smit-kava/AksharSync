@@ -83,9 +83,12 @@ export default function RetentionAuditBooking() {
   const [selDate, setSelDate] = useState<Date | null>(null);
   const [selTime, setSelTime] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", countryCode: "+91", phone: "", website: "", notes: "" });
+  const [errors, setErrors] = useState({ name: "", email: "", phone: "", website: "" });
+  const [touched, setTouched] = useState({ name: false, email: false, phone: false, website: false });
   const [loading, setLoading] = useState(false);
   const [booked, setBooked] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [dateTimeError, setDateTimeError] = useState("");
 
   const cells = buildCalendar(viewYear, viewMonth);
 
@@ -120,9 +123,50 @@ export default function RetentionAuditBooking() {
     }
   };
 
+  // ─── Single-field validator ──────────────────────────────────────────────────
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case "name":
+        if (!value.trim()) return "Full name is required.";
+        if (value.trim().length < 2) return "Name must be at least 2 characters.";
+        return "";
+      case "email":
+        if (!value.trim()) return "Business email is required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Please enter a valid email address.";
+        return "";
+      case "phone":
+        if (value === "" || value === '') return "Phone number is required.";
+        if (!/^[0-9\s\-()]{5,15}$/.test(value.trim()))
+          return "Enter 5–15 digits. Spaces, dashes and parentheses allowed.";
+        return "";
+      case "website":
+        if (value === "" || value === '') return "Website is required.";
+        if (!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}/i.test(value.trim()))
+          return "Please enter a valid website URL (e.g. yourbrand.com).";
+        return "";
+      case "notes":
+        if (value === "" || value === null || value === undefined) return "Notes is required.";
+        if (value.trim() && value.trim().length < 100) return "Notes must be at least 100 characters.";
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  // ─── Input: update value + re-validate touched fields live ──────────────────────
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+    if (touched[name as keyof typeof touched]) {
+      setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
+    }
+  };
+
+  // ─── Blur: mark touched + validate immediately ─────────────────────────────────
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
   };
 
   const ready = !!selDate && !!selTime;
@@ -133,9 +177,29 @@ export default function RetentionAuditBooking() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ready) return;
-    if (!form.name.trim() || !form.email.trim()) {
-      setErrMsg("Name and email are required.");
+
+    // ── 1. Validate date + time ──
+    if (!selDate && !selTime) {
+      setDateTimeError("Please select a date and time slot before continuing.");
+      return;
+    }
+    if (!selDate) { setDateTimeError("Please select a date."); return; }
+    if (!selTime) { setDateTimeError("Please select a time slot for your chosen date."); return; }
+    setDateTimeError("");
+
+    // ── 2. Validate all form fields ──
+    setTouched({ name: true, email: true, phone: true, website: true });
+    const newErrors = {
+      name: validateField("name", form.name),
+      email: validateField("email", form.email),
+      phone: validateField("phone", form.phone),
+      website: validateField("website", form.website),
+    };
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some(Boolean);
+    if (hasErrors) {
+      setErrMsg("Please fix the highlighted errors before confirming your booking.");
       return;
     }
     setErrMsg("");
@@ -412,14 +476,16 @@ export default function RetentionAuditBooking() {
 
                   <TextField
                     fullWidth label="Full name" name="name"
-                    value={form.name} onChange={handleInput}
+                    value={form.name} onChange={handleInput} onBlur={handleBlur}
                     required placeholder="Jane Smith"
+                    error={!!errors.name} helperText={errors.name}
                     size="small" sx={inputSx}
                   />
                   <TextField
                     fullWidth label="Business email" name="email" type="email"
-                    value={form.email} onChange={handleInput}
+                    value={form.email} onChange={handleInput} onBlur={handleBlur}
                     required placeholder="jane@company.com"
+                    error={!!errors.email} helperText={errors.email}
                     size="small" sx={inputSx}
                   />
 
@@ -474,16 +540,18 @@ export default function RetentionAuditBooking() {
                     </TextField>
                     <TextField
                       fullWidth label="Phone" name="phone"
-                      value={form.phone} onChange={handleInput}
-                      placeholder="9876543210"
+                      value={form.phone} onChange={handleInput} onBlur={handleBlur}
+                      placeholder="00000 00000"
+                      error={!!errors.phone} helperText={errors.phone}
                       size="small" sx={inputSx}
                     />
                   </Stack>
 
                   <TextField
                     fullWidth label="Website URL" name="website"
-                    value={form.website} onChange={handleInput}
+                    value={form.website} onChange={handleInput} onBlur={handleBlur}
                     placeholder="yourbrand.com"
+                    error={!!errors.website} helperText={errors.website}
                     size="small" sx={inputSx}
                   />
                   <TextField
@@ -494,7 +562,14 @@ export default function RetentionAuditBooking() {
                     sx={inputSx}
                   />
 
-                  {/* Inline error */}
+                  {/* Date/time validation error */}
+                  {dateTimeError && (
+                    <Typography sx={{ fontSize: "0.78rem", color: "#fbbf24", display: "flex", alignItems: "center", gap: 0.5 }}>
+                      ⚠ {dateTimeError}
+                    </Typography>
+                  )}
+
+                  {/* Form field errors summary */}
                   {errMsg && (
                     <Typography sx={{ fontSize: "0.78rem", color: "#ff6b6b" }}>{errMsg}</Typography>
                   )}

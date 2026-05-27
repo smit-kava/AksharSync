@@ -89,81 +89,85 @@ const ContactUs = () => {
         website: "",
         message: "",
     });
+    const [touched, setTouched] = useState({
+        name: false,
+        email: false,
+        phone: false,
+        website: false,
+        message: false,
+    });
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<{
         type: "success" | "error" | null;
         message: string;
     }>({ type: null, message: "" });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        if (errors[name as keyof typeof errors]) {
-            setErrors((prev) => ({ ...prev, [name]: "" }));
+    // ─── Validate a single field ──────────────────────────────────────────────
+    const validateField = (name: string, value: string): string => {
+        switch (name) {
+            case "name":
+                if (value == '' || value == null) return "Name is required.";
+                if (value.trim().length < 2) return "Name must be at least 2 characters.";
+                if (!/^[a-zA-Z\s'\-.]+$/.test(value.trim())) return "Name can only contain letters, spaces, hyphens or apostrophes.";
+                return "";
+            case "email":
+                if (!value.trim()) return "Email address is required.";
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Please enter a valid email address.";
+                return "";
+            case "phone":
+                if (!value.trim()) return "Phone number is required.";
+                if (!/^[0-9\s\-()]{5,15}$/.test(value.trim())) return "Enter 5–15 digits. Spaces, dashes and parentheses are allowed.";
+                return "";
+            case "website":
+                if (!value.trim()) return "Website URL is required.";
+                if (!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}([-a-zA-Z0-9@:%_+.~#?&/=]*)$/i.test(value.trim()))
+                    return "Please enter a valid URL (e.g. https://yourcompany.com).";
+                return "";
+            case "message":
+                if (!value.trim()) return "Message is required.";
+                if (value.trim().length < 10) return "Message must be at least 10 characters.";
+                if (value.trim().length > 2000) return "Message must be under 2000 characters.";
+                return "";
+            default:
+                return "";
         }
     };
 
-    const validateForm = (): boolean => {
-        const newErrors = {
-            name: "",
-            email: "",
-            phone: "",
-            website: "",
-            message: "",
-        };
-        let isValid = true;
-
-        if (!formData.name.trim()) {
-            newErrors.name = "Name is required.";
-            isValid = false;
-        } else if (formData.name.trim().length < 2) {
-            newErrors.name = "Name must be at least 2 characters.";
-            isValid = false;
+    // ─── Change: clear error + re-validate if already touched ──────────────────
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (touched[name as keyof typeof touched]) {
+            setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
         }
+    };
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!formData.email.trim()) {
-            newErrors.email = "Email is required.";
-            isValid = false;
-        } else if (!emailRegex.test(formData.email.trim())) {
-            newErrors.email = "Please enter a valid email address.";
-            isValid = false;
-        }
-
-        const phoneRegex = /^[0-9\s\-()]{5,15}$/;
-        if (!formData.phone.trim()) {
-            newErrors.phone = "Phone number is required.";
-            isValid = false;
-        } else if (!phoneRegex.test(formData.phone.trim())) {
-            newErrors.phone = "Please enter a valid phone number.";
-            isValid = false;
-        }
-
-        const webRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
-        if (!formData.website.trim()) {
-            newErrors.website = "Website URL is required.";
-            isValid = false;
-        } else if (!webRegex.test(formData.website.trim())) {
-            newErrors.website = "Please enter a valid website URL.";
-            isValid = false;
-        }
-
-        if (!formData.message.trim()) {
-            newErrors.message = "Message is required.";
-            isValid = false;
-        } else if (formData.message.trim().length < 10) {
-            newErrors.message = "Message must be at least 10 characters.";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
+    // ─── Blur: mark touched + validate immediately ──────────────────────────────
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setTouched((prev) => ({ ...prev, [name]: true }));
+        setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validateForm()) {
-            setStatus({ type: "error", message: "Please correct the errors in the form before submitting." });
+
+        // Mark all fields touched so errors show
+        setTouched({ name: true, email: true, phone: true, website: true, message: true });
+
+        // Validate everything
+        const newErrors = {
+            name: validateField("name", formData.name),
+            email: validateField("email", formData.email),
+            phone: validateField("phone", formData.phone),
+            website: validateField("website", formData.website),
+            message: validateField("message", formData.message),
+        };
+        setErrors(newErrors);
+
+        const hasErrors = Object.values(newErrors).some(Boolean);
+        if (hasErrors) {
+            setStatus({ type: "error", message: "Please fix the highlighted errors before submitting." });
             return;
         }
 
@@ -410,6 +414,7 @@ const ContactUs = () => {
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
                                                 required
                                                 error={!!errors.name}
                                                 helperText={errors.name}
@@ -432,6 +437,7 @@ const ContactUs = () => {
                                                 type="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
                                                 required
                                                 error={!!errors.email}
                                                 helperText={errors.email}
@@ -526,6 +532,7 @@ const ContactUs = () => {
                                                     type="tel"
                                                     value={formData.phone}
                                                     onChange={handleChange}
+                                                    onBlur={handleBlur}
                                                     required
                                                     error={!!errors.phone}
                                                     helperText={errors.phone}
@@ -548,6 +555,7 @@ const ContactUs = () => {
                                                 name="website"
                                                 value={formData.website}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
                                                 required
                                                 error={!!errors.website}
                                                 helperText={errors.website}
@@ -569,6 +577,7 @@ const ContactUs = () => {
                                                 name="message"
                                                 value={formData.message}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
                                                 required
                                                 multiline
                                                 rows={5}
