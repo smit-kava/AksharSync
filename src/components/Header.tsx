@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { HeaderSearch } from "./HeaderSearch";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -391,8 +392,11 @@ export function Header() {
             ))}
           </Box>
 
-          {/* CTA & Toggle */}
+          {/* Search + CTA row */}
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px' }}>
+            {/* Liquid Glass search bar */}
+            <HeaderSearch />
+
             {/* Desktop: Liquid Glass Contact button */}
             <LiquidGlassContactButton />
 
