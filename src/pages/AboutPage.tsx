@@ -1,7 +1,7 @@
 import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import logo from "../assets/Logo.svg";
 import { keyframes, styled } from "@mui/system";
-import { ExpertCTA as CommonExpertCTA, CountUp } from "../components";
+import { ExpertCTA as CommonExpertCTA, CountUp, SEO } from "../components";
 import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
 import {
@@ -11,6 +11,15 @@ import {
     TargetIcon,
     EmailIcon,
     MessagingIcon,
+    WhatsAppIcon,
+    SmsIcon,
+    InstagramDmIcon,
+    PushNotificationIcon,
+    DeliverabilityIcon,
+    ModularTemplateIcon,
+    EspMigrationIcon,
+    JourneyIcon,
+    CreativeIcon,
 } from "../components/icons";
 
 // ─── Animations ───────────────────────────────────────────────────────────────
@@ -139,6 +148,78 @@ const stats = [
     { n: 100, suffix: "%", l: "White-label ready" },
 ];
 
+const services = [
+    {
+        icon: <EmailIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />,
+        color: "#7fd0ff",
+        title: "Email Marketing",
+        desc: "Lifecycle flows, campaigns, and automated sequences built for maximum revenue attribution.",
+    },
+    {
+        icon: <WhatsAppIcon sx={{ fontSize: 26, color: "#34d399" }} />,
+        color: "#34d399",
+        title: "WhatsApp Marketing",
+        desc: "Conversational WhatsApp campaigns, broadcast lists, and automated drip sequences.",
+    },
+    {
+        icon: <InstagramDmIcon sx={{ fontSize: 26, color: "#f472b6" }} />,
+        color: "#f472b6",
+        title: "Instagram DM Automation",
+        desc: "Automated DM flows, story reply sequences, and lead capture funnels via Instagram.",
+    },
+    {
+        icon: <SmsIcon />,
+        color: "#fbbf24",
+        title: "SMS Campaigns",
+        desc: "Compliance-ready SMS flows — welcome, cart recovery, win-back, and transactional alerts.",
+    },
+    {
+        icon: <PushNotificationIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
+        color: "#a78bfa",
+        title: "Push Notifications",
+        desc: "Web & mobile push notifications for re-engagement, flash sales, and lifecycle triggers.",
+    },
+    {
+        icon: <ModularTemplateIcon sx={{ fontSize: 26, color: "#6ee7b7" }} />,
+        color: "#6ee7b7",
+        title: "Template Design",
+        desc: "Pixel-perfect modular email templates — dark mode ready, tested across 40+ clients.",
+    },
+    {
+        icon: <DeliverabilityIcon sx={{ fontSize: 26, color: "#f97316" }} />,
+        color: "#f97316",
+        title: "Deliverability Audits",
+        desc: "DNS setup, authentication review, reputation analysis, and inbox placement testing.",
+    },
+    {
+        icon: <JourneyIcon sx={{ fontSize: 26, color: "#38bdf8" }} />,
+        color: "#38bdf8",
+        title: "Customer Journey Mapping",
+        desc: "End-to-end lifecycle mapping — from acquisition through retention and re-engagement.",
+    },
+    {
+        icon: <EspMigrationIcon sx={{ fontSize: 26, color: "#c084fc" }} />,
+        color: "#c084fc",
+        title: "ESP Migration",
+        desc: "Seamless platform migrations preserving all flows, segments, data, and historic metrics.",
+    },
+];
+
+const platforms = [
+    { name: "Klaviyo", cat: "ESP", color: "#7fd0ff" },
+    { name: "HubSpot", cat: "CRM / ESP", color: "#f97316" },
+    { name: "Braze", cat: "Enterprise ESP", color: "#a78bfa" },
+    { name: "SFMC", cat: "Salesforce MC", color: "#34d399" },
+    { name: "Mailchimp", cat: "ESP", color: "#fbbf24" },
+    { name: "ActiveCampaign", cat: "ESP", color: "#f472b6" },
+    { name: "Twilio", cat: "Messaging API", color: "#7fd0ff" },
+    { name: "WATI", cat: "WhatsApp API", color: "#34d399" },
+    { name: "Attentive", cat: "SMS", color: "#a78bfa" },
+    { name: "Shopify", cat: "Ecommerce", color: "#6ee7b7" },
+    { name: "Webflow", cat: "Web", color: "#38bdf8" },
+    { name: "Postscript", cat: "SMS", color: "#fbbf24" },
+];
+
 const values = [
     {
         icon: <TrendUpIcon sx={{ fontSize: 22, color: "#34d399" }} />,
@@ -190,16 +271,38 @@ const team = [
     {
         name: "Strategy Team",
         role: "CRM & Lifecycle Specialists",
-        bio: "Data-led strategists who turn customer journeys into compounding revenue engines.",
+        bio: "Data-led strategists who turn customer journeys into compounding revenue engines. They analyse cohort data, design multi-touch automations, and ensure every campaign ties back to measurable CLV growth.",
         initials: "ST",
         gradient: "linear-gradient(135deg, #34d399 0%, #06b6d4 100%)",
+        skills: ["Lifecycle Strategy", "Segmentation", "A/B Testing", "Revenue Attribution"],
+        icon: <TrendUpIcon sx={{ fontSize: 18, color: "#34d399" }} />,
     },
     {
         name: "Dev & QA Squad",
         role: "Technical Execution",
-        bio: "Production-grade email developers and QA engineers delivering pixel-perfect builds.",
+        bio: "Production-grade email developers and QA engineers delivering pixel-perfect builds. They specialise in Liquid, AMPscript, dynamic content rendering, dark mode, and cross-client testing.",
         initials: "DQ",
         gradient: "linear-gradient(135deg, #fbbf24 0%, #f472b6 100%)",
+        skills: ["HTML/CSS Email", "Liquid & AMPscript", "Dark Mode", "Litmus QA"],
+        icon: <ArchitectureIcon sx={{ fontSize: 18, color: "#fbbf24" }} />,
+    },
+    {
+        name: "Deliverability Team",
+        role: "Inbox & Reputation Experts",
+        bio: "Dedicated deliverability engineers who handle DNS, authentication, list hygiene, and sender reputation. They run inbox placement tests and recover damaged sending domains.",
+        initials: "DT",
+        gradient: "linear-gradient(135deg, #7fd0ff 0%, #a78bfa 100%)",
+        skills: ["DKIM / DMARC / SPF", "Inbox Placement", "List Hygiene", "Sender Reputation"],
+        icon: <DeliverabilityIcon sx={{ fontSize: 18, color: "#7fd0ff" }} />,
+    },
+    {
+        name: "Creative Studio",
+        role: "Design & Brand",
+        bio: "Template designers and brand specialists who craft stunning, on-brand email templates, landing pages, and omnichannel creative assets that convert.",
+        initials: "CS",
+        gradient: "linear-gradient(135deg, #f472b6 0%, #fbbf24 100%)",
+        skills: ["Email Design", "Figma", "Brand Guidelines", "CRO"],
+        icon: <CreativeIcon sx={{ fontSize: 18, color: "#f472b6" }} />,
     },
 ];
 
@@ -208,6 +311,12 @@ const team = [
 const AboutPage = () => {
     return (
         <Box sx={{ bgcolor: "#060e1a", color: "#fff", minHeight: "100vh", overflowX: "hidden" }}>
+            <SEO
+                canonical="/about"
+                title="About Us"
+                description="Learn about AksharSync — a white-label email marketing and CRM retention agency founded in 2014. Meet our strategy, development, deliverability, and creative teams."
+                keywords="about AksharSync, email marketing team, CRM agency India, white-label agency, retention specialists, Klaviyo experts, lifecycle marketing"
+            />
 
             {/* ══ HERO ══ */}
             <Box sx={{ pt: { xs: 14, md: 20 }, pb: 10, textAlign: "center", position: "relative" }}>
@@ -590,6 +699,74 @@ const AboutPage = () => {
                 </Container>
             </Box>
 
+            {/* ── WHAT WE DO ── */}
+            <Box sx={{ py: 12, bgcolor: "rgba(255,255,255,0.01)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                <Container maxWidth="lg">
+                    <RevealOnScroll>
+                        <Box sx={{ textAlign: "center", mb: 8 }}>
+                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>Services</Typography>
+                            <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
+                                What we <GradientText>do</GradientText>
+                            </Typography>
+                            <Typography sx={{ color: alpha("#fff", 0.4), fontSize: "1rem", maxWidth: 560, mx: "auto", mt: 2, lineHeight: 1.8 }}>
+                                Full-stack retention execution across every channel your customers live on.
+                            </Typography>
+                        </Box>
+                    </RevealOnScroll>
+                    <Grid container spacing={3}>
+                        {services.map((svc, i) => (
+                            <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+                                <RevealOnScroll delay={i * 0.06}>
+                                    <ValueCard>
+                                        <Box sx={{ position: "absolute", top: -40, right: -40, width: 120, height: 120, borderRadius: "50%", background: alpha(svc.color, 0.06), filter: "blur(40px)" }} />
+                                        <Box sx={{ width: 48, height: 48, borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", bgcolor: alpha(svc.color, 0.1), border: `1px solid ${alpha(svc.color, 0.22)}`, mb: 2.5, position: "relative", zIndex: 1 }}>
+                                            {svc.icon}
+                                        </Box>
+                                        <Typography sx={{ fontSize: "1rem", fontWeight: 700, mb: 1, color: "#fff", position: "relative", zIndex: 1 }}>{svc.title}</Typography>
+                                        <Typography sx={{ fontSize: "0.85rem", color: alpha("#fff", 0.42), lineHeight: 1.7, position: "relative", zIndex: 1 }}>{svc.desc}</Typography>
+                                    </ValueCard>
+                                </RevealOnScroll>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+            </Box>
+
+            {/* ── PLATFORMS ── */}
+            <Box sx={{ py: 10 }}>
+                <Container maxWidth="lg">
+                    <RevealOnScroll>
+                        <Box sx={{ textAlign: "center", mb: 6 }}>
+                            <Typography sx={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 2 }}>Tech Stack</Typography>
+                            <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
+                                Platforms we <GradientText>master</GradientText>
+                            </Typography>
+                        </Box>
+                    </RevealOnScroll>
+                    <RevealOnScroll delay={0.1}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, justifyContent: "center" }}>
+                            {platforms.map((p, i) => (
+                                <Box key={i} sx={{
+                                    px: 2.5, py: 1.5, borderRadius: "14px",
+                                    background: "rgba(255,255,255,0.02)",
+                                    border: "1px solid rgba(255,255,255,0.07)",
+                                    transition: "all 0.25s ease",
+                                    cursor: "default",
+                                    "&:hover": {
+                                        background: alpha(p.color, 0.07),
+                                        borderColor: alpha(p.color, 0.3),
+                                        transform: "translateY(-3px)",
+                                    },
+                                }}>
+                                    <Typography sx={{ fontSize: "0.92rem", fontWeight: 700, color: "#fff" }}>{p.name}</Typography>
+                                    <Typography sx={{ fontSize: "0.62rem", color: p.color, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600, mt: 0.2 }}>{p.cat}</Typography>
+                                </Box>
+                            ))}
+                        </Box>
+                    </RevealOnScroll>
+                </Container>
+            </Box>
+
             {/* ── TEAM ── */}
             <Box sx={{ py: 12, bgcolor: "rgba(255,255,255,0.01)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                 <Container maxWidth="lg">
@@ -599,25 +776,35 @@ const AboutPage = () => {
                             <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.6rem" }, fontWeight: 800, letterSpacing: "-0.03em" }}>
                                 Meet the <GradientText>team</GradientText>
                             </Typography>
+                            <Typography sx={{ color: alpha("#fff", 0.4), fontSize: "1rem", maxWidth: 540, mx: "auto", mt: 2, lineHeight: 1.8 }}>
+                                Specialists across strategy, development, deliverability, and design — all working as your invisible execution layer.
+                            </Typography>
                         </Box>
                     </RevealOnScroll>
-                    <Grid container spacing={4} sx={{ justifyContent: "space-around" }}>
+                    <Grid container spacing={4}>
                         {team.map((member, i) => (
-                            <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+                            <Grid key={i} size={{ xs: 12, sm: 6, md: 3 }}>
                                 <RevealOnScroll delay={i * 0.1}>
                                     <TeamCard>
-                                        <Box sx={{ height: 6, background: member.gradient }} />
-                                        <Box sx={{ p: 3.5 }}>
-                                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2.5 }}>
-                                                <Box sx={{ width: 52, height: 52, borderRadius: "16px", background: member.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", fontWeight: 800, color: "#060e1a", flexShrink: 0 }}>
+                                        <Box sx={{ height: 5, background: member.gradient }} />
+                                        <Box sx={{ p: 3 }}>
+                                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                                                <Box sx={{ width: 48, height: 48, borderRadius: "14px", background: member.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem", fontWeight: 800, color: "#060e1a", flexShrink: 0 }}>
                                                     {member.initials}
                                                 </Box>
                                                 <Box>
-                                                    <Typography sx={{ fontSize: "1rem", fontWeight: 700, color: "#fff", mb: 0.2 }}>{member.name}</Typography>
-                                                    <Typography sx={{ fontSize: "0.72rem", color: alpha("#fff", 0.35), textTransform: "uppercase", letterSpacing: "0.06em" }}>{member.role}</Typography>
+                                                    <Typography sx={{ fontSize: "0.92rem", fontWeight: 700, color: "#fff", mb: 0.2 }}>{member.name}</Typography>
+                                                    <Typography sx={{ fontSize: "0.65rem", color: alpha("#fff", 0.35), textTransform: "uppercase", letterSpacing: "0.06em" }}>{member.role}</Typography>
                                                 </Box>
                                             </Box>
-                                            <Typography sx={{ fontSize: "0.88rem", color: alpha("#fff", 0.45), lineHeight: 1.7 }}>{member.bio}</Typography>
+                                            <Typography sx={{ fontSize: "0.82rem", color: alpha("#fff", 0.42), lineHeight: 1.7, mb: 2 }}>{member.bio}</Typography>
+                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
+                                                {member.skills.map((skill: string) => (
+                                                    <Box key={skill} sx={{ px: 1.2, py: 0.4, borderRadius: "6px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                                                        <Typography sx={{ fontSize: "0.6rem", color: alpha("#fff", 0.4), fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>{skill}</Typography>
+                                                    </Box>
+                                                ))}
+                                            </Box>
                                         </Box>
                                     </TeamCard>
                                 </RevealOnScroll>

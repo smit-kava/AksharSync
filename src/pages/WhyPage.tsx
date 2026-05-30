@@ -2,7 +2,7 @@ import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { keyframes, styled } from "@mui/system";
 import { animate, motion, useInView, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { ExpertCTA as CommonExpertCTA } from "../components";
+import { ExpertCTA as CommonExpertCTA, SEO } from "../components";
 import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
 import {
@@ -193,6 +193,12 @@ const WhyPage = () => {
 
     return (
         <Box sx={{ bgcolor: "#060e1a", color: "#fff", minHeight: "100vh", overflowX: "hidden" }}>
+            <SEO
+                canonical="/why"
+                title="Why AksharSync"
+                description="Discover why brands and agencies choose AksharSync as their white-label email and retention partner. 10+ years of expertise, 7 ESP platforms, global delivery."
+                keywords="why AksharSync, white label email agency, retention partner, Klaviyo experts, email marketing partner India, lifecycle CRM agency"
+            />
 
             {/* ── HERO SECTION ── */}
             <Box sx={{ pt: { xs: 10, md: 16 }, pb: 8, textAlign: "center", position: "relative" }}>

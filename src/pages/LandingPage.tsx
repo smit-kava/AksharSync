@@ -1,7 +1,6 @@
 import { Box, styled } from "@mui/material";
 import Hero from "../components/Landing/Hero";
-
-import { ClientReviews } from "../components";
+import { ClientReviews, SEO } from "../components";
 import CTA from "../components/Landing/CTA";
 import Services from "../components/Landing/Services";
 import WhyUs from "../components/Landing/WhyUs";
@@ -17,6 +16,13 @@ const PageWrapper = styled(Box)(({ theme }) => ({
 export default function LandingPage() {
   return (
     <PageWrapper>
+      <SEO
+        canonical="/"
+        title="Email, WhatsApp & Digital Marketing Services"
+        description="AksharSync is a white-label retention agency providing Email Marketing, WhatsApp Marketing, Instagram DM Automation, SMS Campaigns, Template Design, and Lifecycle CRM services since 2014."
+        keywords="AksharSync, Email Marketing Agency, WhatsApp Marketing, Instagram DM Automation, SMS Campaigns, Lifecycle CRM, Klaviyo, Email Template Design, Digital Marketing India, White Label Agency"
+      />
+
       {/* ── HERO SECTION ── */}
       <Hero />
 
@@ -36,4 +42,4 @@ export default function LandingPage() {
       <CTA />
     </PageWrapper>
   );
-}
+}

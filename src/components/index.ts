@@ -16,3 +16,7 @@ export { default as KlaviyoAuditHero } from "./KlaviyoAuditHero";
 export { default as CustomCursor } from "./CustomCursor";
 export { default as CountUp } from "./CountUp";
 export { default as PageTransition } from "./PageTransition";
+
+// SEO
+export { SEO } from "./SEO";
+

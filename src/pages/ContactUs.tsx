@@ -25,6 +25,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "../routes/paths";
+import { SEO } from "../components";
 
 /* ─── Contact info cards ──────────────────────────────────────────────────── */
 const CONTACT_ITEMS = [
@@ -206,6 +207,13 @@ const ContactUs = () => {
     };
 
     return (
+        <>
+        <SEO
+            canonical="/contact"
+            title="Contact Us"
+            description="Get in touch with AksharSync. We provide Email Marketing, WhatsApp Marketing, and Digital Retention services. Reply within 24 hours."
+            keywords="Contact AksharSync, email marketing agency contact, WhatsApp marketing support, digital marketing inquiry"
+        />
         <Box
             sx={{
                 position: "relative",
@@ -660,6 +668,7 @@ const ContactUs = () => {
                 </Alert>
             </Snackbar>
         </Box>
+        </>
     );
 };
 
