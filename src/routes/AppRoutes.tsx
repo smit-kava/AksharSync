@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { CommonLayout, PageTransition } from "../components";
 import LandingPage from "../pages/LandingPage";
@@ -19,6 +19,7 @@ import ContactUs from "../pages/ContactUs";
 import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
 import RetentionAuditBooking from "../pages/RetentionAuditBooking";
 import WriteReview from "../pages/WriteReview";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -70,11 +71,11 @@ export function AppRoutes() {
           <Route path={ROUTE_PATHS.CONTACT} element={<PageTransition><ContactUs /></PageTransition>} />
           <Route path={ROUTE_PATHS.KLAVIYO_AUDIT} element={<PageTransition><KlaviyoAuditPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.RETENTION_AUDIT_BOOKING} element={<PageTransition><RetentionAuditBooking /></PageTransition>} />
-          <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
         </Route>
 
         {/* Standalone Pages (No Footer/Nav) */}
         <Route path={ROUTE_PATHS.WRITE_REVIEW} element={<PageTransition><WriteReview /></PageTransition>} />
+        <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
