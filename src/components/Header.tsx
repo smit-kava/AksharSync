@@ -23,6 +23,8 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import CodeIcon from "@mui/icons-material/Code";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import { LiquidGlassMenuButton } from "./LiquidGlassMenuButton";
 import { LiquidGlassContactButton } from "./LiquidGlassContactButton";
 import { ROUTE_PATHS } from "../routes/paths";
@@ -67,6 +69,9 @@ const iconComponentMap: Record<string, React.FC<IconProps>> = {
   whatsapp: WhatsAppIcon,
   rcs: RcsIcon,
   instagramDm: InstagramDmIcon,
+  // Development — use inline MUI icons via wrapper
+  webDev: (props) => <CodeIcon {...(props as object)} />,
+  appDev: (props) => <PhoneIphoneIcon {...(props as object)} />,
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -139,6 +144,32 @@ const mainServices: ServiceCategory[] = [
       // { label: "RCS Messaging", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
       { label: "Direct Mail Opportunities", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
       { label: "Instagram DM Automation", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, icon: "instagramDm" },
+    ],
+  },
+  {
+    label: "Web Development Solutions",
+    icon: <CodeIcon sx={{ fontSize: "1rem" }} />,
+    accent: "#60a5fa",
+    desc: "Custom websites, e-commerce & landing pages built for performance",
+    to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT,
+    sub: [
+      { label: "Custom Website Design", to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT, icon: "webDev" },
+      { label: "E-commerce Development", to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT, icon: "webDev" },
+      { label: "Landing Page Engineering", to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT, icon: "webDev" },
+      { label: "Performance Optimization", to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT, icon: "webDev" },
+    ],
+  },
+  {
+    label: "App Development Solutions",
+    icon: <PhoneIphoneIcon sx={{ fontSize: "1rem" }} />,
+    accent: "#a78bfa",
+    desc: "iOS & Android apps engineered for retention and revenue",
+    to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT,
+    sub: [
+      { label: "iOS App Development", to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT, icon: "appDev" },
+      { label: "Android App Development", to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT, icon: "appDev" },
+      { label: "Cross-Platform (React Native / Flutter)", to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT, icon: "appDev" },
+      { label: "App Store Optimization", to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT, icon: "appDev" },
     ],
   },
 ];

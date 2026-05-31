@@ -16,6 +16,8 @@ import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import TouchAppIcon from "@mui/icons-material/TouchApp";
+import CodeIcon from "@mui/icons-material/Code";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import { Box, Typography, alpha, keyframes, styled } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +41,8 @@ const ALL_SEARCH_ITEMS: SearchItem[] = [
   { label: "Deliverability Review", desc: "Technical inbox health and reputation audit", to: ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT, category: "Main Services", accent: "#34d399", icon: <InboxOutlinedIcon /> },
   { label: "Revenue Opportunity Analysis", desc: "Data-driven discovery of hidden repeat revenue", to: ROUTE_PATHS.SERVICE_REVENUE_AUDIT, category: "Main Services", accent: "#fbbf24", icon: <TrendingUpOutlinedIcon /> },
   { label: "Omnichannel Retention Review", desc: "Multi-platform reach across all messaging channels", to: ROUTE_PATHS.SERVICE_SMS, category: "Main Services", accent: "#f472b6", icon: <HubOutlinedIcon /> },
+  { label: "Web Development", desc: "Custom digital presence and e-commerce solutions", to: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT ?? "/services/web-development-solutions", category: "Main Services", accent: "#38bdf8", icon: <CodeIcon /> },
+  { label: "App Development", desc: "Native and cross-platform mobile apps", to: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT ?? "/services/app-development-solutions", category: "Main Services", accent: "#fb923c", icon: <PhoneIphoneIcon /> },
   // Omnichannel Retention — Sub-Services
   { label: "SMS Automation", desc: "Full-service SMS campaign strategy & execution", to: ROUTE_PATHS.SERVICE_SMS, category: "Omnichannel Retention", accent: "#f472b6", icon: <SmsOutlinedIcon /> },
   { label: "WhatsApp Retention Systems", desc: "Connect with 2B+ users via branded WhatsApp campaigns", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, category: "Omnichannel Retention", accent: "#f472b6", icon: <WhatsAppIcon /> },
@@ -170,7 +174,7 @@ export function HeaderSearch() {
   const navigate = useNavigate();
 
   const results = query.trim() === ""
-    ? ALL_SEARCH_ITEMS
+    ? ALL_SEARCH_ITEMS.filter(item => item.category !== "Quick Links")
     : ALL_SEARCH_ITEMS.filter(
       (item) =>
         item.label.toLowerCase().includes(query.toLowerCase()) ||

@@ -20,7 +20,9 @@ import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
 import RetentionAuditBooking from "../pages/RetentionAuditBooking";
 import WriteReview from "../pages/WriteReview";
 import NotFoundPage from "../pages/NotFoundPage";
-
+import WebDevelopmentService from "../pages/services/WebDevelopmentService";
+import AppDevelopmentService from "../pages/services/AppDevelopmentService";
+import SubServiceDetailPage from "../pages/services/SubServiceDetailPage";
 export function AppRoutes() {
   const location = useLocation();
 
@@ -51,8 +53,6 @@ export function AppRoutes() {
           <Route path={ROUTE_PATHS.SERVICE_DIGITAL_STRATEGY} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_SEO} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_CONTENT} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
-          <Route path={ROUTE_PATHS.SERVICE_WEB_DEV} element={<PageTransition><ServiceDetailPage /></PageTransition>} />
-
           {/* Messaging & Engagement Channels */}
           <Route path={ROUTE_PATHS.SERVICE_SMS} element={<PageTransition><SMSService /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS} element={<PageTransition><PushNotification /></PageTransition>} />
@@ -65,6 +65,14 @@ export function AppRoutes() {
           <Route path={ROUTE_PATHS.SERVICE_CREATIVE_AUDIT} element={<PageTransition><CreativeAudit /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_DELIVERABILITY_AUDIT} element={<PageTransition><DeliverabilityAudit /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICE_REVENUE_AUDIT} element={<PageTransition><RevenueAudit /></PageTransition>} />
+
+          {/* Core Development Services */}
+          <Route path={ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT} element={<PageTransition><WebDevelopmentService /></PageTransition>} />
+          <Route path={ROUTE_PATHS.SERVICE_APP_DEVELOPMENT} element={<PageTransition><AppDevelopmentService /></PageTransition>} />
+
+          {/* Development Sub-Services */}
+          <Route path={`${ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT}/:subSlug`} element={<PageTransition><SubServiceDetailPage category="web" /></PageTransition>} />
+          <Route path={`${ROUTE_PATHS.SERVICE_APP_DEVELOPMENT}/:subSlug`} element={<PageTransition><SubServiceDetailPage category="app" /></PageTransition>} />
 
           <Route path={ROUTE_PATHS.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.WHY} element={<PageTransition><WhyPage /></PageTransition>} />

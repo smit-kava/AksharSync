@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { ROUTE_PATHS } from "../../routes/paths";
 import { ChatIcon, EmailIcon, PushNotificationIcon, RcsIcon, TargetIcon, WhatsAppIcon } from "../icons";
+import CodeIcon from "@mui/icons-material/Code";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 
 // ─── Animations ────────────────────────────────────────────────────────────────
 const pulseGlow = keyframes`
@@ -62,6 +64,8 @@ const liveEvents = [
   { icon: <TargetIcon sx={{ fontSize: 16 }} />, msg: "Klaviyo Audit: 4 missing flows", time: "9s ago", color: "#fbbf24" },
   { icon: <PushNotificationIcon sx={{ fontSize: 16 }} />, msg: "Push Strategy: +8% retention", time: "14s ago", color: "#7fd0ff" },
   { icon: <RcsIcon sx={{ fontSize: 16 }} />, msg: "RCS Pilot: 3.4x higher ROI", time: "18s ago", color: "#34d399" },
+  { icon: <CodeIcon sx={{ fontSize: 16 }} />, msg: "Web Dev: Shopify store launched 98 Lighthouse", time: "22s ago", color: "#60a5fa" },
+  { icon: <PhoneIphoneIcon sx={{ fontSize: 16 }} />, msg: "App Dev: iOS app 4.8★ on App Store", time: "28s ago", color: "#a78bfa" },
 ];
 
 const statCards = [
@@ -437,22 +441,62 @@ export default function Hero() {
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
                   {[
+                    "Web Projects", "Mobile Apps",
                     "Shopify Brands", "DTC Ecommerce", "Agencies", "Klaviyo Users", "Growth Teams"
-                  ].map((tag) => (
-                    <Box
-                      key={tag}
-                      sx={{
-                        px: 1.2, py: 0.5, borderRadius: "6px",
-                        background: "rgba(255,255,255,0.02)",
-                        border: "0.5px solid rgba(255,255,255,0.06)",
-                        fontSize: "0.68rem", color: alpha("#fff", 0.6), fontWeight: 600,
-                        transition: "all 0.2s",
-                        "&:hover": { background: "rgba(255,255,255,0.05)", borderColor: alpha("#7fd0ff", 0.3), color: "#7fd0ff" }
-                      }}
-                    >
-                      {tag}
-                    </Box>
-                  ))}
+                  ].map((tag) => {
+                    const isNew = tag === "Web Projects" || tag === "Mobile Apps";
+                    const isWeb = tag === "Web Projects";
+                    const isMobile = tag === "Mobile Apps";
+                    const targetUrl = isWeb ? ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT : (isMobile ? ROUTE_PATHS.SERVICE_APP_DEVELOPMENT : undefined);
+
+                    return (
+                      <Box
+                        key={tag}
+                        component={isNew ? RouterLink : "div"}
+                        to={targetUrl}
+                        sx={{
+                          textDecoration: "none",
+                          cursor: isNew ? "pointer" : "default",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          px: 1.2, py: 0.5, borderRadius: "6px",
+                          background: isNew ? "rgba(127,208,255,0.08)" : "rgba(255,255,255,0.02)",
+                          border: `0.5px solid ${isNew ? "rgba(127,208,255,0.25)" : "rgba(255,255,255,0.06)"}`,
+                          fontSize: "0.68rem", 
+                          color: isNew ? "#7fd0ff" : alpha("#fff", 0.6), 
+                          fontWeight: isNew ? 700 : 600,
+                          transition: "all 0.2s",
+                          "&:hover": { 
+                            background: isNew ? "rgba(127,208,255,0.15)" : "rgba(255,255,255,0.05)", 
+                            borderColor: "rgba(127,208,255,0.4)", 
+                            color: "#7fd0ff" 
+                          }
+                        }}
+                      >
+                        {tag}
+                        {isNew && (
+                          <Box
+                            component="span"
+                            sx={{
+                              ml: 0.8,
+                              px: 0.6,
+                              py: 0.2,
+                              borderRadius: "4px",
+                              bgcolor: "rgba(127,208,255,0.15)",
+                              color: "#7fd0ff",
+                              fontSize: "0.5rem",
+                              fontWeight: 900,
+                              letterSpacing: "0.05em",
+                              textTransform: "uppercase",
+                              lineHeight: 1
+                            }}
+                          >
+                            New
+                          </Box>
+                        )}
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Box>
             </Fade>

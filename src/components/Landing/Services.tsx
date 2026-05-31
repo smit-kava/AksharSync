@@ -1,23 +1,20 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+
 import {
   Box,
   Container,
   Typography,
   alpha,
   Fade,
-  useMediaQuery,
-  useTheme,
-  IconButton,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Link as RouterLink } from "react-router-dom";
 import { useInView as useInViewShared, GradientText } from "./Shared";
 import { ROUTE_PATHS } from "../../routes/paths";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { LifecycleIcon, ArchitectureIcon, CreativeIcon, MessagingIcon } from "../icons";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
+import CodeIcon from "@mui/icons-material/Code";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 
 // ─── Service data ──────────────────────────────────────────────────────────────
 
@@ -75,6 +72,28 @@ const services = [
     desc: "Audit of SMS, WhatsApp, Push, RCS, Direct Mail, and Instagram DM automation systems.",
     accent: "#f472b6",
     label: "05",
+    clickable: true,
+  },
+  {
+    rotate: -9,
+    icon: <CodeIcon sx={{ fontSize: "2rem" }} />,
+    id: ROUTE_PATHS.SERVICE_WEB_DEVELOPMENT ?? "/services/web-development-solutions",
+    title: "Web Development",
+    sub: "Digital Presence",
+    desc: "From web design to full e-commerce sites — reliable, user-friendly web services.",
+    accent: "#38bdf8",
+    label: "06",
+    clickable: true,
+  },
+  {
+    rotate: 9,
+    icon: <PhoneIphoneIcon sx={{ fontSize: "2rem" }} />,
+    id: ROUTE_PATHS.SERVICE_APP_DEVELOPMENT ?? "/services/app-development-solutions",
+    title: "App Development",
+    sub: "Mobile & Cross-Platform",
+    desc: "Native and cross-platform mobile apps crafted for seamless UX on iOS and Android.",
+    accent: "#fb923c",
+    label: "07",
     clickable: true,
   },
 ];
@@ -225,208 +244,53 @@ function CardInner({ svc, cardWidth }: { svc: (typeof services)[0]; cardWidth: n
   );
 }
 
-// ─── Desktop fan deck — fully responsive ──────────────────────────────────────
-
-function DesktopFanDeck() {
-  const deckRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const [layout, setLayout] = useState({
-    cardWidth: 220,
-    cardHeight: 320,
-    spreads: [0, 0, 0, 0, 0] as number[],
-  });
-
-  const isInView = useInView(deckRef, {
-    amount: 0.2,
-    margin: "0% 0% -40% 0%",
-    once: true,
-  });
-
-  const recalc = useCallback(() => {
-    if (!containerRef.current) return;
-    const W = containerRef.current.offsetWidth;
-
-    // ── Card width: divide container into 5 columns with 12px gutters ──
-    // totalCardWidth * 5 + 12 * 4 = W  →  cardW = (W - 48) / 5
-    const cardW = Math.max(160, Math.floor((W - 48) / 5));
-    // Height: fixed ratio 1.55 so content has room
-    const cardH = Math.round(cardW * 1.55);
-    // Gap between card centres = cardW + gutter
-    const step = cardW + 12;
-
-    const spreads = services.map((_, i) => (i - 2) * step);
-
-    setLayout({ cardWidth: cardW, cardHeight: cardH, spreads });
-  }, []);
-
-  useEffect(() => {
-    recalc();
-    const ro = new ResizeObserver(recalc);
-    if (containerRef.current) ro.observe(containerRef.current);
-    return () => ro.disconnect();
-  }, [recalc]);
-
-  return (
-    <Box ref={containerRef} sx={{ width: "100%", position: "relative" }}>
-      <Box
-        ref={deckRef}
-        sx={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // height = card height + breathing room for hover scale
-          height: layout.cardHeight + 48,
-          width: "100%",
-        }}
-      >
-        {services.map((svc, i) => (
-          <motion.div
-            key={svc.title}
-            style={{ position: "absolute", zIndex: i + 1 }}
-            animate={{
-              x: isInView ? layout.spreads[i] : 0,
-              rotate: isInView ? 0 : svc.rotate,
-              zIndex: isInView ? i + 1 : services.length - Math.abs(i - 2),
-              scale: 1,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 140,
-              damping: 22,
-              mass: 1.1,
-              delay: isInView ? i * 0.07 : (services.length - 1 - i) * 0.04,
-            }}
-            whileHover={isInView ? { scale: 1.035, zIndex: 10 } : {}}
-          >
-            <Box sx={{ width: layout.cardWidth, height: layout.cardHeight }}>
-              <CardInner svc={svc} cardWidth={layout.cardWidth} />
-            </Box>
-          </motion.div>
-        ))}
-      </Box>
-    </Box>
-  );
-}
-
-// ─── Mobile blur-peek carousel ────────────────────────────────────────────────
-
-function MobileServiceCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const dragStartX = useRef(0);
-  const dragCurrentX = useRef(0);
-  const isDragging = useRef(false);
-
-  const goTo = useCallback((idx: number) => {
-    setActiveIndex(Math.max(0, Math.min(services.length - 1, idx)));
-  }, []);
-
-  const onTouchStart = (e: React.TouchEvent) => { dragStartX.current = e.touches[0].clientX; };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const diff = dragStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) goTo(activeIndex + (diff > 0 ? 1 : -1));
-  };
-  const onMouseDown = (e: React.MouseEvent) => { isDragging.current = true; dragStartX.current = dragCurrentX.current = e.clientX; };
-  const onMouseMove = (e: React.MouseEvent) => { if (isDragging.current) dragCurrentX.current = e.clientX; };
-  const onMouseUp = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    const diff = dragStartX.current - dragCurrentX.current;
-    if (Math.abs(diff) > 40) goTo(activeIndex + (diff > 0 ? 1 : -1));
-  };
-
-  return (
-    <Box sx={{ width: "100%", position: "relative", userSelect: "none" }}>
-      <Box
-        onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
-        onMouseDown={onMouseDown} onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
-        sx={{ position: "relative", width: "100%", height: { xs: 400, sm: 430 }, overflow: "hidden" }}
-      >
-        {services.map((svc, i) => {
-          const offset = i - activeIndex;
-          const isActive = offset === 0;
-          const isAdjacent = Math.abs(offset) === 1;
-          return (
-            <Box key={svc.title} sx={{
-              position: "absolute", top: 0, left: "11%", width: "78%", height: "100%",
-              transform: `translateX(${offset * 78}%)`,
-              transition: "transform 0.45s cubic-bezier(0.4,0,0.2,1), filter 0.45s ease, opacity 0.45s ease",
-              filter: isActive ? "blur(0px)" : isAdjacent ? "blur(3px)" : "blur(7px)",
-              opacity: isActive ? 1 : isAdjacent ? 0.42 : 0,
-              pointerEvents: isActive ? "auto" : "none",
-              zIndex: isActive ? 2 : isAdjacent ? 1 : 0,
-            }}>
-              <CardInner svc={svc} cardWidth={300} />
-            </Box>
-          );
-        })}
-
-        {/* Left arrow */}
-        <IconButton onClick={() => goTo(activeIndex - 1)} disabled={activeIndex === 0} aria-label="Previous service"
-          sx={{
-            position: "absolute", left: 0, top: 0, width: "11%", height: "100%", borderRadius: 0, zIndex: 10,
-            color: "#fff", "&:hover": { background: "rgba(255,255,255,0.04)" },
-            "&.Mui-disabled": { color: alpha("#fff", 0.12) }
-          }}>
-          <Box sx={{
-            width: 34, height: 34, borderRadius: "50%",
-            border: `1px solid ${alpha("#fff", activeIndex === 0 ? 0.07 : 0.22)}`,
-            background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)",
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
-            <ChevronLeftIcon sx={{ fontSize: "1rem" }} />
-          </Box>
-        </IconButton>
-
-        {/* Right arrow */}
-        <IconButton onClick={() => goTo(activeIndex + 1)} disabled={activeIndex === services.length - 1} aria-label="Next service"
-          sx={{
-            position: "absolute", right: 0, top: 0, width: "11%", height: "100%", borderRadius: 0, zIndex: 10,
-            color: "#fff", "&:hover": { background: "rgba(255,255,255,0.04)" },
-            "&.Mui-disabled": { color: alpha("#fff", 0.12) }
-          }}>
-          <Box sx={{
-            width: 34, height: 34, borderRadius: "50%",
-            border: `1px solid ${alpha("#fff", activeIndex === services.length - 1 ? 0.07 : 0.22)}`,
-            background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)",
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
-            <ChevronRightIcon sx={{ fontSize: "1rem" }} />
-          </Box>
-        </IconButton>
-      </Box>
-
-      {/* Dots */}
-      <Box sx={{ display: "flex", justifyContent: "center", gap: "6px", mt: 2.5 }}>
-        {services.map((svc, i) => (
-          <Box key={i} onClick={() => goTo(i)} role="button" aria-label={`Go to service ${i + 1}`}
-            sx={{
-              width: i === activeIndex ? 22 : 6, height: 6, borderRadius: "99px",
-              background: i === activeIndex ? svc.accent : alpha("#fff", 0.18), cursor: "pointer",
-              transition: "all 0.35s ease",
-              boxShadow: i === activeIndex ? `0 0 10px ${alpha(svc.accent, 0.7)}` : "none"
-            }} />
-        ))}
-      </Box>
-
-      <Typography sx={{
-        textAlign: "center", mt: 1.5, fontSize: "0.6rem",
-        letterSpacing: "0.14em", textTransform: "uppercase", color: alpha("#fff", 0.2)
-      }}>
-        {activeIndex + 1} / {services.length}
-      </Typography>
-    </Box>
-  );
-}
-
-// ─── Responsive wrapper ────────────────────────────────────────────────────────
+// ─── Continuous Infinite Scrolling Ticker ──────────────────────────────────────
 
 function ServiceDeck() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  return isMobile ? <MobileServiceCarousel /> : <DesktopFanDeck />;
+  // Duplicate services for seamless infinite scroll loop
+  const duplicated = [...services, ...services, ...services]; // 3x to ensure it fills ultra-wide screens
+  const CARD_WIDTH = 320;
+  const GAP = 24;
+  const TOTAL_ITEM_WIDTH = CARD_WIDTH + GAP;
+
+  return (
+    <Box sx={{
+      display: 'flex',
+      width: '100%',
+      overflow: 'hidden',
+      py: 4,
+      maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+      WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+    }}>
+      <motion.div
+        animate={{ x: [0, -(TOTAL_ITEM_WIDTH * services.length)] }}
+        transition={{
+          x: {
+            repeat: Infinity,
+            repeatType: 'loop',
+            duration: services.length * 3.5, // Smooth scrolling speed
+            ease: 'linear',
+          },
+        }}
+        style={{ display: 'flex', gap: `${GAP}px` }}
+      >
+        {duplicated.map((svc, i) => (
+          <Box
+            key={`${svc.title}-${i}`}
+            sx={{
+              width: CARD_WIDTH,
+              height: 440,
+              flexShrink: 0,
+              transition: "transform 0.3s ease",
+              "&:hover": { transform: "translateY(-8px)" }
+            }}
+          >
+            <CardInner svc={svc} cardWidth={CARD_WIDTH} />
+          </Box>
+        ))}
+      </motion.div>
+    </Box>
+  );
 }
 
 // ─── Main export ───────────────────────────────────────────────────────────────
