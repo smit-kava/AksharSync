@@ -1,13 +1,13 @@
-import { Box, Container, Typography, alpha, Stack, Button, Chip } from "@mui/material";
-import { FAQComponent } from "../../components";
-import { motion } from "framer-motion";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useNavigate, useParams, Navigate } from "react-router-dom";
-import { ROUTE_PATHS } from "../../routes/paths";
-import { webDevSubServices, appDevSubServices } from "../../data/devServicesData";
+import { alpha, Box, Button, Container, Stack, Typography } from "@mui/material";
+import { motion } from "framer-motion";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { FAQComponent } from "../../components";
 import type { DevSubService } from "../../data/devServicesData";
+import { appDevSubServices, webDevSubServices } from "../../data/devServicesData";
+import { ROUTE_PATHS } from "../../routes/paths";
 
 interface Props { category: "web" | "app"; }
 
