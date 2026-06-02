@@ -1,31 +1,28 @@
-import { useRef } from "react";
-import { Box, Container, Typography, alpha, Stack, Button, Chip, IconButton } from "@mui/material";
-import { FAQComponent } from "../../components";
-import { motion } from "framer-motion";
+import ApiIcon from "@mui/icons-material/Api";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import BrushIcon from "@mui/icons-material/Brush";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CodeIcon from "@mui/icons-material/Code";
+import DataUsageIcon from "@mui/icons-material/DataUsage";
+import DevicesIcon from "@mui/icons-material/Devices";
+import InsightsIcon from "@mui/icons-material/Insights";
+import IntegrationInstructionsIcon from "@mui/icons-material/IntegrationInstructions";
 import LanguageIcon from "@mui/icons-material/Language";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import SecurityIcon from "@mui/icons-material/Security";
 import SpeedIcon from "@mui/icons-material/Speed";
-import ApiIcon from "@mui/icons-material/Api";
-import PhonelinkIcon from "@mui/icons-material/Phonelink";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import InsightsIcon from "@mui/icons-material/Insights";
-import DataUsageIcon from "@mui/icons-material/DataUsage";
-import CodeIcon from "@mui/icons-material/Code";
-import BrushIcon from "@mui/icons-material/Brush";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import IntegrationInstructionsIcon from "@mui/icons-material/IntegrationInstructions";
-import SecurityIcon from "@mui/icons-material/Security";
-import DevicesIcon from "@mui/icons-material/Devices";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { ROUTE_PATHS } from "../../routes/paths";
+import { alpha, Box, Button, Chip, Container, IconButton, Stack, Typography, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
+import { useRef } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { FAQComponent } from "../../components";
 import { webDevSubServices } from "../../data/devServicesData";
-
-const THEME = "#60a5fa";
+import { ROUTE_PATHS } from "../../routes/paths";
 
 const subIcons = [BrushIcon, StorefrontIcon, RocketLaunchIcon, IntegrationInstructionsIcon, SpeedIcon, ApiIcon, DevicesIcon, SecurityIcon];
 
@@ -43,7 +40,8 @@ const techStack = [
 export default function WebDevelopmentService() {
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
-
+  const theme = useTheme();
+  const THEME = theme.palette.primary.main; // This will now use your global theme color
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
     scrollRef.current.scrollBy({ left: dir === "left" ? -340 : 340, behavior: "smooth" });
@@ -140,8 +138,10 @@ export default function WebDevelopmentService() {
                     const to = `/services/web-development-solutions/${svc.slug}`;
                     return (
                       <Box key={svc.slug} component={RouterLink} to={to}
-                        sx={{ flexShrink: 0, width: { xs: 280, sm: 310 }, scrollSnapAlign: "start", textDecoration: "none", display: "flex", flexDirection: "column", p: 3, borderRadius: "20px", bgcolor: alpha("#fff", 0.02), border: `1px solid ${alpha("#fff", 0.07)}`, cursor: "pointer", transition: "all 0.3s ease", position: "relative", overflow: "hidden",
-                          "&:hover": { transform: "translateY(-6px)", bgcolor: alpha(svc.accent, 0.05), borderColor: alpha(svc.accent, 0.35), boxShadow: `0 16px 40px ${alpha(svc.accent, 0.15)}` } }}>
+                        sx={{
+                          flexShrink: 0, width: { xs: 280, sm: 310 }, scrollSnapAlign: "start", textDecoration: "none", display: "flex", flexDirection: "column", p: 3, borderRadius: "20px", bgcolor: alpha("#fff", 0.02), border: `1px solid ${alpha("#fff", 0.07)}`, cursor: "pointer", transition: "all 0.3s ease", position: "relative", overflow: "hidden",
+                          "&:hover": { transform: "translateY(-6px)", bgcolor: alpha(svc.accent, 0.05), borderColor: alpha(svc.accent, 0.35), boxShadow: `0 16px 40px ${alpha(svc.accent, 0.15)}` }
+                        }}>
                         {/* Glow */}
                         <Box sx={{ position: "absolute", top: -40, right: -40, width: 160, height: 140, borderRadius: "50%", background: `radial-gradient(circle, ${alpha(svc.accent, 0.2)} 0%, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none" }} />
                         {/* Label */}
