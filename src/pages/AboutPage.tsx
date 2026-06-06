@@ -1,7 +1,7 @@
 import { alpha, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import logo from "../assets/Logo.svg";
 import { keyframes, styled } from "@mui/system";
-import { ExpertCTA as CommonExpertCTA, CountUp, SEO } from "../components";
+import { ExpertCTA as CommonExpertCTA, CountUp, SEO, PageWrapper } from "../components";
 import { GradientText } from "../components/Landing/Shared";
 import RevealOnScroll from "../components/RevealOnScroll";
 import {
@@ -310,7 +310,7 @@ const team = [
 
 const AboutPage = () => {
     return (
-        <Box sx={{ bgcolor: "#060e1a", color: "#fff", minHeight: "100vh", overflowX: "hidden" }}>
+        <PageWrapper>
             <SEO
                 canonical="/about"
                 title="About Us"
@@ -832,7 +832,7 @@ const AboutPage = () => {
                 </Container>
             </Box>
 
-        </Box>
+        </PageWrapper>
     );
 };
 

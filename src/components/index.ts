@@ -19,4 +19,4 @@ export { default as PageTransition } from "./PageTransition";
 
 // SEO
 export { SEO } from "./SEO";
-
+export { default as PageWrapper } from "./PageWrapper";
