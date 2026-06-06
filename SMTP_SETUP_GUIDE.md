@@ -18,7 +18,7 @@ This guide walks you through getting your App Password and completing your confi
    - **App Name**: Enter a descriptive name like `AksharSync Website`.
    - Click **Create**.
 5. **Copy the Password**:
-   - A modal will pop up showing a **16-character code** (e.g., `abcd efgh ijkl mnop`).
+   - A modal will pop up showing a **16-character code** (e.g., `abcd efgh ijkl rstws`).
    - Copy this 16-character code immediately. **This is your SMTP password.** (Note: Do not include the spaces when pasting it; just paste all 16 letters).
 
 ---
