@@ -37,7 +37,7 @@ export const marketingTheme = createTheme({
           overflowX: "hidden",
         },
         "*": {
-          scrollbarWidth: "thin",
+          scrollbarWidth: "smooth",
           scrollbarColor: "#031423 #e4cece00",
           "&::-webkit-scrollbar": {
             width: "8px",
