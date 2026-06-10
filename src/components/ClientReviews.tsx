@@ -109,12 +109,24 @@ function getGradient(name: string): [string, string] {
 
 // Converts "company name" → best-guess domain for logo lookup
 function companyToDomain(company: string): string {
-    return company
+    const cleaned = company
         .toLowerCase()
         .replace(/\s+(pvt|ltd|llc|inc|co|corp|private|limited|consultancy|consulting|solutions|services|technologies|tech|group|studio|agency|digital|media|ventures)\.?$/gi, '')
-        .trim()
-        .replace(/[^a-z0-9]/g, '')
-        + '.com';
+        .trim();
+
+    const dummyWords = [
+        'ecommerce', 'saas', 'startup', 'brand', 'client', 'test', 'demo',
+        'example', 'temp', 'placeholder', 'akshar', 'hkinfosoft'
+    ];
+
+    if (dummyWords.some(word => cleaned.includes(word))) {
+        return '';
+    }
+
+    const domainName = cleaned.replace(/[^a-z0-9]/g, '');
+    if (domainName.length < 4) return '';
+
+    return domainName + '.com';
 }
 
 const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
@@ -128,9 +140,7 @@ const BrandAvatar = ({ name, company }: { name: string; company?: string }) => {
         if (!company?.trim()) return;
 
         const domain = companyToDomain(company);
-        // Only attempt if domain root is at least 4 chars (avoids "ak.com", "abc.com" guesses)
-        const root = domain.replace(/\.com$/, '');
-        if (root.length < 4) return;
+        if (!domain) return;
 
         const url = `https://logo.clearbit.com/${domain}`;
 
@@ -216,7 +226,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
                             {review.company}
                         </Typography>
                     )}
-                    <Typography sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.72rem' }}>
                         {review.date}
                     </Typography>
                 </Box>
@@ -227,7 +237,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
         <Rating value={review.rating} readOnly size="small" sx={{ color: '#FBBC05' }} />
 
         <Typography sx={{
-            color: 'rgba(255,255,255,0.65)',
+            color: 'rgba(255,255,255,0.85)',
             fontSize: '0.85rem',
             lineHeight: 1.65,
             flexGrow: 1,

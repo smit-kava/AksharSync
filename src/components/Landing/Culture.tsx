@@ -80,10 +80,10 @@ export default function Culture() {
                         </Typography>
 
                         {/* Body copy */}
-                        <Typography sx={{ color: alpha("#fff", 0.48), fontSize: "0.97rem", lineHeight: 1.85, mb: 2.5 }}>
+                        <Typography sx={{ color: alpha("#fff", 0.75), fontSize: "0.97rem", lineHeight: 1.85, mb: 2.5 }}>
                             The AksharSync team is an international group of professionals spread across the globe. Our diverse backgrounds bring unique ideas and fresh perspectives — contributing to industry-leading retention innovation.
                         </Typography>
-                        <Typography sx={{ color: alpha("#fff", 0.35), fontSize: "0.92rem", lineHeight: 1.85, mb: 5 }}>
+                        <Typography sx={{ color: alpha("#fff", 0.65), fontSize: "0.92rem", lineHeight: 1.85, mb: 5 }}>
                             Despite our differences, we're a tight-knit group with extraordinary communication. We work together to go the extra mile for every client — every send, every flow, every campaign.
                         </Typography>
 
@@ -128,7 +128,7 @@ export default function Culture() {
                                 mb: 2,
                             }}
                         >
-                            <Typography sx={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.25), mb: 2.5 }}>
+                            <Typography sx={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: alpha("#fff", 0.5), mb: 2.5 }}>
                                 Who's behind AksharSync
                             </Typography>
                             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
@@ -147,7 +147,7 @@ export default function Culture() {
                                         <Box sx={{ width: 38, height: 38, borderRadius: "11px", background: h.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 800, color: "#060e1a", flexShrink: 0 }}>
                                             {h.initials}
                                         </Box>
-                                        <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: alpha("#fff", 0.65), lineHeight: 1.3 }}>
+                                        <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: alpha("#fff", 0.8), lineHeight: 1.3 }}>
                                             {h.label}
                                         </Typography>
                                     </Box>
@@ -162,7 +162,7 @@ export default function Culture() {
                                     <Typography sx={{ fontSize: "1.1rem", fontWeight: 900, background: "linear-gradient(135deg, #7fd0ff, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.1 }}>
                                         {s.value}
                                     </Typography>
-                                    <Typography sx={{ fontSize: "0.55rem", color: alpha("#fff", 0.3), mt: 0.5, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
+                                    <Typography sx={{ fontSize: "0.55rem", color: alpha("#fff", 0.55), mt: 0.5, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
                                         {s.label}
                                     </Typography>
                                 </Box>

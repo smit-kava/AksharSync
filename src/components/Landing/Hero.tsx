@@ -462,14 +462,14 @@ export default function Hero() {
                           px: 1.2, py: 0.5, borderRadius: "6px",
                           background: isNew ? "rgba(127,208,255,0.08)" : "rgba(255,255,255,0.02)",
                           border: `0.5px solid ${isNew ? "rgba(127,208,255,0.25)" : "rgba(255,255,255,0.06)"}`,
-                          fontSize: "0.68rem", 
-                          color: isNew ? "#7fd0ff" : alpha("#fff", 0.6), 
+                          fontSize: "0.68rem",
+                          color: isNew ? "#7fd0ff" : alpha("#fff", 0.6),
                           fontWeight: isNew ? 700 : 600,
                           transition: "all 0.2s",
-                          "&:hover": { 
-                            background: isNew ? "rgba(127,208,255,0.15)" : "rgba(255,255,255,0.05)", 
-                            borderColor: "rgba(127,208,255,0.4)", 
-                            color: "#7fd0ff" 
+                          "&:hover": {
+                            background: isNew ? "rgba(127,208,255,0.15)" : "rgba(255,255,255,0.05)",
+                            borderColor: "rgba(127,208,255,0.4)",
+                            color: "#7fd0ff"
                           }
                         }}
                       >
