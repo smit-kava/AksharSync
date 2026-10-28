@@ -12,6 +12,7 @@ const serviceLinks = [
 ];
 
 const learnMoreLinks = [
+  { label: "Blog", to: "/blogs" },
   { label: "Career", to: "/about" },
   { label: "FAQs", to: "/why" },
   { label: "Partners", to: "/solutions" },

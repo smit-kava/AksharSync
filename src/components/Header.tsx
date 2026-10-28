@@ -146,6 +146,7 @@ const mainServices: ServiceCategory[] = [
 const navItems: NavItem[] = [
   { label: "Home", to: ROUTE_PATHS.HOME },
   { label: "Services", to: ROUTE_PATHS.SERVICES, anchor: "services", hasServices: true },
+  { label: "Blog", to: ROUTE_PATHS.BLOGS },
   { label: "About Us", to: ROUTE_PATHS.ABOUT },
   { label: "Why AksharSync", to: ROUTE_PATHS.WHY },
 ];

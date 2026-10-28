@@ -50,4 +50,14 @@ export const ROUTE_PATHS = {
 
   // Review
   WRITE_REVIEW: "/write-review",
+
+  // Blogs (Public)
+  BLOGS: "/blogs",
+  BLOG_DETAIL: "/blog/:slug",
+
+  // Superadmin Panel
+  ADMIN_LOGIN: "/admin/login",
+  ADMIN_BLOGS: "/admin/blogs",
+  ADMIN_BLOG_CREATE: "/admin/blogs/new",
+  ADMIN_BLOG_EDIT: "/admin/blogs/edit/:id",
 } as const;

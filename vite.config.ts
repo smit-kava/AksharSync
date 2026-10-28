@@ -56,6 +56,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: true,
         },
+        // Blogs API proxy
+        "/api/blogs": {
+          target: "https://aksharsync.com",
+          changeOrigin: true,
+          secure: true,
+        },
       },
     },
     build: {

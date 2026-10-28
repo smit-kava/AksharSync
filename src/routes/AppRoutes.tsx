@@ -19,6 +19,12 @@ import ContactUs from "../pages/ContactUs";
 import KlaviyoAuditPage from "../pages/KlaviyoAuditPage";
 import RetentionAuditBooking from "../pages/RetentionAuditBooking";
 import WriteReview from "../pages/WriteReview";
+import BlogListingPage from "../pages/BlogListingPage";
+import BlogDetailPage from "../pages/BlogDetailPage";
+import AdminLogin from "../pages/admin/AdminLogin";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import BlogEditor from "../pages/admin/BlogEditor";
+import AdminRoute from "../pages/admin/AdminRoute";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -70,11 +76,43 @@ export function AppRoutes() {
           <Route path={ROUTE_PATHS.CONTACT} element={<PageTransition><ContactUs /></PageTransition>} />
           <Route path={ROUTE_PATHS.KLAVIYO_AUDIT} element={<PageTransition><KlaviyoAuditPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.RETENTION_AUDIT_BOOKING} element={<PageTransition><RetentionAuditBooking /></PageTransition>} />
+
+          {/* Public Dynamic Blogs */}
+          <Route path={ROUTE_PATHS.BLOGS} element={<PageTransition><BlogListingPage /></PageTransition>} />
+          <Route path={ROUTE_PATHS.BLOG_DETAIL} element={<PageTransition><BlogDetailPage /></PageTransition>} />
+
           <Route path="*" element={<Navigate to={ROUTE_PATHS.HOME} replace />} />
         </Route>
 
-        {/* Standalone Pages (No Footer/Nav) */}
+        {/* Standalone Pages (No Main Nav/Footer) */}
         <Route path={ROUTE_PATHS.WRITE_REVIEW} element={<PageTransition><WriteReview /></PageTransition>} />
+
+        {/* Superadmin Portal */}
+        <Route path={ROUTE_PATHS.ADMIN_LOGIN} element={<PageTransition><AdminLogin /></PageTransition>} />
+        <Route
+          path={ROUTE_PATHS.ADMIN_BLOGS}
+          element={
+            <AdminRoute>
+              <PageTransition><AdminDashboard /></PageTransition>
+            </AdminRoute>
+          }
+        />
+        <Route
+          path={ROUTE_PATHS.ADMIN_BLOG_CREATE}
+          element={
+            <AdminRoute>
+              <PageTransition><BlogEditor /></PageTransition>
+            </AdminRoute>
+          }
+        />
+        <Route
+          path={ROUTE_PATHS.ADMIN_BLOG_EDIT}
+          element={
+            <AdminRoute>
+              <PageTransition><BlogEditor /></PageTransition>
+            </AdminRoute>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );

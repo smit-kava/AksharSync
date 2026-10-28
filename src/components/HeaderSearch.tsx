@@ -46,9 +46,11 @@ const ALL_SEARCH_ITEMS: SearchItem[] = [
   { label: "RCS Marketing", desc: "Rich Communication Services — the next evolution of SMS", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, category: "Omnichannel Retention", accent: "#f472b6", icon: <SignalCellularAltOutlinedIcon /> },
   { label: "Instagram DM Automation", desc: "Turn Instagram into a revenue channel with automated DM flows", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, category: "Omnichannel Retention", accent: "#f472b6", icon: <InstagramIcon /> },
   // Quick Links
+  { label: "Blog & Strategies", desc: "Engineering insights, automation playbooks, and deliverability guides", to: ROUTE_PATHS.BLOGS, category: "Quick Links", accent: "#7fd0ff", icon: <AssessmentOutlinedIcon /> },
   { label: "Customer Reviews", desc: "See what our clients say about AksharSync", to: ROUTE_PATHS.WRITE_REVIEW, category: "Quick Links", accent: "#fbbf24", icon: <StarOutlineRoundedIcon /> },
   { label: "Contact Us", desc: "Get in touch with our retention marketing experts", to: ROUTE_PATHS.CONTACT, category: "Quick Links", accent: "#7fd0ff", icon: <HeadsetMicOutlinedIcon /> },
   { label: "Book a Retention Audit", desc: "Schedule your free retention growth audit today", to: ROUTE_PATHS.RETENTION_AUDIT_BOOKING, category: "Quick Links", accent: "#34d399", icon: <CalendarMonthOutlinedIcon /> },
+  { label: "Superadmin Portal", desc: "Manage blogs, publish articles, and view content analytics", to: ROUTE_PATHS.ADMIN_LOGIN, category: "Quick Links", accent: "#a78bfa", icon: <TouchAppIcon /> },
 ];
 
 // ─── Category metadata ────────────────────────────────────────────────────────
