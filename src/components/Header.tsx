@@ -30,7 +30,10 @@ import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettin
 import { LiquidGlassMenuButton } from "./LiquidGlassMenuButton";
 import { LiquidGlassContactButton } from "./LiquidGlassContactButton";
 import { CustomerSignInModal } from "./CustomerSignInModal";
-import { getStoredCustomer, clearStoredCustomer } from "../services/customerApi";
+import {
+  getStoredCustomer,
+  clearStoredCustomer,
+} from "../services/customerApi";
 import type { Customer } from "../services/customerApi";
 import { ROUTE_PATHS } from "../routes/paths";
 import logo from "../assets/Logo.svg";
@@ -141,18 +144,39 @@ const mainServices: ServiceCategory[] = [
     to: ROUTE_PATHS.SERVICE_SMS,
     sub: [
       { label: "SMS Automation", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
-      { label: "WhatsApp Retention Systems", to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING, icon: "whatsapp" },
-      { label: "Push Notifications", to: ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS, icon: "pushNotification" },
+      {
+        label: "WhatsApp Retention Systems",
+        to: ROUTE_PATHS.SERVICE_WHATSAPP_MARKETING,
+        icon: "whatsapp",
+      },
+      {
+        label: "Push Notifications",
+        to: ROUTE_PATHS.SERVICE_PUSH_NOTIFICATIONS,
+        icon: "pushNotification",
+      },
       // { label: "RCS Messaging", to: ROUTE_PATHS.SERVICE_RCS_MARKETING, icon: "rcs" },
-      { label: "Direct Mail Opportunities", to: ROUTE_PATHS.SERVICE_SMS, icon: "sms" },
-      { label: "Instagram DM Automation", to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM, icon: "instagramDm" },
+      {
+        label: "Direct Mail Opportunities",
+        to: ROUTE_PATHS.SERVICE_SMS,
+        icon: "sms",
+      },
+      {
+        label: "Instagram DM Automation",
+        to: ROUTE_PATHS.SERVICE_INSTAGRAM_DM,
+        icon: "instagramDm",
+      },
     ],
   },
 ];
 
 const navItems: NavItem[] = [
   { label: "Home", to: ROUTE_PATHS.HOME },
-  { label: "Services", to: ROUTE_PATHS.SERVICES, anchor: "services", hasServices: true },
+  {
+    label: "Services",
+    to: ROUTE_PATHS.SERVICES,
+    anchor: "services",
+    hasServices: true,
+  },
   { label: "Blog", to: ROUTE_PATHS.BLOGS },
   { label: "About Us", to: ROUTE_PATHS.ABOUT },
   { label: "Why AksharSync", to: ROUTE_PATHS.WHY },
@@ -207,11 +231,11 @@ const PillContainer = styled(Box, {
   // ── Liquid Glass shadows ──────────────────────────────────────────────
   boxShadow: scrolled
     ? [
-      "0 8px 32px rgba(0,0,0,0.45)",
-      "0 2px 12px rgba(127,208,255,0.15)",        // brand blue ambient lift
-      "inset 0 1px 1px rgba(127,208,255,0.25)",   // inner top highlight
-      "inset 0 -1px 1px rgba(0,0,0,0.30)",        // inner bottom shadow
-    ].join(", ")
+        "0 8px 32px rgba(0,0,0,0.45)",
+        "0 2px 12px rgba(127,208,255,0.15)", // brand blue ambient lift
+        "inset 0 1px 1px rgba(127,208,255,0.25)", // inner top highlight
+        "inset 0 -1px 1px rgba(0,0,0,0.30)", // inner bottom shadow
+      ].join(", ")
     : "none",
 
   color: theme.palette.text.primary,
@@ -226,26 +250,6 @@ const PillContainer = styled(Box, {
   },
 }));
 
-const MegaMenu = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<{ open: boolean }>(({ theme, open }) => ({
-  position: "absolute",
-  top: "100%",
-  left: 0,
-  right: 0,
-  paddingTop: "8px",
-  zIndex: 999,
-  display: "flex",
-  justifyContent: "center",
-  opacity: open ? 1 : 0,
-  transform: open ? "translateY(0)" : "translateY(-10px)",
-  pointerEvents: open ? "auto" : "none",
-  transition: theme.transitions.create(["opacity", "transform"], {
-    easing: theme.transitions.easing.easeOut,
-    duration: 300,
-  }),
-}));
-
 // ─── Component ────────────────────────────────────────────────────────────────
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -255,7 +259,9 @@ export function Header() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [customerModalOpen, setCustomerModalOpen] = useState(false);
-  const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(() => getStoredCustomer());
+  const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(() =>
+    getStoredCustomer(),
+  );
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -265,7 +271,8 @@ export function Header() {
   useEffect(() => {
     const updateCustomer = () => setCurrentCustomer(getStoredCustomer());
     window.addEventListener("akshar_customer_change", updateCustomer);
-    return () => window.removeEventListener("akshar_customer_change", updateCustomer);
+    return () =>
+      window.removeEventListener("akshar_customer_change", updateCustomer);
   }, []);
 
   const handleCustomerSignOut = () => {
@@ -313,7 +320,8 @@ export function Header() {
     if (element) {
       const headerOffset = 100;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
@@ -330,7 +338,9 @@ export function Header() {
     }
   };
 
-  const activeSubService = mainServices.find((s) => s.label === expandedService);
+  const activeSubService = mainServices.find(
+    (s) => s.label === expandedService,
+  );
 
   return (
     <>
@@ -338,7 +348,9 @@ export function Header() {
         <PillContainer scrolled={scrolled}>
           {/* Logo */}
           <Box
-            onClick={() => handleNavClick({ label: "Home", to: ROUTE_PATHS.HOME })}
+            onClick={() =>
+              handleNavClick({ label: "Home", to: ROUTE_PATHS.HOME })
+            }
             sx={{
               display: "flex",
               alignItems: "center",
@@ -382,51 +394,555 @@ export function Header() {
           </Box>
 
           {/* Desktop Nav */}
-          <Box component="nav" sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5, flexShrink: 0 }}>
-            {navItems.map((item) => (
-              <Button
-                key={item.label}
-                onClick={() => handleNavClick(item)}
-                onMouseEnter={item.hasServices ? handleOpenMega : undefined}
-                onMouseLeave={item.hasServices ? handleCloseMega : undefined}
-                endIcon={
-                  item.hasServices ? (
-                    <KeyboardArrowDownIcon
+          <Box
+            component="nav"
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              gap: 0.5,
+              flexShrink: 0,
+            }}
+          >
+            {navItems.map((item) => {
+              if (item.hasServices) {
+                return (
+                  <Box
+                    key={item.label}
+                    sx={{ position: "relative" }}
+                    onMouseEnter={handleOpenMega}
+                    onMouseLeave={handleCloseMega}
+                  >
+                    <Button
+                      onClick={() => handleNavClick(item)}
+                      endIcon={
+                        <KeyboardArrowDownIcon
+                          sx={{
+                            fontSize: "1rem !important",
+                            transition:
+                              "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                            transform: megaOpen ? "rotate(180deg)" : "none",
+                          }}
+                        />
+                      }
                       sx={{
-                        fontSize: "1rem !important",
-                        transition: "transform 0.2s",
-                        transform: megaOpen ? "rotate(180deg)" : "none",
+                        color:
+                          megaOpen || location.pathname === item.to
+                            ? "#7fd0ff"
+                            : alpha("#fff", 0.75),
+                        fontSize: scrolled ? "0.85rem" : "0.9rem",
+                        fontWeight:
+                          megaOpen || location.pathname === item.to ? 700 : 600,
+                        textTransform: "none",
+                        borderRadius: "999px",
+                        padding: scrolled ? "6px 14px" : "8px 18px",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                        transition: "all 0.2s ease",
+                        background: megaOpen
+                          ? "rgba(127, 208, 255, 0.12)"
+                          : "transparent",
+                        "&:hover": {
+                          color: "#fff",
+                          background: alpha("#fff", 0.08),
+                        },
                       }}
-                    />
-                  ) : undefined
-                }
-                sx={{
-                  color: location.pathname === item.to ? "#7fd0ff" : alpha("#fff", 0.75),
-                  fontSize: scrolled ? "0.85rem" : "0.9rem",
-                  fontWeight: location.pathname === item.to ? 700 : 600,
-                  textTransform: "none",
-                  borderRadius: "999px",
-                  padding: scrolled ? "6px 14px" : "8px 18px",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  transition: "all 0.2s ease",
-                  "&:hover": { color: "#fff", background: alpha("#fff", 0.06) },
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
+                    >
+                      {item.label}
+                    </Button>
+
+                    {/* iPhone Notch Type Dropdown Menu */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: "100%",
+                        left: { md: "-24px", lg: "-36px" },
+                        pt: "12px", // Seamless hover bridge preventing mouse-leave flicker
+                        zIndex: 1400,
+                        opacity: megaOpen ? 1 : 0,
+                        transform: megaOpen
+                          ? "translateY(0) scale(1)"
+                          : "translateY(-10px) scale(0.96)",
+                        pointerEvents: megaOpen ? "auto" : "none",
+                        transformOrigin: "top left",
+                        transition:
+                          "opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                    >
+                      {/* Dynamic Island / iPhone Notch Container */}
+                      <Box
+                        sx={{
+                          width: "fit-content",
+                          margin: "0",
+                          bgcolor: "rgba(5, 10, 20, 0.97)",
+                          backdropFilter: "blur(36px) saturate(220%)",
+                          WebkitBackdropFilter: "blur(36px) saturate(220%)",
+                          border: "1px solid rgba(127, 208, 255, 0.22)",
+                          borderTop: "2.5px solid rgba(127, 208, 255, 0.65)",
+                          borderRadius: "28px", // Apple Dynamic Island curved profile
+                          p: "14px",
+                          display: "flex",
+                          flexDirection: "row",
+                          boxShadow: [
+                            "0 32px 80px rgba(0,0,0,0.9)",
+                            "0 0 0 1px rgba(0,0,0,0.6)",
+                            "0 0 36px rgba(127, 208, 255, 0.18)",
+                            "inset 0 1px 1px rgba(255,255,255,0.25)",
+                          ].join(", "),
+                          overflow: "hidden",
+                        }}
+                      >
+                        {/* ── LEFT: Compact service cards with iPhone Notch Dynamic Island Header ── */}
+                        <Box
+                          sx={{
+                            width: "330px",
+                            minWidth: "330px",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {/* iPhone Notch Header Bar */}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              px: 1.2,
+                              pb: 1.4,
+                              mb: 1,
+                              borderBottom:
+                                "1px solid rgba(255, 255, 255, 0.08)",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              {/* Notch sensor pill */}
+                              <Box
+                                sx={{
+                                  width: 26,
+                                  height: 4.5,
+                                  borderRadius: "999px",
+                                  bgcolor: "rgba(255, 255, 255, 0.35)",
+                                  boxShadow: "0 0 8px rgba(127, 208, 255, 0.4)",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "0.72rem",
+                                  fontWeight: 800,
+                                  letterSpacing: "0.08em",
+                                  textTransform: "uppercase",
+                                  color: alpha("#fff", 0.8),
+                                }}
+                              >
+                                Services Suite
+                              </Typography>
+                            </Box>
+                            <Box
+                              sx={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 0.6,
+                                bgcolor: "rgba(52, 211, 153, 0.12)",
+                                border: "1px solid rgba(52, 211, 153, 0.35)",
+                                borderRadius: "999px",
+                                px: 1.2,
+                                py: 0.25,
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: "50%",
+                                  bgcolor: "#34d399",
+                                  boxShadow: "0 0 6px #34d399",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "0.65rem",
+                                  fontWeight: 700,
+                                  color: "#6ee7b7",
+                                  letterSpacing: "0.04em",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Live Audit
+                              </Typography>
+                            </Box>
+                          </Box>
+
+                          <Stack spacing={0.3}>
+                            {mainServices.map((svc) => {
+                              const isExpanded = expandedService === svc.label;
+                              const hasSub = svc.sub.length > 0;
+
+                              return (
+                                <Box
+                                  key={svc.label}
+                                  component={svc.to ? RouterLink : "div"}
+                                  to={svc.to}
+                                  onMouseEnter={() => handleServiceHover(svc)}
+                                  onClick={() => svc.to && setMegaOpen(false)}
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1.5,
+                                    px: 1.5,
+                                    py: 1.1,
+                                    borderRadius: "14px",
+                                    cursor: "pointer",
+                                    textDecoration: "none",
+                                    bgcolor: isExpanded
+                                      ? alpha(svc.accent, 0.1)
+                                      : "transparent",
+                                    border: "1px solid",
+                                    borderColor: isExpanded
+                                      ? alpha(svc.accent, 0.35)
+                                      : "transparent",
+                                    transition: "all 0.18s ease",
+                                    "&:hover": {
+                                      bgcolor: alpha(svc.accent, 0.08),
+                                      borderColor: alpha(svc.accent, 0.25),
+                                    },
+                                  }}
+                                >
+                                  {/* Icon */}
+                                  <Box
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      borderRadius: "10px",
+                                      flexShrink: 0,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      bgcolor: alpha(
+                                        svc.accent,
+                                        isExpanded ? 0.22 : 0.1,
+                                      ),
+                                      color: svc.accent,
+                                      transition: "background 0.18s",
+                                      "& svg": { fontSize: "1rem" },
+                                    }}
+                                  >
+                                    {svc.icon}
+                                  </Box>
+
+                                  {/* Text */}
+                                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                                    <Typography
+                                      sx={{
+                                        fontSize: "0.82rem",
+                                        fontWeight: isExpanded ? 700 : 600,
+                                        color: isExpanded
+                                          ? "#fff"
+                                          : alpha("#fff", 0.75),
+                                        lineHeight: 1.2,
+                                        transition: "color 0.18s",
+                                      }}
+                                    >
+                                      {svc.label}
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        fontSize: "0.71rem",
+                                        color: alpha("#fff", 0.35),
+                                        mt: 0.2,
+                                        lineHeight: 1.2,
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                      }}
+                                    >
+                                      {svc.desc}
+                                    </Typography>
+                                  </Box>
+
+                                  {/* Arrow indicator for expandable */}
+                                  {hasSub && (
+                                    <KeyboardArrowRightIcon
+                                      sx={{
+                                        fontSize: "0.95rem",
+                                        color: isExpanded
+                                          ? svc.accent
+                                          : alpha("#fff", 0.22),
+                                        flexShrink: 0,
+                                        transition:
+                                          "color 0.18s, transform 0.18s",
+                                        transform: isExpanded
+                                          ? "translateX(2px)"
+                                          : "none",
+                                      }}
+                                    />
+                                  )}
+
+                                  {/* Active dot for non-expandable */}
+                                  {!hasSub && isExpanded && (
+                                    <Box
+                                      sx={{
+                                        width: 5,
+                                        height: 5,
+                                        borderRadius: "50%",
+                                        bgcolor: svc.accent,
+                                        flexShrink: 0,
+                                      }}
+                                    />
+                                  )}
+                                </Box>
+                              );
+                            })}
+                          </Stack>
+                        </Box>
+
+                        {/* ── RIGHT: Sub-services panel (Dynamic Island expansion) ── */}
+                        <Box
+                          onMouseLeave={handleSubPanelLeave}
+                          sx={{
+                            width: expandedService ? "340px" : "0px",
+                            overflow: "hidden",
+                            flexShrink: 0,
+                            transition:
+                              "width 0.32s cubic-bezier(0.16, 1, 0.3, 1)",
+                            borderLeft: expandedService
+                              ? "1px solid rgba(255,255,255,0.08)"
+                              : "1px solid transparent",
+                          }}
+                        >
+                          {activeSubService && (
+                            <Box
+                              sx={{
+                                width: "340px",
+                                p: 2.5,
+                                opacity: expandedService ? 1 : 0,
+                                transition: "opacity 0.22s ease 0.1s",
+                              }}
+                            >
+                              {/* Sub-panel header */}
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 1.5,
+                                  mb: 2.5,
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    width: 32,
+                                    height: 32,
+                                    borderRadius: "10px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    bgcolor: alpha(
+                                      activeSubService.accent,
+                                      0.18,
+                                    ),
+                                    color: activeSubService.accent,
+                                  }}
+                                >
+                                  {activeSubService.icon}
+                                </Box>
+                                <Box>
+                                  <Typography
+                                    sx={{
+                                      fontSize: "0.8rem",
+                                      fontWeight: 700,
+                                      color: activeSubService.accent,
+                                      textTransform: "uppercase",
+                                      letterSpacing: "0.06em",
+                                    }}
+                                  >
+                                    Channels
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      fontSize: "0.75rem",
+                                      color: alpha("#fff", 0.35),
+                                    }}
+                                  >
+                                    {activeSubService.sub.length} options
+                                    available
+                                  </Typography>
+                                </Box>
+                              </Box>
+
+                              {/* Sub-service links */}
+                              <Stack spacing={0.65}>
+                                {activeSubService.sub.map((sub, i) => {
+                                  const IconComp = iconComponentMap[sub.icon];
+                                  return (
+                                    <Box
+                                      key={sub.label}
+                                      component={RouterLink}
+                                      to={sub.to}
+                                      onClick={() => setMegaOpen(false)}
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1.5,
+                                        px: 1.5,
+                                        py: 1.1,
+                                        borderRadius: "12px",
+                                        textDecoration: "none",
+                                        color: alpha("#fff", 0.72),
+                                        border: "1px solid transparent",
+                                        transition: "all 0.18s ease",
+                                        opacity: expandedService ? 1 : 0,
+                                        transform: expandedService
+                                          ? "translateX(0)"
+                                          : "translateX(-8px)",
+                                        transitionDelay: expandedService
+                                          ? `${i * 35 + 120}ms`
+                                          : "0ms",
+                                        "&:hover": {
+                                          color: "#fff",
+                                          bgcolor: alpha(
+                                            activeSubService.accent,
+                                            0.08,
+                                          ),
+                                          borderColor: alpha(
+                                            activeSubService.accent,
+                                            0.2,
+                                          ),
+                                          transform: "translateX(3px)",
+                                        },
+                                      }}
+                                    >
+                                      <Box
+                                        sx={{
+                                          width: 30,
+                                          height: 30,
+                                          borderRadius: "9px",
+                                          flexShrink: 0,
+                                          bgcolor: alpha(
+                                            activeSubService.accent,
+                                            0.1,
+                                          ),
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                          color: activeSubService.accent,
+                                          border: `1px solid ${alpha(activeSubService.accent, 0.18)}`,
+                                        }}
+                                      >
+                                        {IconComp && (
+                                          <IconComp sx={{ fontSize: 15 }} />
+                                        )}
+                                      </Box>
+                                      <Typography
+                                        sx={{
+                                          fontSize: "0.82rem",
+                                          fontWeight: 600,
+                                        }}
+                                      >
+                                        {sub.label}
+                                      </Typography>
+                                      <KeyboardArrowRightIcon
+                                        sx={{
+                                          ml: "auto",
+                                          fontSize: "0.9rem",
+                                          color: alpha("#fff", 0.18),
+                                          flexShrink: 0,
+                                        }}
+                                      />
+                                    </Box>
+                                  );
+                                })}
+                              </Stack>
+
+                              {/* Bottom CTA */}
+                              <Box
+                                sx={{
+                                  mt: 2.5,
+                                  pt: 2,
+                                  borderTop: "1px solid rgba(255,255,255,0.06)",
+                                  opacity: expandedService ? 1 : 0,
+                                  transition: "opacity 0.22s ease 0.28s",
+                                }}
+                              >
+                                <Typography
+                                  component={RouterLink}
+                                  to={ROUTE_PATHS.SERVICES}
+                                  onClick={() => setMegaOpen(false)}
+                                  sx={{
+                                    fontSize: "0.78rem",
+                                    color: activeSubService.accent,
+                                    textDecoration: "none",
+                                    fontWeight: 700,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 0.5,
+                                    opacity: 0.75,
+                                    "&:hover": { opacity: 1 },
+                                    transition: "opacity 0.2s",
+                                  }}
+                                >
+                                  View all services
+                                  <KeyboardArrowRightIcon
+                                    sx={{ fontSize: "1rem" }}
+                                  />
+                                </Typography>
+                              </Box>
+                            </Box>
+                          )}
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              }
+
+              return (
+                <Button
+                  key={item.label}
+                  onClick={() => handleNavClick(item)}
+                  sx={{
+                    color:
+                      location.pathname === item.to
+                        ? "#7fd0ff"
+                        : alpha("#fff", 0.75),
+                    fontSize: scrolled ? "0.85rem" : "0.9rem",
+                    fontWeight: location.pathname === item.to ? 700 : 600,
+                    textTransform: "none",
+                    borderRadius: "999px",
+                    padding: scrolled ? "6px 14px" : "8px 18px",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      color: "#fff",
+                      background: alpha("#fff", 0.06),
+                    },
+                  }}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
           </Box>
 
           {/* Search + CTA row */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: "8px", flexShrink: 0 }}>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{ alignItems: "center", marginRight: "8px", flexShrink: 0 }}
+          >
             {/* Liquid Glass search bar */}
             <HeaderSearch />
 
             {/* Desktop: Customer Sign In / Profile button */}
             {scrolled ? (
               currentCustomer ? (
-                <Tooltip title={`Sign Out (${currentCustomer.name.split(" ")[0]})`} arrow>
+                <Tooltip
+                  title={`Sign Out (${currentCustomer.name.split(" ")[0]})`}
+                  arrow
+                >
                   <IconButton
                     onClick={handleCustomerSignOut}
                     aria-label="Sign Out"
@@ -530,7 +1046,9 @@ export function Header() {
 
                 <Button
                   onClick={handleCustomerSignOut}
-                  startIcon={<LogoutIcon sx={{ fontSize: "0.95rem !important" }} />}
+                  startIcon={
+                    <LogoutIcon sx={{ fontSize: "0.95rem !important" }} />
+                  }
                   sx={{
                     borderRadius: "999px",
                     bgcolor: "rgba(239, 68, 68, 0.10)",
@@ -558,7 +1076,11 @@ export function Header() {
             ) : (
               <Button
                 onClick={() => setCustomerModalOpen(true)}
-                startIcon={<PersonIcon sx={{ fontSize: "1rem !important", color: "#7fd0ff" }} />}
+                startIcon={
+                  <PersonIcon
+                    sx={{ fontSize: "1rem !important", color: "#7fd0ff" }}
+                  />
+                }
                 sx={{
                   display: { xs: "none", md: "inline-flex" },
                   borderRadius: "999px",
@@ -591,283 +1113,6 @@ export function Header() {
             <LiquidGlassMenuButton onClick={() => setMobileOpen(true)} />
           </Stack>
         </PillContainer>
-
-        {/* ── Mega Menu ── */}
-        <MegaMenu open={megaOpen} onMouseEnter={handleOpenMega} onMouseLeave={handleCloseMega}>
-          <Box
-            sx={{
-              width: "fit-content",
-              margin: "0",
-              bgcolor: "rgba(6, 14, 26, 0.98)",
-              backdropFilter: "blur(24px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: "18px",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "row",
-              boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
-            }}
-          >
-            {/* ── LEFT: 5 compact service cards ── */}
-            <Box sx={{ width: "340px", minWidth: "340px", p: 1.5, flexShrink: 0 }}>
-              <Stack spacing={0.25}>
-                {mainServices.map((svc) => {
-                  const isExpanded = expandedService === svc.label;
-                  const hasSub = svc.sub.length > 0;
-
-                  return (
-                    <Box
-                      key={svc.label}
-                      component={svc.to ? RouterLink : "div"}
-                      to={svc.to}
-                      onMouseEnter={() => handleServiceHover(svc)}
-                      onClick={() => svc.to && setMegaOpen(false)}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.5,
-                        px: 1.5,
-                        py: 1,
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        textDecoration: "none",
-                        bgcolor: isExpanded ? alpha(svc.accent, 0.08) : "transparent",
-                        border: "1px solid",
-                        borderColor: isExpanded ? alpha(svc.accent, 0.3) : "transparent",
-                        transition: "all 0.18s ease",
-                        "&:hover": {
-                          bgcolor: alpha(svc.accent, 0.07),
-                          borderColor: alpha(svc.accent, 0.2),
-                        },
-                      }}
-                    >
-                      {/* Icon */}
-                      <Box
-                        sx={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: "9px",
-                          flexShrink: 0,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          bgcolor: alpha(svc.accent, isExpanded ? 0.22 : 0.1),
-                          color: svc.accent,
-                          transition: "background 0.18s",
-                          "& svg": { fontSize: "1rem" },
-                        }}
-                      >
-                        {svc.icon}
-                      </Box>
-
-                      {/* Text */}
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography
-                          sx={{
-                            fontSize: "0.82rem",
-                            fontWeight: isExpanded ? 700 : 600,
-                            color: isExpanded ? "#fff" : alpha("#fff", 0.7),
-                            lineHeight: 1.2,
-                            transition: "color 0.18s",
-                          }}
-                        >
-                          {svc.label}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            fontSize: "0.71rem",
-                            color: alpha("#fff", 0.28),
-                            mt: 0.2,
-                            lineHeight: 1.2,
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {svc.desc}
-                        </Typography>
-                      </Box>
-
-                      {/* Arrow indicator for expandable */}
-                      {hasSub && (
-                        <KeyboardArrowRightIcon
-                          sx={{
-                            fontSize: "0.95rem",
-                            color: isExpanded ? svc.accent : alpha("#fff", 0.18),
-                            flexShrink: 0,
-                            transition: "color 0.18s, transform 0.18s",
-                            transform: isExpanded ? "translateX(2px)" : "none",
-                          }}
-                        />
-                      )}
-
-                      {/* Active dot for non-expandable */}
-                      {!hasSub && isExpanded && (
-                        <Box
-                          sx={{
-                            width: 5,
-                            height: 5,
-                            borderRadius: "50%",
-                            bgcolor: svc.accent,
-                            flexShrink: 0,
-                          }}
-                        />
-                      )}
-                    </Box>
-                  );
-                })}
-              </Stack>
-            </Box>
-
-            {/* ── RIGHT: Sub-services panel (slides in) ── */}
-            <Box
-              onMouseLeave={handleSubPanelLeave}
-              sx={{
-                width: expandedService ? "360px" : "0px",
-                overflow: "hidden",
-                flexShrink: 0,
-                transition: "width 0.32s cubic-bezier(0.4, 0, 0.2, 1)",
-                borderLeft: expandedService
-                  ? "1px solid rgba(255,255,255,0.06)"
-                  : "1px solid transparent",
-              }}
-            >
-              {activeSubService && (
-                <Box
-                  sx={{
-                    width: "360px",
-                    p: 3,
-                    opacity: expandedService ? 1 : 0,
-                    transition: "opacity 0.22s ease 0.1s",
-                  }}
-                >
-                  {/* Sub-panel header */}
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-                    <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "10px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        bgcolor: alpha(activeSubService.accent, 0.18),
-                        color: activeSubService.accent,
-                      }}
-                    >
-                      {activeSubService.icon}
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontSize: "0.8rem", fontWeight: 700, color: activeSubService.accent, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                        Channels
-                      </Typography>
-                      <Typography sx={{ fontSize: "0.75rem", color: alpha("#fff", 0.35) }}>
-                        {activeSubService.sub.length} options available
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {/* Sub-service links */}
-                  <Stack spacing={0.75}>
-                    {activeSubService.sub.map((sub, i) => {
-                      const IconComp = iconComponentMap[sub.icon];
-                      return (
-                        <Box
-                          key={sub.label}
-                          component={RouterLink}
-                          to={sub.to}
-                          onClick={() => setMegaOpen(false)}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1.75,
-                            px: 1.5,
-                            py: 1.25,
-                            borderRadius: "12px",
-                            textDecoration: "none",
-                            color: alpha("#fff", 0.65),
-                            border: "1px solid transparent",
-                            transition: "all 0.18s ease",
-                            // staggered entrance
-                            opacity: expandedService ? 1 : 0,
-                            transform: expandedService ? "translateX(0)" : "translateX(-8px)",
-                            transitionDelay: expandedService ? `${i * 35 + 120}ms` : "0ms",
-                            "&:hover": {
-                              color: "#fff",
-                              bgcolor: alpha(activeSubService.accent, 0.07),
-                              borderColor: alpha(activeSubService.accent, 0.18),
-                              transform: "translateX(3px)",
-                            },
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "9px",
-                              flexShrink: 0,
-                              bgcolor: alpha(activeSubService.accent, 0.1),
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: activeSubService.accent,
-                              border: `1px solid ${alpha(activeSubService.accent, 0.18)}`,
-                            }}
-                          >
-                            {IconComp && <IconComp sx={{ fontSize: 16 }} />}
-                          </Box>
-                          <Typography sx={{ fontSize: "0.83rem", fontWeight: 600 }}>
-                            {sub.label}
-                          </Typography>
-                          <KeyboardArrowRightIcon
-                            sx={{
-                              ml: "auto",
-                              fontSize: "0.9rem",
-                              color: alpha("#fff", 0.15),
-                              flexShrink: 0,
-                            }}
-                          />
-                        </Box>
-                      );
-                    })}
-                  </Stack>
-
-                  {/* Bottom CTA */}
-                  <Box
-                    sx={{
-                      mt: 3,
-                      pt: 2.5,
-                      borderTop: "1px solid rgba(255,255,255,0.05)",
-                      opacity: expandedService ? 1 : 0,
-                      transition: "opacity 0.22s ease 0.28s",
-                    }}
-                  >
-                    <Typography
-                      component={RouterLink}
-                      to={ROUTE_PATHS.SERVICES}
-                      onClick={() => setMegaOpen(false)}
-                      sx={{
-                        fontSize: "0.78rem",
-                        color: activeSubService.accent,
-                        textDecoration: "none",
-                        fontWeight: 700,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 0.5,
-                        opacity: 0.7,
-                        "&:hover": { opacity: 1 },
-                        transition: "opacity 0.2s",
-                      }}
-                    >
-                      View all services
-                      <KeyboardArrowRightIcon sx={{ fontSize: "1rem" }} />
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
-            </Box>
-          </Box>
-        </MegaMenu>
       </RootHeader>
 
       {/* ── Mobile Drawer ── */}
@@ -878,7 +1123,13 @@ export function Header() {
         slotProps={{ paper: { sx: { width: 320, bgcolor: "#060e1a", p: 4 } } }}
       >
         <Stack spacing={4}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <Box
                 component="img"
@@ -894,27 +1145,50 @@ export function Header() {
                   filter: "drop-shadow(0 0 15px rgba(127, 208, 255, 0.2))",
                 }}
               />
-              <Typography variant="h6" sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}>
+              <Typography
+                variant="h6"
+                sx={{ color: "#fff", fontFamily: "'Anta', sans-serif" }}
+              >
                 Akshar<span style={{ color: "#7fd0ff" }}>Sync</span>
               </Typography>
             </Box>
-            <IconButton onClick={() => setMobileOpen(false)} sx={{ color: "#fff" }}>
+            <IconButton
+              onClick={() => setMobileOpen(false)}
+              sx={{ color: "#fff" }}
+            >
               <CloseIcon />
             </IconButton>
           </Box>
 
           <List>
             {navItems.map((item) => (
-              <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
+              <ListItem
+                key={item.label}
+                disablePadding
+                sx={{ display: "block" }}
+              >
                 {item.hasServices ? (
                   <>
                     <ListItemButton
-                      onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
+                      onClick={() =>
+                        setMobileExpanded(
+                          mobileExpanded === item.label ? null : item.label,
+                        )
+                      }
                       sx={{ py: 2, color: "#fff" }}
                     >
-                      <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 700 } } }} />
+                      <ListItemText
+                        primary={item.label}
+                        slotProps={{ primary: { sx: { fontWeight: 700 } } }}
+                      />
                       <KeyboardArrowDownIcon
-                        sx={{ transform: mobileExpanded === item.label ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+                        sx={{
+                          transform:
+                            mobileExpanded === item.label
+                              ? "rotate(180deg)"
+                              : "none",
+                          transition: "transform 0.2s",
+                        }}
                       />
                     </ListItemButton>
                     <Collapse in={mobileExpanded === item.label}>
@@ -923,48 +1197,92 @@ export function Header() {
                           <Box key={svc.label} sx={{ mb: 2 }}>
                             <Typography
                               variant="caption"
-                              onClick={() => { if (svc.to) { setMobileOpen(false); navigate(svc.to); } }}
-                              sx={{ color: svc.accent, fontWeight: 700, textTransform: "uppercase", px: 2, cursor: svc.to ? "pointer" : "default" }}
+                              onClick={() => {
+                                if (svc.to) {
+                                  setMobileOpen(false);
+                                  navigate(svc.to);
+                                }
+                              }}
+                              sx={{
+                                color: svc.accent,
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                                px: 2,
+                                cursor: svc.to ? "pointer" : "default",
+                              }}
                             >
                               {svc.label}
                             </Typography>
-                            {svc.sub.length > 0 ? (
-                              svc.sub.map((sub) => (
-                                <ListItemButton
-                                  key={sub.label}
-                                  onClick={() => { setMobileOpen(false); navigate(sub.to); }}
-                                >
-                                  <ListItemText
-                                    primary={sub.label}
-                                    slotProps={{ primary: { style: { fontSize: "0.9rem", color: alpha("#fff", 0.6) } } }}
-                                  />
-                                </ListItemButton>
-                              ))
-                            ) : (
-                              svc.to && (
-                                <ListItemButton onClick={() => { setMobileOpen(false); navigate(svc.to!); }}>
-                                  <ListItemText
-                                    primary="View Details"
-                                    slotProps={{ primary: { style: { fontSize: "0.85rem", color: alpha("#fff", 0.4), fontStyle: "italic" } } }}
-                                  />
-                                </ListItemButton>
-                              )
-                            )}
+                            {svc.sub.length > 0
+                              ? svc.sub.map((sub) => (
+                                  <ListItemButton
+                                    key={sub.label}
+                                    onClick={() => {
+                                      setMobileOpen(false);
+                                      navigate(sub.to);
+                                    }}
+                                  >
+                                    <ListItemText
+                                      primary={sub.label}
+                                      slotProps={{
+                                        primary: {
+                                          style: {
+                                            fontSize: "0.9rem",
+                                            color: alpha("#fff", 0.6),
+                                          },
+                                        },
+                                      }}
+                                    />
+                                  </ListItemButton>
+                                ))
+                              : svc.to && (
+                                  <ListItemButton
+                                    onClick={() => {
+                                      setMobileOpen(false);
+                                      navigate(svc.to!);
+                                    }}
+                                  >
+                                    <ListItemText
+                                      primary="View Details"
+                                      slotProps={{
+                                        primary: {
+                                          style: {
+                                            fontSize: "0.85rem",
+                                            color: alpha("#fff", 0.4),
+                                            fontStyle: "italic",
+                                          },
+                                        },
+                                      }}
+                                    />
+                                  </ListItemButton>
+                                )}
                           </Box>
                         ))}
                       </List>
                     </Collapse>
                   </>
                 ) : (
-                  <ListItemButton onClick={() => handleNavClick(item)} sx={{ py: 2, color: "#fff" }}>
-                    <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 700 } } }} />
+                  <ListItemButton
+                    onClick={() => handleNavClick(item)}
+                    sx={{ py: 2, color: "#fff" }}
+                  >
+                    <ListItemText
+                      primary={item.label}
+                      slotProps={{ primary: { sx: { fontWeight: 700 } } }}
+                    />
                   </ListItemButton>
                 )}
               </ListItem>
             ))}
 
             {/* Mobile Sign In / Out & Admin Portal Links */}
-            <Box sx={{ mt: 2, pt: 2, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <Box
+              sx={{
+                mt: 2,
+                pt: 2,
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
               {currentCustomer ? (
                 <ListItemButton
                   onClick={() => {
@@ -983,7 +1301,9 @@ export function Header() {
                   <LogoutIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
                   <ListItemText
                     primary={`Sign Out (${currentCustomer.name.split(" ")[0]})`}
-                    slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                    slotProps={{
+                      primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } },
+                    }}
                   />
                 </ListItemButton>
               ) : (
@@ -997,7 +1317,9 @@ export function Header() {
                   <PersonIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
                   <ListItemText
                     primary="Customer Sign In"
-                    slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                    slotProps={{
+                      primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } },
+                    }}
                   />
                 </ListItemButton>
               )}
@@ -1006,12 +1328,20 @@ export function Header() {
                   setMobileOpen(false);
                   navigate(ROUTE_PATHS.ADMIN_LOGIN);
                 }}
-                sx={{ py: 1.5, color: "rgba(255,255,255,0.7)", borderRadius: 2 }}
+                sx={{
+                  py: 1.5,
+                  color: "rgba(255,255,255,0.7)",
+                  borderRadius: 2,
+                }}
               >
-                <AdminPanelSettingsOutlinedIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
+                <AdminPanelSettingsOutlinedIcon
+                  sx={{ mr: 1.5, fontSize: "1.2rem" }}
+                />
                 <ListItemText
                   primary="Admin Portal"
-                  slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                  slotProps={{
+                    primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } },
+                  }}
                 />
               </ListItemButton>
             </Box>
@@ -1042,7 +1372,8 @@ export function Header() {
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           borderTop: "1px solid rgba(127,208,255,0.1)",
-          boxShadow: "0 -4px 40px rgba(0,0,0,0.5), 0 -1px 0 rgba(127,208,255,0.08)",
+          boxShadow:
+            "0 -4px 40px rgba(0,0,0,0.5), 0 -1px 0 rgba(127,208,255,0.08)",
         }}
       >
         {/* Left CTA: Free Audit – gradient primary */}
@@ -1073,13 +1404,22 @@ export function Header() {
         </Button>
 
         {/* Divider */}
-        <Box sx={{ width: "1px", height: 32, bgcolor: "rgba(255,255,255,0.08)", flexShrink: 0 }} />
+        <Box
+          sx={{
+            width: "1px",
+            height: 32,
+            bgcolor: "rgba(255,255,255,0.08)",
+            flexShrink: 0,
+          }}
+        />
 
         {/* Right CTA: Schedule Call – ghost secondary */}
         <Button
           component={RouterLink}
           to={ROUTE_PATHS.CONTACT}
-          startIcon={<CalendarMonthOutlinedIcon sx={{ fontSize: "1rem !important" }} />}
+          startIcon={
+            <CalendarMonthOutlinedIcon sx={{ fontSize: "1rem !important" }} />
+          }
           sx={{
             flex: 1,
             borderRadius: "12px",
