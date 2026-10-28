@@ -82,6 +82,7 @@ export function getStoredCustomer(): Customer | null {
  */
 export function setStoredCustomer(customer: Customer) {
   localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customer));
+  window.dispatchEvent(new Event('akshar_customer_change'));
 }
 
 /**
@@ -89,6 +90,7 @@ export function setStoredCustomer(customer: Customer) {
  */
 export function clearStoredCustomer() {
   localStorage.removeItem(CUSTOMER_STORAGE_KEY);
+  window.dispatchEvent(new Event('akshar_customer_change'));
 }
 
 /**

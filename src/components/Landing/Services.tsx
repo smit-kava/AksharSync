@@ -4,7 +4,6 @@ import {
   Container,
   Typography,
   alpha,
-  Fade,
   useMediaQuery,
   useTheme,
   IconButton,
@@ -13,11 +12,15 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Link as RouterLink } from "react-router-dom";
-import { useInView as useInViewShared, GradientText } from "./Shared";
+import { GradientText } from "./Shared";
 import { ROUTE_PATHS } from "../../routes/paths";
 import { motion, useInView } from "framer-motion";
 import { LifecycleIcon, ArchitectureIcon, CreativeIcon, MessagingIcon } from "../icons";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Service data ──────────────────────────────────────────────────────────────
 
@@ -432,11 +435,34 @@ function ServiceDeck() {
 // ─── Main export ───────────────────────────────────────────────────────────────
 
 export default function Services() {
-  const [servicesRef, servicesInView] = useInViewShared(0.1);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (headerRef.current) {
+        gsap.from(headerRef.current.children, {
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+            once: true,
+          },
+          opacity: 0,
+          y: 40,
+          stagger: 0.15,
+          duration: 0.9,
+          ease: "power3.out",
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <Box
-      ref={servicesRef}
+      ref={sectionRef}
       id="services"
       sx={{
         py: { xs: 8, md: 12 },
@@ -454,38 +480,35 @@ export default function Services() {
       }}
     >
       <Container maxWidth="xl">
-        {/* Header */}
-        <Box sx={{ textAlign: "center", mb: { xs: 5, md: 8 }, px: { xs: 2, md: 0 } }}>
-          <Fade in={servicesInView} timeout={500}>
-            <Box>
-              <Typography variant="h2" sx={{
-                fontWeight: 900,
-                fontSize: { xs: "1.8rem", sm: "2.2rem", md: "3.2rem" },
-                letterSpacing: "-0.03em", lineHeight: 1.1,
-              }}>
-                The science of <GradientText>Synchronization.</GradientText>
-              </Typography>
-              <Typography sx={{
-                color: alpha("#fff", 0.4), mt: 2, maxWidth: 640, mx: "auto",
-                fontSize: { xs: "0.9rem", md: "1rem" }, lineHeight: 1.7, px: { xs: 1, md: 0 },
-              }}>
-                We engineer the strategic ecosystem that powers your brand's growth.
-                Our audits deep-dive into your data to build high-performance revenue engines.
-              </Typography>
-            </Box>
-          </Fade>
+        {/* Header with GSAP Reveal */}
+        <Box
+          ref={headerRef}
+          sx={{ textAlign: "center", mb: { xs: 5, md: 8 }, px: { xs: 2, md: 0 } }}
+        >
+          <Typography variant="h2" sx={{
+            fontWeight: 900,
+            fontSize: { xs: "1.8rem", sm: "2.2rem", md: "3.2rem" },
+            letterSpacing: "-0.03em", lineHeight: 1.1,
+          }}>
+            The science of <GradientText>Synchronization.</GradientText>
+          </Typography>
+          <Typography sx={{
+            color: alpha("#fff", 0.6), mt: 2, maxWidth: 640, mx: "auto",
+            fontSize: { xs: "0.95rem", md: "1.05rem" }, lineHeight: 1.7, px: { xs: 1, md: 0 },
+          }}>
+            We engineer the strategic ecosystem that powers your brand's growth.
+            Our audits deep-dive into your data to build high-performance revenue engines.
+          </Typography>
         </Box>
 
         {/* Scroll hint desktop */}
-        <Fade in={servicesInView} timeout={900}>
-          <Typography sx={{
-            textAlign: "center", fontSize: "0.65rem", letterSpacing: "0.14em",
-            textTransform: "uppercase", color: alpha("#fff", 0.2), mb: 3,
-            display: { xs: "none", md: "block" },
-          }}>
-            ↓ scroll to reveal services
-          </Typography>
-        </Fade>
+        <Typography sx={{
+          textAlign: "center", fontSize: "0.65rem", letterSpacing: "0.14em",
+          textTransform: "uppercase", color: alpha("#fff", 0.25), mb: 3,
+          display: { xs: "none", md: "block" },
+        }}>
+          ↓ scroll to reveal services
+        </Typography>
 
         <ServiceDeck />
       </Container>

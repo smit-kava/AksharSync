@@ -25,11 +25,13 @@ import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import { LiquidGlassMenuButton } from "./LiquidGlassMenuButton";
 import { LiquidGlassContactButton } from "./LiquidGlassContactButton";
 import { CustomerSignInModal } from "./CustomerSignInModal";
-import { getStoredCustomer } from "../services/customerApi";
+import { getStoredCustomer, clearStoredCustomer } from "../services/customerApi";
+import type { Customer } from "../services/customerApi";
 import { ROUTE_PATHS } from "../routes/paths";
 import logo from "../assets/Logo.svg";
 import {
@@ -253,12 +255,22 @@ export function Header() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [customerModalOpen, setCustomerModalOpen] = useState(false);
-  const currentCustomer = getStoredCustomer();
+  const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(() => getStoredCustomer());
   const location = useLocation();
   const navigate = useNavigate();
 
   const megaTimeout = useRef<number | null>(null);
   const collapseTimeout = useRef<number | null>(null);
+
+  useEffect(() => {
+    const updateCustomer = () => setCurrentCustomer(getStoredCustomer());
+    window.addEventListener("akshar_customer_change", updateCustomer);
+    return () => window.removeEventListener("akshar_customer_change", updateCustomer);
+  }, []);
+
+  const handleCustomerSignOut = () => {
+    clearStoredCustomer();
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -413,59 +425,136 @@ export function Header() {
 
             {/* Desktop: Customer Sign In / Profile button */}
             {scrolled ? (
-              <Tooltip
-                title={
-                  currentCustomer
-                    ? `Signed in: ${currentCustomer.name}`
-                    : "Sign In / Customer Portal"
-                }
-                arrow
+              currentCustomer ? (
+                <Tooltip title={`Sign Out (${currentCustomer.name.split(" ")[0]})`} arrow>
+                  <IconButton
+                    onClick={handleCustomerSignOut}
+                    aria-label="Sign Out"
+                    sx={{
+                      display: { xs: "none", md: "inline-flex" },
+                      width: 40,
+                      height: 40,
+                      flexShrink: 0,
+                      borderRadius: "50%",
+                      bgcolor: "rgba(239, 68, 68, 0.12)",
+                      color: "#fca5a5",
+                      border: "1px solid rgba(239, 68, 68, 0.35)",
+                      borderTop: "1.5px solid rgba(239, 68, 68, 0.6)",
+                      backdropFilter: "blur(20px) saturate(180%)",
+                      WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+                      transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      "&:hover": {
+                        bgcolor: "rgba(239, 68, 68, 0.25)",
+                        borderColor: "#f87171",
+                        color: "#fff",
+                        transform: "scale(1.08)",
+                        boxShadow: "0 6px 20px rgba(239, 68, 68, 0.35)",
+                      },
+                    }}
+                  >
+                    <LogoutIcon sx={{ fontSize: "1.1rem" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Sign In / Customer Portal" arrow>
+                  <IconButton
+                    onClick={() => setCustomerModalOpen(true)}
+                    aria-label="Customer Sign In"
+                    sx={{
+                      display: { xs: "none", md: "inline-flex" },
+                      width: 40,
+                      height: 40,
+                      flexShrink: 0,
+                      borderRadius: "50%",
+                      bgcolor: "rgba(127, 208, 255, 0.10)",
+                      color: "#7fd0ff",
+                      border: "1px solid rgba(127, 208, 255, 0.25)",
+                      borderTop: "1.5px solid rgba(127, 208, 255, 0.45)",
+                      backdropFilter: "blur(20px) saturate(180%)",
+                      WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                      boxShadow:
+                        "0 4px 16px rgba(0,0,0,0.35), 0 1px 6px rgba(127,208,255,0.15), inset 0 1px 1px rgba(127,208,255,0.25)",
+                      transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      position: "relative",
+                      "&:hover": {
+                        bgcolor: "rgba(127, 208, 255, 0.20)",
+                        borderColor: "rgba(127, 208, 255, 0.50)",
+                        color: "#fff",
+                        transform: "scale(1.08)",
+                        boxShadow: "0 6px 24px rgba(127,208,255,0.35)",
+                      },
+                    }}
+                  >
+                    <PersonIcon sx={{ fontSize: "1.2rem" }} />
+                  </IconButton>
+                </Tooltip>
+              )
+            ) : currentCustomer ? (
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  display: { xs: "none", md: "inline-flex" },
+                  alignItems: "center",
+                  flexShrink: 0,
+                }}
               >
-                <IconButton
-                  onClick={() => setCustomerModalOpen(true)}
-                  aria-label="Customer Sign In"
+                <Box
                   sx={{
-                    display: { xs: "none", md: "inline-flex" },
-                    width: 40,
-                    height: 40,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 0.8,
+                    borderRadius: "999px",
+                    bgcolor: "rgba(52, 211, 153, 0.12)",
+                    border: "1px solid rgba(52, 211, 153, 0.35)",
+                    px: 1.6,
+                    py: 0.55,
+                    fontSize: "0.82rem",
+                    color: "#a7f3d0",
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      bgcolor: "#34d399",
+                      boxShadow: "0 0 6px #34d399",
+                    }}
+                  />
+                  {currentCustomer.name.split(" ")[0]}
+                </Box>
+
+                <Button
+                  onClick={handleCustomerSignOut}
+                  startIcon={<LogoutIcon sx={{ fontSize: "0.95rem !important" }} />}
+                  sx={{
+                    borderRadius: "999px",
+                    bgcolor: "rgba(239, 68, 68, 0.10)",
+                    color: "#fca5a5",
+                    border: "1px solid rgba(239, 68, 68, 0.28)",
+                    px: 1.8,
+                    py: 0.65,
+                    fontSize: "0.82rem",
+                    fontWeight: 600,
+                    textTransform: "none",
+                    whiteSpace: "nowrap",
                     flexShrink: 0,
-                    borderRadius: "50%",
-                    bgcolor: "rgba(127, 208, 255, 0.10)",
-                    color: "#7fd0ff",
-                    border: "1px solid rgba(127, 208, 255, 0.25)",
-                    borderTop: "1.5px solid rgba(127, 208, 255, 0.45)",
-                    backdropFilter: "blur(20px) saturate(180%)",
-                    WebkitBackdropFilter: "blur(20px) saturate(180%)",
-                    boxShadow:
-                      "0 4px 16px rgba(0,0,0,0.35), 0 1px 6px rgba(127,208,255,0.15), inset 0 1px 1px rgba(127,208,255,0.25)",
-                    transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                    position: "relative",
+                    transition: "all 0.2s ease",
                     "&:hover": {
-                      bgcolor: "rgba(127, 208, 255, 0.20)",
-                      borderColor: "rgba(127, 208, 255, 0.50)",
+                      bgcolor: "rgba(239, 68, 68, 0.20)",
+                      borderColor: "#f87171",
                       color: "#fff",
-                      transform: "scale(1.08)",
-                      boxShadow: "0 6px 24px rgba(127,208,255,0.35)",
+                      transform: "translateY(-1px)",
                     },
                   }}
                 >
-                  <PersonIcon sx={{ fontSize: "1.2rem" }} />
-                  {currentCustomer && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 6,
-                        right: 6,
-                        width: 8,
-                        height: 8,
-                        borderRadius: "50%",
-                        bgcolor: "#34d399",
-                        boxShadow: "0 0 6px #34d399",
-                      }}
-                    />
-                  )}
-                </IconButton>
-              </Tooltip>
+                  Sign Out
+                </Button>
+              </Stack>
             ) : (
               <Button
                 onClick={() => setCustomerModalOpen(true)}
@@ -491,7 +580,7 @@ export function Header() {
                   },
                 }}
               >
-                {currentCustomer ? currentCustomer.name.split(" ")[0] : "Sign In"}
+                Sign In
               </Button>
             )}
 
@@ -874,21 +963,44 @@ export function Header() {
               </ListItem>
             ))}
 
-            {/* Mobile Sign In & Admin Portal Links */}
+            {/* Mobile Sign In / Out & Admin Portal Links */}
             <Box sx={{ mt: 2, pt: 2, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-              <ListItemButton
-                onClick={() => {
-                  setMobileOpen(false);
-                  setCustomerModalOpen(true);
-                }}
-                sx={{ py: 1.5, color: "#7fd0ff", borderRadius: 2 }}
-              >
-                <PersonIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
-                <ListItemText
-                  primary={currentCustomer ? `Customer: ${currentCustomer.name}` : "Customer Sign In"}
-                  slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
-                />
-              </ListItemButton>
+              {currentCustomer ? (
+                <ListItemButton
+                  onClick={() => {
+                    setMobileOpen(false);
+                    handleCustomerSignOut();
+                  }}
+                  sx={{
+                    py: 1.5,
+                    color: "#fca5a5",
+                    borderRadius: 2,
+                    bgcolor: "rgba(239, 68, 68, 0.08)",
+                    border: "1px solid rgba(239, 68, 68, 0.25)",
+                    mb: 1,
+                  }}
+                >
+                  <LogoutIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
+                  <ListItemText
+                    primary={`Sign Out (${currentCustomer.name.split(" ")[0]})`}
+                    slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                  />
+                </ListItemButton>
+              ) : (
+                <ListItemButton
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setCustomerModalOpen(true);
+                  }}
+                  sx={{ py: 1.5, color: "#7fd0ff", borderRadius: 2 }}
+                >
+                  <PersonIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
+                  <ListItemText
+                    primary="Customer Sign In"
+                    slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                  />
+                </ListItemButton>
+              )}
               <ListItemButton
                 onClick={() => {
                   setMobileOpen(false);
