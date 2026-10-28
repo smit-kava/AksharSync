@@ -25,13 +25,16 @@ import AdminLogin from "../pages/admin/AdminLogin";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import BlogEditor from "../pages/admin/BlogEditor";
 import AdminRoute from "../pages/admin/AdminRoute";
+import { VisitorTracker } from "../components/VisitorTracker";
 
 export function AppRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+    <>
+      <VisitorTracker />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
         <Route element={<CommonLayout />}>
           <Route path={ROUTE_PATHS.HOME} element={<PageTransition><LandingPage /></PageTransition>} />
           <Route path={ROUTE_PATHS.SERVICES} element={<PageTransition><ServicesPage /></PageTransition>} />
@@ -115,5 +118,6 @@ export function AppRoutes() {
         />
       </Routes>
     </AnimatePresence>
+  </>
   );
 }

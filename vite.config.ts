@@ -62,6 +62,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: true,
         },
+        // Customers & Analytics API proxy
+        "/api/customers": {
+          target: "https://aksharsync.com",
+          changeOrigin: true,
+          secure: true,
+        },
       },
     },
     build: {

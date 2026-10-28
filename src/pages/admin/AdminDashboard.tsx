@@ -1,6 +1,6 @@
 // ============================================================
 // src/pages/admin/AdminDashboard.tsx
-// Superadmin Blog Management Dashboard
+// Superadmin Blog & Customer Traffic Management Dashboard
 // ============================================================
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -46,6 +46,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LanguageIcon from "@mui/icons-material/Language";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import DevicesIcon from "@mui/icons-material/Devices";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 import {
   fetchAdminBlogs,
@@ -55,12 +59,19 @@ import {
   getSessionRemainingText,
 } from "../../services/blogApi";
 import type { BlogArticle, BlogStats } from "../../services/blogApi";
+import {
+  fetchCustomerAnalytics,
+} from "../../services/customerApi";
+import type { AnalyticsData } from "../../services/customerApi";
 import { ROUTE_PATHS } from "../../routes/paths";
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const adminUser = getStoredAdminUser();
   const [sessionText, setSessionText] = useState(getSessionRemainingText());
+
+  // ── Main Dashboard Tab: 'blogs' | 'analytics' ─────────────────
+  const [mainTab, setMainTab] = useState<"blogs" | "analytics">("blogs");
 
   useEffect(() => {
     const sessionTimer = setInterval(() => {
@@ -69,6 +80,7 @@ export const AdminDashboard: React.FC = () => {
     return () => clearInterval(sessionTimer);
   }, []);
 
+  // ── Blogs State ──────────────────────────────────────────────
   const [blogs, setBlogs] = useState<BlogArticle[]>([]);
   const [stats, setStats] = useState<BlogStats>({
     total: 0,
@@ -81,6 +93,15 @@ export const AdminDashboard: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "published" | "draft"
   >("all");
+
+  // ── Customer & Traffic Analytics State ───────────────────────
+  const [analytics, setAnalytics] = useState<AnalyticsData>({
+    stats: { total_visits: 0, unique_visitors: 0, today_visits: 0, total_customers: 0 },
+    customers: [],
+    recent_visitors: [],
+  });
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState("");
 
   // Delete modal state
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -117,12 +138,35 @@ export const AdminDashboard: React.FC = () => {
     }
   }, [search, statusFilter]);
 
+  const loadAnalytics = useCallback(async () => {
+    setAnalyticsLoading(true);
+    try {
+      const data = await fetchCustomerAnalytics(customerSearch.trim() || undefined);
+      setAnalytics(data);
+    } catch (err: any) {
+      setSnackbar({
+        open: true,
+        message: err.message || "Failed to load customer analytics.",
+        severity: "error",
+      });
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  }, [customerSearch]);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      loadBlogs();
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [loadBlogs]);
+    if (mainTab === "blogs") {
+      const timer = setTimeout(() => {
+        loadBlogs();
+      }, 250);
+      return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => {
+        loadAnalytics();
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [mainTab, loadBlogs, loadAnalytics]);
 
   const handleSignOut = () => {
     clearAdminAuth();
@@ -150,6 +194,15 @@ export const AdminDashboard: React.FC = () => {
     } finally {
       setDeleting(false);
     }
+  };
+
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setSnackbar({
+      open: true,
+      message: `${label} copied to clipboard!`,
+      severity: "success",
+    });
   };
 
   return (
@@ -180,24 +233,34 @@ export const AdminDashboard: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            maxWidth: "1440px",
+            maxWidth: 1600,
             mx: "auto",
           }}
         >
-          {/* Logo & Portal title */}
+          {/* Brand + Dashboard title */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography
-              variant="h6"
+            <Box
+              component={RouterLink}
+              to={ROUTE_PATHS.HOME}
               sx={{
-                fontWeight: 800,
-                letterSpacing: "-0.02em",
-                background: "linear-gradient(90deg, #ffffff 0%, #7fd0ff 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}
             >
-              AksharSync
-            </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "'Anta', sans-serif",
+                  fontSize: "1.35rem",
+                  color: "#ffffff",
+                  fontWeight: 700,
+                  "& span": { color: "#7fd0ff" },
+                }}
+              >
+                Akshar<span>Sync</span>
+              </Typography>
+            </Box>
             <Chip
               label="Superadmin"
               size="small"
@@ -211,12 +274,13 @@ export const AdminDashboard: React.FC = () => {
             />
           </Box>
 
-          {/* User profile & Actions */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          {/* Navigation Controls */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Button
               component={RouterLink}
               to={ROUTE_PATHS.BLOGS}
               target="_blank"
+              size="small"
               startIcon={<LanguageIcon />}
               sx={{
                 color: "rgba(255, 255, 255, 0.7)",
@@ -225,11 +289,11 @@ export const AdminDashboard: React.FC = () => {
                 "&:hover": { color: "#7fd0ff" },
               }}
             >
-              View Public Blog
+              View Public Website
             </Button>
 
             <Chip
-              label={adminUser?.username || "Superadmin"}
+              label={adminUser?.username || "superadmin"}
               variant="outlined"
               sx={{
                 color: "#a78bfa",
@@ -280,14 +344,14 @@ export const AdminDashboard: React.FC = () => {
         </Box>
       </Box>
 
-      {/* ── MAIN DASHBOARD CONTENT ─────────────────────────── */}
+      {/* ── MAIN DASHBOARD CONTAINER ─────────────────────────── */}
       <Container maxWidth="xl" sx={{ py: 4, flex: 1 }}>
-        {/* Title & Add Blog Action */}
+        {/* Top Header & Tab Switcher */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: { xs: "flex-start", sm: "center" },
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "flex-start", md: "center" },
             justifyContent: "space-between",
             gap: 2,
             mb: 4,
@@ -298,20 +362,22 @@ export const AdminDashboard: React.FC = () => {
               variant="h4"
               sx={{ fontWeight: 800, letterSpacing: "-0.02em", mb: 0.5 }}
             >
-              Blog Management
+              {mainTab === "blogs" ? "Blog Article Management" : "Customer & Traffic Analytics"}
             </Typography>
             <Typography
               sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.95rem" }}
             >
-              Publish, edit, and organize dynamic articles across the AksharSync
-              website.
+              {mainTab === "blogs"
+                ? "Publish, edit, and organize dynamic articles across the AksharSync website."
+                : "Monitor live visitors, website page views, and registered customer leads in real time."}
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: 1.5 }}>
+          {/* Action Row */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Button
               variant="outlined"
-              onClick={loadBlogs}
+              onClick={mainTab === "blogs" ? loadBlogs : loadAnalytics}
               startIcon={<RefreshIcon />}
               sx={{
                 color: "rgba(255, 255, 255, 0.8)",
@@ -322,481 +388,708 @@ export const AdminDashboard: React.FC = () => {
             >
               Refresh
             </Button>
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={ROUTE_PATHS.ADMIN_BLOG_CREATE}
-              startIcon={<AddIcon />}
-              sx={{
-                background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
-                color: "#ffffff",
-                fontWeight: 700,
-                textTransform: "none",
-                px: 2.5,
-                boxShadow: "0 8px 24px rgba(71, 33, 135, 0.4)",
-                "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #a78bfa 0%, #0D3B66 100%)",
-                  boxShadow: "0 12px 30px rgba(127, 208, 255, 0.3)",
-                },
-              }}
-            >
-              Create New Article
-            </Button>
-          </Box>
-        </Box>
 
-        {/* ── 4 STAT METRIC CARDS ───────────────────────────── */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(4, 1fr)",
-            },
-            gap: 2.5,
-            mb: 4,
-          }}
-        >
-          {[
-            {
-              label: "Total Articles",
-              value: stats.total,
-              icon: <ArticleIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />,
-              accent: "rgba(127, 208, 255, 0.1)",
-            },
-            {
-              label: "Published",
-              value: stats.published,
-              icon: <CheckCircleIcon sx={{ fontSize: 26, color: "#34d399" }} />,
-              accent: "rgba(52, 211, 153, 0.1)",
-            },
-            {
-              label: "Drafts",
-              value: stats.drafts,
-              icon: <EditNoteIcon sx={{ fontSize: 26, color: "#fbbf24" }} />,
-              accent: "rgba(251, 191, 36, 0.1)",
-            },
-            {
-              label: "Total Views",
-              value: stats.total_views.toLocaleString(),
-              icon: <VisibilityIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
-              accent: "rgba(167, 139, 250, 0.1)",
-            },
-          ].map((item, idx) => (
-            <Card
-              key={idx}
-              sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.02)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: 3,
-                p: 2.5,
-                transition: "transform 0.2s ease, border-color 0.2s ease",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  borderColor: "rgba(127, 208, 255, 0.3)",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 1.5,
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: "rgba(255, 255, 255, 0.65)",
-                    fontSize: "0.875rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  {item.label}
-                </Typography>
-                <Box
-                  sx={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 2.5,
-                    backgroundColor: item.accent,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </Box>
-              </Box>
-              <Typography
-                variant="h4"
-                sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
-              >
-                {item.value}
-              </Typography>
-            </Card>
-          ))}
-        </Box>
-
-        {/* ── SEARCH & FILTER CONTROLS ─────────────────────── */}
-        <Card
-          sx={{
-            backgroundColor: "rgba(8, 17, 33, 0.6)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            borderRadius: 3.5,
-            p: { xs: 2, sm: 3 },
-            mb: 4,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", md: "row" },
-              alignItems: { xs: "stretch", md: "center" },
-              justifyContent: "space-between",
-              gap: 2,
-              mb: 2.5,
-            }}
-          >
-            {/* Search Input */}
-            <TextField
-              size="small"
-              placeholder="Search by article title, category, or tag..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)" }} />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-              sx={{
-                minWidth: { xs: "100%", md: 380 },
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "rgba(6, 14, 26, 0.7)",
-                  borderRadius: 2,
-                  color: "#fff",
-                  "& fieldset": { borderColor: "rgba(255, 255, 255, 0.12)" },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(127, 208, 255, 0.4)",
-                  },
-                  "&.Mui-focused fieldset": { borderColor: "#7fd0ff" },
-                },
-              }}
-            />
-
-            {/* Filter Tabs */}
-            <Tabs
-              value={statusFilter}
-              onChange={(_, val) => setStatusFilter(val)}
-              sx={{
-                minHeight: "auto",
-                "& .MuiTabs-indicator": { backgroundColor: "#7fd0ff" },
-                "& .MuiTab-root": {
-                  color: "rgba(255, 255, 255, 0.6)",
-                  minHeight: "auto",
-                  py: 1,
-                  px: 2,
-                  fontSize: "0.85rem",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  "&.Mui-selected": { color: "#7fd0ff" },
-                },
-              }}
-            >
-              <Tab value="all" label="All Articles" />
-              <Tab value="published" label="Published" />
-              <Tab value="draft" label="Drafts" />
-            </Tabs>
-          </Box>
-
-          {/* ── ARTICLES TABLE ─────────────────────────────────── */}
-          {loading ? (
-            <Box
-              sx={{
-                py: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress sx={{ color: "#7fd0ff" }} />
-            </Box>
-          ) : blogs.length === 0 ? (
-            <Box sx={{ py: 8, textAlign: "center" }}>
-              <ArticleIcon
-                sx={{
-                  fontSize: 48,
-                  color: "rgba(255, 255, 255, 0.2)",
-                  mb: 1.5,
-                }}
-              />
-              <Typography
-                sx={{
-                  color: "rgba(255, 255, 255, 0.8)",
-                  fontWeight: 600,
-                  mb: 0.5,
-                }}
-              >
-                No articles found
-              </Typography>
-              <Typography
-                sx={{
-                  color: "rgba(255, 255, 255, 0.5)",
-                  fontSize: "0.875rem",
-                  mb: 2.5,
-                }}
-              >
-                {search
-                  ? `No matching results for "${search}". Try adjusting your query.`
-                  : "Get started by creating your very first dynamic article."}
-              </Typography>
+            {mainTab === "blogs" && (
               <Button
                 variant="contained"
                 component={RouterLink}
                 to={ROUTE_PATHS.ADMIN_BLOG_CREATE}
                 startIcon={<AddIcon />}
-                size="small"
                 sx={{
-                  background:
-                    "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                  background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                  color: "#ffffff",
+                  fontWeight: 700,
                   textTransform: "none",
+                  px: 2.5,
+                  boxShadow: "0 8px 24px rgba(71, 33, 135, 0.4)",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #a78bfa 0%, #0D3B66 100%)",
+                    boxShadow: "0 12px 30px rgba(127, 208, 255, 0.3)",
+                  },
                 }}
               >
-                Create Article
+                Create New Article
               </Button>
-            </Box>
-          ) : (
-            <TableContainer>
-              <Table sx={{ minWidth: 750 }}>
-                <TableHead>
-                  <TableRow
+            )}
+          </Box>
+        </Box>
+
+        {/* ── TABS: Blogs vs Customer Traffic ────────────────── */}
+        <Box sx={{ mb: 4, borderBottom: "1px solid rgba(255, 255, 255, 0.08)" }}>
+          <Tabs
+            value={mainTab}
+            onChange={(_, val) => setMainTab(val)}
+            sx={{
+              "& .MuiTab-root": {
+                color: "rgba(255, 255, 255, 0.6)",
+                textTransform: "none",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                minHeight: 48,
+                "&.Mui-selected": { color: "#7fd0ff", fontWeight: 700 },
+              },
+              "& .MuiTabs-indicator": { backgroundColor: "#7fd0ff", height: 3 },
+            }}
+          >
+            <Tab
+              value="blogs"
+              label={
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <ArticleIcon sx={{ fontSize: 18 }} />
+                  <span>Blog Articles</span>
+                  <Chip
+                    label={stats.total}
+                    size="small"
+                    sx={{ backgroundColor: "rgba(127, 208, 255, 0.15)", color: "#7fd0ff", fontSize: "0.75rem", height: 20 }}
+                  />
+                </Box>
+              }
+            />
+            <Tab
+              value="analytics"
+              label={
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <PeopleAltIcon sx={{ fontSize: 18 }} />
+                  <span>Customers & Traffic</span>
+                  <Chip
+                    label={analytics.stats.total_customers}
+                    size="small"
+                    sx={{ backgroundColor: "rgba(167, 139, 250, 0.15)", color: "#a78bfa", fontSize: "0.75rem", height: 20 }}
+                  />
+                </Box>
+              }
+            />
+          </Tabs>
+        </Box>
+
+        {/* ═════════════════════════════════════════════════════ */}
+        {/* TAB 1: BLOG ARTICLES MANAGEMENT                     */}
+        {/* ═════════════════════════════════════════════════════ */}
+        {mainTab === "blogs" && (
+          <>
+            {/* 4 STAT METRIC CARDS */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, 1fr)",
+                  md: "repeat(4, 1fr)",
+                },
+                gap: 2.5,
+                mb: 4,
+              }}
+            >
+              {[
+                {
+                  label: "Total Articles",
+                  value: stats.total,
+                  icon: <ArticleIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />,
+                  accent: "rgba(127, 208, 255, 0.1)",
+                },
+                {
+                  label: "Published",
+                  value: stats.published,
+                  icon: <CheckCircleIcon sx={{ fontSize: 26, color: "#34d399" }} />,
+                  accent: "rgba(52, 211, 153, 0.1)",
+                },
+                {
+                  label: "Drafts",
+                  value: stats.drafts,
+                  icon: <EditNoteIcon sx={{ fontSize: 26, color: "#fbbf24" }} />,
+                  accent: "rgba(251, 191, 36, 0.1)",
+                },
+                {
+                  label: "Total Views",
+                  value: stats.total_views.toLocaleString(),
+                  icon: <VisibilityIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
+                  accent: "rgba(167, 139, 250, 0.1)",
+                },
+              ].map((item, idx) => (
+                <Card
+                  key={idx}
+                  sx={{
+                    backgroundColor: "rgba(255, 255, 255, 0.02)",
+                    border: "1px solid rgba(255, 255, 255, 0.07)",
+                    borderRadius: 3,
+                    p: 2.5,
+                    transition: "transform 0.2s ease, border-color 0.2s ease",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      borderColor: "rgba(127, 208, 255, 0.3)",
+                    },
+                  }}
+                >
+                  <Box
                     sx={{
-                      "& th": {
-                        borderColor: "rgba(255, 255, 255, 0.08)",
-                        color: "rgba(255, 255, 255, 0.5)",
-                        fontWeight: 700,
-                        fontSize: "0.8rem",
-                        textTransform: "uppercase",
-                        py: 1.5,
-                      },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      mb: 1.5,
                     }}
                   >
-                    <TableCell>Article</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell align="center">Views</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {blogs.map((b) => (
-                    <TableRow
-                      key={b.id}
-                      hover
+                    <Typography
                       sx={{
-                        "&:hover": {
-                          backgroundColor:
-                            "rgba(255, 255, 255, 0.02) !important",
-                        },
-                        "& td": {
-                          borderColor: "rgba(255, 255, 255, 0.06)",
-                          py: 2,
-                        },
+                        color: "rgba(255, 255, 255, 0.65)",
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
                       }}
                     >
-                      {/* Title & Slug */}
-                      <TableCell>
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      {item.label}
+                    </Typography>
+                    <Box
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 2.5,
+                        backgroundColor: item.accent,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </Box>
+                  </Box>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
+                  >
+                    {item.value}
+                  </Typography>
+                </Card>
+              ))}
+            </Box>
+
+            {/* SEARCH & STATUS FILTER */}
+            <Card
+              sx={{
+                backgroundColor: "rgba(8, 17, 33, 0.6)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 3.5,
+                p: { xs: 2, sm: 3 },
+                mb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
+                  gap: 2,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="Search by article title, category, or tag..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)" }} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  sx={{
+                    maxWidth: { xs: "100%", md: 450 },
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "rgba(6, 14, 26, 0.7)",
+                      borderRadius: 2.5,
+                      color: "#ffffff",
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.1)" },
+                      "&:hover fieldset": { borderColor: "rgba(127, 208, 255, 0.4)" },
+                      "&.Mui-focused fieldset": { borderColor: "#7fd0ff" },
+                    },
+                  }}
+                />
+
+                <Tabs
+                  value={statusFilter}
+                  onChange={(_, val) => setStatusFilter(val)}
+                  sx={{
+                    minHeight: "auto",
+                    "& .MuiTab-root": {
+                      color: "rgba(255, 255, 255, 0.6)",
+                      textTransform: "none",
+                      fontSize: "0.875rem",
+                      fontWeight: 600,
+                      minHeight: "auto",
+                      py: 1,
+                      px: 2,
+                      "&.Mui-selected": { color: "#7fd0ff", fontWeight: 700 },
+                    },
+                    "& .MuiTabs-indicator": { backgroundColor: "#7fd0ff" },
+                  }}
+                >
+                  <Tab label="All Articles" value="all" />
+                  <Tab label="Published" value="published" />
+                  <Tab label="Drafts" value="draft" />
+                </Tabs>
+              </Box>
+            </Card>
+
+            {/* ARTICLES TABLE */}
+            <Card
+              sx={{
+                backgroundColor: "rgba(8, 17, 33, 0.7)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 4,
+                overflow: "hidden",
+              }}
+            >
+              {loading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 12 }}>
+                  <CircularProgress size={44} sx={{ color: "#7fd0ff" }} />
+                </Box>
+              ) : blogs.length === 0 ? (
+                <Box sx={{ textAlign: "center", py: 12, px: 3 }}>
+                  <ArticleIcon sx={{ fontSize: 48, color: "rgba(255, 255, 255, 0.2)", mb: 1.5 }} />
+                  <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#ffffff", mb: 0.5 }}>
+                    No articles found
+                  </Typography>
+                  <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.9rem", mb: 2.5 }}>
+                    {search ? "Try adjusting your search query." : "Get started by creating your very first dynamic article."}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to={ROUTE_PATHS.ADMIN_BLOG_CREATE}
+                    startIcon={<AddIcon />}
+                    sx={{
+                      background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                      color: "#fff",
+                      textTransform: "none",
+                      fontWeight: 700,
+                      borderRadius: 2,
+                    }}
+                  >
+                    Create Article
+                  </Button>
+                </Box>
+              ) : (
+                <TableContainer>
+                  <Table sx={{ minWidth: 700 }}>
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>ARTICLE</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>CATEGORY</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>STATUS</TableCell>
+                        <TableCell align="center" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>VIEWS</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>DATE</TableCell>
+                        <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>ACTIONS</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {blogs.map((b) => (
+                        <TableRow
+                          key={b.id}
+                          hover
+                          sx={{
+                            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.02) !important" },
+                            "& td": { borderColor: "rgba(255, 255, 255, 0.06)", py: 2 },
+                          }}
                         >
-                          {b.cover_image && (
-                            <Box
-                              component="img"
-                              src={b.cover_image}
-                              alt={b.title}
+                          <TableCell>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                              {b.cover_image && (
+                                <Box
+                                  component="img"
+                                  src={b.cover_image}
+                                  alt={b.title}
+                                  sx={{
+                                    width: 52,
+                                    height: 52,
+                                    borderRadius: 2,
+                                    objectFit: "cover",
+                                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                                  }}
+                                />
+                              )}
+                              <Box sx={{ maxWidth: 360 }}>
+                                <Typography sx={{ color: "#ffffff", fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.3, mb: 0.3 }}>
+                                  {b.title}
+                                </Typography>
+                                <Typography sx={{ color: "rgba(255, 255, 255, 0.45)", fontSize: "0.78rem", fontFamily: "monospace" }}>
+                                  /blog/{b.slug}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={b.category}
+                              size="small"
                               sx={{
-                                width: 52,
-                                height: 52,
-                                borderRadius: 2,
-                                objectFit: "cover",
-                                border: "1px solid rgba(255, 255, 255, 0.1)",
+                                backgroundColor: "rgba(127, 208, 255, 0.08)",
+                                color: "#7fd0ff",
+                                border: "1px solid rgba(127, 208, 255, 0.2)",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
                               }}
                             />
-                          )}
-                          <Box sx={{ maxWidth: 360 }}>
-                            <Typography
-                              sx={{
-                                color: "#ffffff",
-                                fontWeight: 600,
-                                fontSize: "0.95rem",
-                                lineHeight: 1.3,
-                                mb: 0.3,
-                              }}
-                            >
-                              {b.title}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "rgba(255, 255, 255, 0.45)",
-                                fontSize: "0.78rem",
-                                fontFamily: "monospace",
-                              }}
-                            >
-                              /blog/{b.slug}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </TableCell>
-
-                      {/* Category */}
-                      <TableCell>
-                        <Chip
-                          label={b.category}
-                          size="small"
-                          sx={{
-                            backgroundColor: "rgba(127, 208, 255, 0.08)",
-                            color: "#7fd0ff",
-                            border: "1px solid rgba(127, 208, 255, 0.2)",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                          }}
-                        />
-                      </TableCell>
-
-                      {/* Status */}
-                      <TableCell>
-                        <Chip
-                          label={
-                            b.status === "published" ? "Published" : "Draft"
-                          }
-                          size="small"
-                          sx={{
-                            backgroundColor:
-                              b.status === "published"
-                                ? "rgba(52, 211, 153, 0.15)"
-                                : "rgba(251, 191, 36, 0.15)",
-                            color:
-                              b.status === "published" ? "#34d399" : "#fbbf24",
-                            border: `1px solid ${
-                              b.status === "published"
-                                ? "rgba(52, 211, 153, 0.3)"
-                                : "rgba(251, 191, 36, 0.3)"
-                            }`,
-                            fontWeight: 700,
-                            fontSize: "0.75rem",
-                          }}
-                        />
-                      </TableCell>
-
-                      {/* Views */}
-                      <TableCell align="center">
-                        <Typography
-                          sx={{
-                            color: "rgba(255, 255, 255, 0.85)",
-                            fontWeight: 600,
-                            fontSize: "0.9rem",
-                          }}
-                        >
-                          {(b.views || 0).toLocaleString()}
-                        </Typography>
-                      </TableCell>
-
-                      {/* Date */}
-                      <TableCell>
-                        <Typography
-                          sx={{
-                            color: "rgba(255, 255, 255, 0.6)",
-                            fontSize: "0.85rem",
-                          }}
-                        >
-                          {b.published_at
-                            ? new Date(b.published_at).toLocaleDateString()
-                            : "—"}
-                        </Typography>
-                      </TableCell>
-
-                      {/* Action buttons */}
-                      <TableCell align="right">
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "flex-end",
-                            gap: 1,
-                          }}
-                        >
-                          <Tooltip title="View live page">
-                            <IconButton
-                              component={RouterLink}
-                              to={`/blog/${b.slug}`}
-                              target="_blank"
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={b.status === "published" ? "Published" : "Draft"}
                               size="small"
                               sx={{
-                                color: "rgba(255, 255, 255, 0.6)",
-                                "&:hover": {
+                                backgroundColor: b.status === "published" ? "rgba(52, 211, 153, 0.15)" : "rgba(251, 191, 36, 0.15)",
+                                color: b.status === "published" ? "#34d399" : "#fbbf24",
+                                border: `1px solid ${b.status === "published" ? "rgba(52, 211, 153, 0.3)" : "rgba(251, 191, 36, 0.3)"}`,
+                                fontWeight: 700,
+                                fontSize: "0.75rem",
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography sx={{ color: "rgba(255, 255, 255, 0.85)", fontWeight: 600, fontSize: "0.9rem" }}>
+                              {(b.views || 0).toLocaleString()}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.85rem" }}>
+                              {b.published_at ? new Date(b.published_at).toLocaleDateString() : "—"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 1 }}>
+                              <Tooltip title="View live page">
+                                <IconButton
+                                  component={RouterLink}
+                                  to={`/blog/${b.slug}`}
+                                  target="_blank"
+                                  size="small"
+                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#7fd0ff", backgroundColor: "rgba(127, 208, 255, 0.1)" } }}
+                                >
+                                  <OpenInNewIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Edit article">
+                                <IconButton
+                                  component={RouterLink}
+                                  to={`/admin/blogs/edit/${b.id}`}
+                                  size="small"
+                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#fbbf24", backgroundColor: "rgba(251, 191, 36, 0.1)" } }}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete article">
+                                <IconButton
+                                  onClick={() => setDeleteId(b.id)}
+                                  size="small"
+                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#f87171", backgroundColor: "rgba(239, 68, 68, 0.1)" } }}
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Card>
+          </>
+        )}
+
+        {/* ═════════════════════════════════════════════════════ */}
+        {/* TAB 2: CUSTOMERS & TRAFFIC ANALYTICS                */}
+        {/* ═════════════════════════════════════════════════════ */}
+        {mainTab === "analytics" && (
+          <>
+            {/* 4 STAT METRIC CARDS */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, 1fr)",
+                  md: "repeat(4, 1fr)",
+                },
+                gap: 2.5,
+                mb: 4,
+              }}
+            >
+              {[
+                {
+                  label: "Total Page Visits",
+                  value: analytics.stats.total_visits.toLocaleString(),
+                  icon: <TrendingUpIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />,
+                  accent: "rgba(127, 208, 255, 0.1)",
+                },
+                {
+                  label: "Unique Visitors",
+                  value: analytics.stats.unique_visitors.toLocaleString(),
+                  icon: <DevicesIcon sx={{ fontSize: 26, color: "#34d399" }} />,
+                  accent: "rgba(52, 211, 153, 0.1)",
+                },
+                {
+                  label: "Registered Customers",
+                  value: analytics.stats.total_customers.toLocaleString(),
+                  icon: <PeopleAltIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
+                  accent: "rgba(167, 139, 250, 0.1)",
+                },
+                {
+                  label: "Visits Today",
+                  value: analytics.stats.today_visits.toLocaleString(),
+                  icon: <AccessTimeIcon sx={{ fontSize: 26, color: "#fbbf24" }} />,
+                  accent: "rgba(251, 191, 36, 0.1)",
+                },
+              ].map((item, idx) => (
+                <Card
+                  key={idx}
+                  sx={{
+                    backgroundColor: "rgba(255, 255, 255, 0.02)",
+                    border: "1px solid rgba(255, 255, 255, 0.07)",
+                    borderRadius: 3,
+                    p: 2.5,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
+                    <Typography sx={{ color: "rgba(255, 255, 255, 0.65)", fontSize: "0.875rem", fontWeight: 600 }}>
+                      {item.label}
+                    </Typography>
+                    <Box
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 2.5,
+                        backgroundColor: item.accent,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </Box>
+                  </Box>
+                  <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
+                    {item.value}
+                  </Typography>
+                </Card>
+              ))}
+            </Box>
+
+            {/* CUSTOMER DIRECTORY */}
+            <Card
+              sx={{
+                backgroundColor: "rgba(8, 17, 33, 0.7)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 4,
+                overflow: "hidden",
+                mb: 4,
+              }}
+            >
+              <Box sx={{ p: 3, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, justifyContent: "space-between", alignItems: { xs: "stretch", sm: "center" } }}>
+                <Box>
+                  <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
+                    Customer Leads & Accounts ({analytics.customers.length})
+                  </Typography>
+                  <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.85rem" }}>
+                    Visitors who signed in or connected through the website popup
+                  </Typography>
+                </Box>
+                <TextField
+                  size="small"
+                  placeholder="Search customer by name, email, company..."
+                  value={customerSearch}
+                  onChange={(e) => setCustomerSearch(e.target.value)}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)", fontSize: 20 }} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  sx={{
+                    width: { xs: "100%", sm: 340 },
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "rgba(6, 14, 26, 0.7)",
+                      borderRadius: 2.5,
+                      color: "#fff",
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.1)" },
+                    },
+                  }}
+                />
+              </Box>
+
+              {analyticsLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                  <CircularProgress size={36} sx={{ color: "#7fd0ff" }} />
+                </Box>
+              ) : analytics.customers.length === 0 ? (
+                <Box sx={{ textAlign: "center", py: 8, color: "rgba(255, 255, 255, 0.5)" }}>
+                  <PeopleAltIcon sx={{ fontSize: 40, opacity: 0.3, mb: 1 }} />
+                  <Typography>No customers registered yet.</Typography>
+                </Box>
+              ) : (
+                <TableContainer>
+                  <Table sx={{ minWidth: 700 }}>
+                    <TableHead sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+                      <TableRow>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>CUSTOMER</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>COMPANY & PHONE</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>INTEREST</TableCell>
+                        <TableCell align="center" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>VISITS</TableCell>
+                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>LAST ACTIVE</TableCell>
+                        <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>ACTION</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {analytics.customers.map((c) => (
+                        <TableRow key={c.id} hover sx={{ "& td": { borderColor: "rgba(255, 255, 255, 0.06)", py: 1.8 } }}>
+                          <TableCell>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                              <Box
+                                sx={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: "50%",
+                                  backgroundColor: "rgba(127, 208, 255, 0.15)",
                                   color: "#7fd0ff",
-                                  backgroundColor: "rgba(127, 208, 255, 0.1)",
-                                },
-                              }}
-                            >
-                              <OpenInNewIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Edit article">
-                            <IconButton
-                              component={RouterLink}
-                              to={`/admin/blogs/edit/${b.id}`}
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  fontWeight: 700,
+                                  fontSize: "0.85rem",
+                                }}
+                              >
+                                {c.name.charAt(0).toUpperCase()}
+                              </Box>
+                              <Box>
+                                <Typography sx={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem" }}>
+                                  {c.name}
+                                </Typography>
+                                <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.8rem" }}>
+                                  {c.email}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Typography sx={{ color: "#fff", fontSize: "0.85rem" }}>
+                              {c.company || "—"}
+                            </Typography>
+                            <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.78rem" }}>
+                              {c.phone || "No phone"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={c.interests || "General"}
                               size="small"
-                              sx={{
-                                color: "rgba(255, 255, 255, 0.6)",
-                                "&:hover": {
-                                  color: "#a78bfa",
-                                  backgroundColor: "rgba(167, 139, 250, 0.1)",
-                                },
-                              }}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Delete article">
-                            <IconButton
-                              onClick={() => setDeleteId(b.id)}
+                              sx={{ backgroundColor: "rgba(167, 139, 250, 0.12)", color: "#a78bfa", fontSize: "0.75rem" }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip
+                              label={`${c.visits_count} visits`}
                               size="small"
-                              sx={{
-                                color: "rgba(255, 255, 255, 0.6)",
-                                "&:hover": {
-                                  color: "#f87171",
-                                  backgroundColor: "rgba(239, 68, 68, 0.1)",
-                                },
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
+                              sx={{ backgroundColor: "rgba(52, 211, 153, 0.12)", color: "#34d399", fontWeight: 700, fontSize: "0.75rem" }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.82rem" }}>
+                              {new Date(c.last_active).toLocaleString()}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Tooltip title="Copy Email">
+                              <IconButton size="small" onClick={() => handleCopy(c.email, "Email")} sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#7fd0ff" } }}>
+                                <ContentCopyIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Card>
+
+            {/* LIVE REAL-TIME VISITOR LOGS */}
+            <Card
+              sx={{
+                backgroundColor: "rgba(8, 17, 33, 0.7)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 4,
+                overflow: "hidden",
+              }}
+            >
+              <Box sx={{ p: 3 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
+                  Live Visitor Activity Stream (Recent 25 Visits)
+                </Typography>
+                <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.85rem" }}>
+                  Real-time page views across your public pages
+                </Typography>
+              </Box>
+
+              <TableContainer>
+                <Table size="small">
+                  <TableHead sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+                    <TableRow>
+                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>PAGE URL</TableCell>
+                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>DEVICE</TableCell>
+                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>IP ADDRESS</TableCell>
+                      <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>VISITED AT</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </Card>
+                  </TableHead>
+                  <TableBody>
+                    {analytics.recent_visitors.map((log) => (
+                      <TableRow key={log.id} sx={{ "& td": { borderColor: "rgba(255, 255, 255, 0.05)", py: 1.2 } }}>
+                        <TableCell>
+                          <Typography sx={{ color: "#7fd0ff", fontFamily: "monospace", fontSize: "0.85rem" }}>
+                            {log.page_url}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={log.device_type}
+                            size="small"
+                            sx={{
+                              fontSize: "0.72rem",
+                              textTransform: "capitalize",
+                              backgroundColor: log.device_type === "mobile" ? "rgba(244, 114, 182, 0.15)" : "rgba(127, 208, 255, 0.15)",
+                              color: log.device_type === "mobile" ? "#f472b6" : "#7fd0ff",
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontFamily: "monospace", fontSize: "0.8rem" }}>
+                            {log.ip_address}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.8rem" }}>
+                            {new Date(log.visited_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+          </>
+        )}
       </Container>
 
-      {/* ── DELETE CONFIRMATION DIALOG ─────────────────────── */}
+      {/* ── DELETE ARTICLE CONFIRMATION MODAL ──────────────── */}
       <Dialog
-        open={deleteId !== null}
-        onClose={() => !deleting && setDeleteId(null)}
+        open={Boolean(deleteId)}
+        onClose={() => setDeleteId(null)}
         slotProps={{
           paper: {
             sx: {

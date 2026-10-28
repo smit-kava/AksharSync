@@ -16,7 +16,7 @@ const learnMoreLinks = [
   { label: "Career", to: "/about" },
   { label: "FAQs", to: "/why" },
   { label: "Partners", to: "/solutions" },
-  { label: "Trainings", to: "/services" },
+  { label: "Admin Portal", to: "/admin/login" },
 ];
 
 const legalLinks = [

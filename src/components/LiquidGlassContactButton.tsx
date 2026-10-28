@@ -1,6 +1,7 @@
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import { ROUTE_PATHS } from "../routes/paths";
 
 // ─── Liquid Glass Constants (AksharSync palette) ──────────────────────────────
@@ -34,20 +35,59 @@ const GLASS_SHADOW_HOVER = [
   "inset 0 -1px 1px rgba(0,0,0,0.18)",
 ].join(", ");
 
+export interface LiquidGlassContactButtonProps {
+  iconOnly?: boolean;
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 /**
  * LiquidGlassContactButton
  *
- * Desktop-only (hidden on xs, visible sm+) "Contact us" pill button
- * styled with AksharSync's Liquid Glass aesthetic:
- *
- *  - Dark navy + #7fd0ff blue-tinted frosted glass body
- *  - Specular top-edge highlight in brand blue
- *  - Blue ambient glow + inner depth layers
- *  - ArrowOutward icon — rotates on hover
- *  - Spring-eased hover & active states
+ * Shows full "Contact us ↗" pill when at top, or sleek circular contact icon
+ * when iconOnly is true (after scrolling).
  */
-export function LiquidGlassContactButton() {
+export function LiquidGlassContactButton({ iconOnly = false }: LiquidGlassContactButtonProps) {
+  if (iconOnly) {
+    return (
+      <Tooltip title="Contact Us" arrow>
+        <IconButton
+          component={RouterLink}
+          to={ROUTE_PATHS.CONTACT}
+          aria-label="Contact Us"
+          sx={{
+            display: { xs: "none", sm: "inline-flex" },
+            width: 40,
+            height: 40,
+            flexShrink: 0,
+            borderRadius: "50%",
+            background: GLASS_BG,
+            backdropFilter: "blur(20px) saturate(200%)",
+            WebkitBackdropFilter: "blur(20px) saturate(200%)",
+            border: "1px solid rgba(127,208,255,0.22)",
+            borderTop: "1.5px solid rgba(127,208,255,0.45)",
+            borderBottom: "1px solid rgba(6,16,30,0.55)",
+            boxShadow: GLASS_SHADOW,
+            color: "#7fd0ff",
+            transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            "&:hover": {
+              background: GLASS_BG_HOVER,
+              boxShadow: GLASS_SHADOW_HOVER,
+              borderColor: "rgba(127,208,255,0.45)",
+              color: "#fff",
+              transform: "scale(1.08)",
+            },
+            "&:active": {
+              background: GLASS_BG_ACTIVE,
+              transform: "scale(0.95)",
+            },
+          }}
+        >
+          <HeadsetMicIcon sx={{ fontSize: "1.15rem" }} />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
   return (
     <Button
       component={RouterLink}
@@ -61,46 +101,32 @@ export function LiquidGlassContactButton() {
         />
       }
       sx={{
-        // ── Visibility ─────────────────────────────────────────────────
         display: { xs: "none", sm: "inline-flex" },
-
-        // ── Shape & size ───────────────────────────────────────────────
         borderRadius: "999px",
         px: 2.5,
         height: 40,
         gap: 0.25,
-
-        // ── Typography ────────────────────────────────────────────────
+        whiteSpace: "nowrap",
+        flexShrink: 0,
         fontSize: "0.85rem",
         fontWeight: 700,
         textTransform: "none",
         letterSpacing: "0.01em",
         color: "#7fd0ff",
-
-        // ── Liquid Glass body ─────────────────────────────────────────
         background: GLASS_BG,
         backdropFilter: "blur(20px) saturate(200%)",
         WebkitBackdropFilter: "blur(20px) saturate(200%)",
-
-        // Border: bright blue top specular, faded navy bottom
         border: "1px solid rgba(127,208,255,0.22)",
         borderTop: "1.5px solid rgba(127,208,255,0.45)",
         borderBottom: "1px solid rgba(6,16,30,0.55)",
-
-        // Shadows
         boxShadow: GLASS_SHADOW,
-
-        // Spring easing
         transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
-
-        // ── States ────────────────────────────────────────────────────
         "&:hover": {
           background: GLASS_BG_HOVER,
           boxShadow: GLASS_SHADOW_HOVER,
           borderColor: "rgba(127,208,255,0.42)",
           color: "#fff",
           transform: "scale(1.04)",
-          // Rotate arrow icon on hover
           "& .MuiButton-endIcon svg": {
             transform: "rotate(45deg) scale(1.1)",
           },

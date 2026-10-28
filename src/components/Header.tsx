@@ -16,6 +16,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -23,8 +24,12 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import PersonIcon from "@mui/icons-material/Person";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import { LiquidGlassMenuButton } from "./LiquidGlassMenuButton";
 import { LiquidGlassContactButton } from "./LiquidGlassContactButton";
+import { CustomerSignInModal } from "./CustomerSignInModal";
+import { getStoredCustomer } from "../services/customerApi";
 import { ROUTE_PATHS } from "../routes/paths";
 import logo from "../assets/Logo.svg";
 import {
@@ -247,6 +252,8 @@ export function Header() {
   // null = compact cards view; service label = sub-services expanded
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [customerModalOpen, setCustomerModalOpen] = useState(false);
+  const currentCustomer = getStoredCustomer();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -325,6 +332,7 @@ export function Header() {
               alignItems: "center",
               gap: 1,
               cursor: "pointer",
+              flexShrink: 0,
               "&:hover .logo-icon": { transform: "rotate(-10deg) scale(1.1)" },
             }}
           >
@@ -334,13 +342,13 @@ export function Header() {
               alt="AksharSync Logo"
               className="logo-icon"
               sx={{
-                width: 80,
-                height: 80,
+                width: scrolled ? 52 : 72,
+                height: scrolled ? 52 : 72,
                 objectFit: "contain",
                 border: "none",
                 outline: "none",
                 background: "transparent",
-                transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 filter: "drop-shadow(0 0 12px rgba(127, 208, 255, 0.2))",
               }}
             />
@@ -348,10 +356,12 @@ export function Header() {
               variant="h6"
               sx={{
                 fontFamily: "'Anta', sans-serif",
-                fontSize: "1.5rem",
+                fontSize: scrolled ? "1.35rem" : "1.5rem",
                 color: "common.white",
                 letterSpacing: "-0.02em",
                 fontWeight: 700,
+                whiteSpace: "nowrap",
+                transition: "font-size 0.3s ease",
                 "& span": { color: "#7fd0ff" },
               }}
             >
@@ -360,7 +370,7 @@ export function Header() {
           </Box>
 
           {/* Desktop Nav */}
-          <Box component="nav" sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5 }}>
+          <Box component="nav" sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 0.5, flexShrink: 0 }}>
             {navItems.map((item) => (
               <Button
                 key={item.label}
@@ -379,12 +389,15 @@ export function Header() {
                   ) : undefined
                 }
                 sx={{
-                  color: location.pathname === item.to ? "#7fd0ff" : alpha("#fff", 5),
-                  fontSize: "0.9rem",
+                  color: location.pathname === item.to ? "#7fd0ff" : alpha("#fff", 0.75),
+                  fontSize: scrolled ? "0.85rem" : "0.9rem",
                   fontWeight: location.pathname === item.to ? 700 : 600,
                   textTransform: "none",
                   borderRadius: "999px",
-                  padding: "8px 18px",
+                  padding: scrolled ? "6px 14px" : "8px 18px",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  transition: "all 0.2s ease",
                   "&:hover": { color: "#fff", background: alpha("#fff", 0.06) },
                 }}
               >
@@ -394,12 +407,96 @@ export function Header() {
           </Box>
 
           {/* Search + CTA row */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: '8px' }}>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", marginRight: "8px", flexShrink: 0 }}>
             {/* Liquid Glass search bar */}
             <HeaderSearch />
 
-            {/* Desktop: Liquid Glass Contact button */}
-            <LiquidGlassContactButton />
+            {/* Desktop: Customer Sign In / Profile button */}
+            {scrolled ? (
+              <Tooltip
+                title={
+                  currentCustomer
+                    ? `Signed in: ${currentCustomer.name}`
+                    : "Sign In / Customer Portal"
+                }
+                arrow
+              >
+                <IconButton
+                  onClick={() => setCustomerModalOpen(true)}
+                  aria-label="Customer Sign In"
+                  sx={{
+                    display: { xs: "none", md: "inline-flex" },
+                    width: 40,
+                    height: 40,
+                    flexShrink: 0,
+                    borderRadius: "50%",
+                    bgcolor: "rgba(127, 208, 255, 0.10)",
+                    color: "#7fd0ff",
+                    border: "1px solid rgba(127, 208, 255, 0.25)",
+                    borderTop: "1.5px solid rgba(127, 208, 255, 0.45)",
+                    backdropFilter: "blur(20px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                    boxShadow:
+                      "0 4px 16px rgba(0,0,0,0.35), 0 1px 6px rgba(127,208,255,0.15), inset 0 1px 1px rgba(127,208,255,0.25)",
+                    transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    position: "relative",
+                    "&:hover": {
+                      bgcolor: "rgba(127, 208, 255, 0.20)",
+                      borderColor: "rgba(127, 208, 255, 0.50)",
+                      color: "#fff",
+                      transform: "scale(1.08)",
+                      boxShadow: "0 6px 24px rgba(127,208,255,0.35)",
+                    },
+                  }}
+                >
+                  <PersonIcon sx={{ fontSize: "1.2rem" }} />
+                  {currentCustomer && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 6,
+                        right: 6,
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        bgcolor: "#34d399",
+                        boxShadow: "0 0 6px #34d399",
+                      }}
+                    />
+                  )}
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Button
+                onClick={() => setCustomerModalOpen(true)}
+                startIcon={<PersonIcon sx={{ fontSize: "1rem !important", color: "#7fd0ff" }} />}
+                sx={{
+                  display: { xs: "none", md: "inline-flex" },
+                  borderRadius: "999px",
+                  bgcolor: "rgba(127, 208, 255, 0.08)",
+                  color: "#fff",
+                  border: "1px solid rgba(127, 208, 255, 0.22)",
+                  px: 2,
+                  py: 0.8,
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bgcolor: "rgba(127, 208, 255, 0.16)",
+                    borderColor: "#7fd0ff",
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                {currentCustomer ? currentCustomer.name.split(" ")[0] : "Sign In"}
+              </Button>
+            )}
+
+            {/* Desktop: Liquid Glass Contact button (iconOnly on scroll) */}
+            <LiquidGlassContactButton iconOnly={scrolled} />
 
             {/* Mobile: Liquid Glass hamburger */}
             <LiquidGlassMenuButton onClick={() => setMobileOpen(true)} />
@@ -776,9 +873,45 @@ export function Header() {
                 )}
               </ListItem>
             ))}
+
+            {/* Mobile Sign In & Admin Portal Links */}
+            <Box sx={{ mt: 2, pt: 2, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+              <ListItemButton
+                onClick={() => {
+                  setMobileOpen(false);
+                  setCustomerModalOpen(true);
+                }}
+                sx={{ py: 1.5, color: "#7fd0ff", borderRadius: 2 }}
+              >
+                <PersonIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
+                <ListItemText
+                  primary={currentCustomer ? `Customer: ${currentCustomer.name}` : "Customer Sign In"}
+                  slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  setMobileOpen(false);
+                  navigate(ROUTE_PATHS.ADMIN_LOGIN);
+                }}
+                sx={{ py: 1.5, color: "rgba(255,255,255,0.7)", borderRadius: 2 }}
+              >
+                <AdminPanelSettingsOutlinedIcon sx={{ mr: 1.5, fontSize: "1.2rem" }} />
+                <ListItemText
+                  primary="Admin Portal"
+                  slotProps={{ primary: { sx: { fontWeight: 600, fontSize: "0.9rem" } } }}
+                />
+              </ListItemButton>
+            </Box>
           </List>
         </Stack>
       </Drawer>
+
+      {/* Customer Sign-In Modal */}
+      <CustomerSignInModal
+        open={customerModalOpen}
+        onClose={() => setCustomerModalOpen(false)}
+      />
 
       {/* ── Premium Split Bottom Action Bar (mobile only) ── */}
       <Box
