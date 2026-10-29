@@ -4,7 +4,7 @@
 // session-based one-time welcome display, and header integration
 // ============================================================
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,14 +17,13 @@ import {
   Alert,
   CircularProgress,
   Tooltip,
+  Grow,
 } from "@mui/material";
+import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
-import { useNavigate } from "react-router-dom";
-import gsap from "gsap";
 
 import {
   customerSignIn,
@@ -32,7 +31,6 @@ import {
   clearStoredCustomer,
 } from "../services/customerApi";
 import type { Customer, CustomerFormData } from "../services/customerApi";
-import { ROUTE_PATHS } from "../routes/paths";
 
 interface CustomerSignInModalProps {
   open: boolean;
@@ -48,13 +46,31 @@ const INTEREST_OPTIONS = [
   "General Inquiry & Consultation",
 ];
 
-const SESSION_POPUP_KEY = "akshar_welcome_popup_shown";
+// In-memory flag ensuring the auto-popup only shows once per page load/refresh
+// and NEVER re-triggers when navigating/redirecting between pages within the site
+let hasShownInSession = false;
+
+// ── Smooth Open / Close Transition ───────────────────────────
+const ModalTransition = forwardRef(function ModalTransition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return (
+    <Grow
+      ref={ref}
+      {...props}
+      timeout={{ enter: 380, exit: 260 }}
+      style={{ transformOrigin: "center center" }}
+    />
+  );
+});
 
 export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
   open,
   onClose,
 }) => {
-  const navigate = useNavigate();
   const [activeCustomer, setActiveCustomer] = useState<Customer | null>(() =>
     getStoredCustomer(),
   );
@@ -75,24 +91,39 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
   // GSAP animation ref
   const dialogPaperRef = useRef<HTMLDivElement | null>(null);
 
-  // ── Auto-Open for New Visitors ONLY ONCE per session ──────────
+  // ── Auto-Open on Initial Page Load / Refresh (never on page redirects/navigation) ──
   useEffect(() => {
-    // If active customer is already verified, do not auto-popup
-    if (activeCustomer) return;
+    // 1. If customer is already registered or signed in, do NOT show the popup
+    if (getStoredCustomer() || activeCustomer) return;
 
-    // Check if already shown in this browser session (prevents showing on page changes)
-    const alreadyShown = sessionStorage.getItem(SESSION_POPUP_KEY);
-    if (alreadyShown) return;
-
-    // Mark as shown immediately so page transitions will never trigger it again
-    sessionStorage.setItem(SESSION_POPUP_KEY, "true");
+    // 2. If already shown or dismissed in this browsing session, do NOT re-trigger on page navigation
+    if (hasShownInSession) return;
+    hasShownInSession = true;
 
     // Delay 2.1s so PageLoader (1.9s) cleanly exits and website is unveiled
     const timer = window.setTimeout(() => {
+      if (getStoredCustomer() || activeCustomer) return;
       setModalOpen(true);
     }, 2100);
 
     return () => clearTimeout(timer);
+  }, [activeCustomer]);
+
+  // Support opening via URL hash (#connect, #signin)
+  useEffect(() => {
+    const handleHash = () => {
+      if (
+        window.location.hash === "#connect" ||
+        window.location.hash === "#signin"
+      ) {
+        setModalOpen(true);
+      }
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+    };
   }, []);
 
   // When external "open" prop becomes true (e.g. user clicks "Sign In" in Header)
@@ -114,54 +145,36 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
     }
   }, [modalOpen]);
 
-  // ── GSAP Entrance Animation on Modal Open ────────────────────
+  // Dispatch modal state changes so floating button knows when it's open/closed
   useEffect(() => {
-    if (modalOpen) {
-      const timer = window.setTimeout(() => {
-        const el =
-          document.getElementById("customer-signin-paper") ||
-          dialogPaperRef.current;
-        if (el) {
-          gsap.fromTo(
-            el,
-            { scale: 0.75, opacity: 0, y: 35 },
-            {
-              scale: 1,
-              opacity: 1,
-              y: 0,
-              duration: 0.45,
-              ease: "back.out(1.4)",
-            },
-          );
-        }
-      }, 40);
-      return () => clearTimeout(timer);
-    }
+    window.dispatchEvent(
+      new CustomEvent("akshar_customer_modal_state", {
+        detail: { open: modalOpen },
+      }),
+    );
   }, [modalOpen]);
 
   // ── Smooth Close Action ─────────────────────────────────────
   const handleClose = () => {
-    const paper =
-      document.getElementById("customer-signin-paper") ||
-      dialogPaperRef.current;
-    if (paper) {
-      gsap.to(paper, {
-        scale: 0.88,
-        opacity: 0,
-        y: -15,
-        duration: 0.25,
-        ease: "power2.in",
-        onComplete: () => {
-          gsap.set(paper, { clearProps: "all" });
-          setModalOpen(false);
-          onClose();
-        },
-      });
-    } else {
-      setModalOpen(false);
-      onClose();
-    }
+    hasShownInSession = true;
+    setModalOpen(false);
+    onClose();
   };
+
+  // Toggle modal open/close on floating button click
+  useEffect(() => {
+    const handleTrigger = () => {
+      if (modalOpen) {
+        handleClose();
+      } else {
+        setModalOpen(true);
+      }
+    };
+    window.addEventListener("akshar_open_signin_modal", handleTrigger);
+    return () => {
+      window.removeEventListener("akshar_open_signin_modal", handleTrigger);
+    };
+  }, [modalOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,6 +212,7 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
   const handleSignOut = () => {
     clearStoredCustomer();
     setActiveCustomer(null);
+    hasShownInSession = false;
     setName("");
     setEmail("");
     setPhone("");
@@ -206,19 +220,23 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
     setSuccessMessage("You have been signed out.");
   };
 
-  const handleGoToAdmin = () => {
-    handleClose();
-    navigate(ROUTE_PATHS.ADMIN_LOGIN);
-  };
-
   return (
     <Dialog
       open={modalOpen}
       onClose={handleClose}
+      slots={{ transition: ModalTransition }}
       maxWidth="sm"
       fullWidth
       sx={{ zIndex: 10000 }}
       slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: "rgba(2, 6, 16, 0.75)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            transition: "all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important",
+          },
+        },
         paper: {
           id: "customer-signin-paper",
           ref: dialogPaperRef,
@@ -551,6 +569,57 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
                   value={interests}
                   onChange={(e) => setInterests(e.target.value)}
                   disabled={loading}
+                  slotProps={{
+                    select: {
+                      MenuProps: {
+                        sx: { zIndex: 12000 },
+                        anchorOrigin: {
+                          vertical: "bottom",
+                          horizontal: "left",
+                        },
+                        transformOrigin: {
+                          vertical: "top",
+                          horizontal: "left",
+                        },
+                        slotProps: {
+                          paper: {
+                            sx: {
+                              mt: 0.8,
+                              bgcolor: "#071224",
+                              border: "1px solid rgba(127, 208, 255, 0.3)",
+                              borderRadius: 2.5,
+                              color: "#fff",
+                              boxShadow:
+                                "0 18px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(127, 208, 255, 0.15)",
+                              maxHeight: 240,
+                              "& .MuiMenuItem-root": {
+                                fontSize: "0.875rem",
+                                py: 1.1,
+                                px: 2,
+                                color: "rgba(255, 255, 255, 0.85)",
+                                whiteSpace: "normal",
+                                transition: "all 0.15s ease",
+                                "&:hover": {
+                                  bgcolor: "rgba(127, 208, 255, 0.12)",
+                                  color: "#7fd0ff",
+                                },
+                                "&.Mui-selected": {
+                                  bgcolor:
+                                    "rgba(127, 208, 255, 0.22) !important",
+                                  color: "#7fd0ff",
+                                  fontWeight: 600,
+                                  "&:hover": {
+                                    bgcolor:
+                                      "rgba(127, 208, 255, 0.3) !important",
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "rgba(6, 14, 26, 0.7)",
@@ -560,6 +629,8 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
                       "& fieldset": {
                         borderColor: "rgba(255, 255, 255, 0.15)",
                       },
+                      "&:hover fieldset": { borderColor: "#7fd0ff" },
+                      "&.Mui-focused fieldset": { borderColor: "#7fd0ff" },
                     },
                     "& .MuiSelect-icon": { color: "#7fd0ff" },
                   }}
@@ -608,42 +679,6 @@ export const CustomerSignInModal: React.FC<CustomerSignInModalProps> = ({
             </Box>
           </form>
         )}
-
-        {/* Direct Admin Login Bridge */}
-        <Box
-          sx={{
-            mt: 3,
-            pt: 2.5,
-            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <AdminPanelSettingsOutlinedIcon
-              sx={{ fontSize: 20, color: "rgba(255, 255, 255, 0.5)" }}
-            />
-            <Typography
-              sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.825rem" }}
-            >
-              Are you an Administrator?
-            </Typography>
-          </Box>
-          <Button
-            size="small"
-            onClick={handleGoToAdmin}
-            sx={{
-              color: "#7fd0ff",
-              textTransform: "none",
-              fontWeight: 700,
-              fontSize: "0.825rem",
-              "&:hover": { color: "#a78bfa", backgroundColor: "transparent" },
-            }}
-          >
-            Admin Portal →
-          </Button>
-        </Box>
       </DialogContent>
     </Dialog>
   );

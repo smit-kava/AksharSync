@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { CustomerPortalFloatingButton } from "./CustomerPortalFloatingButton";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,6 +32,7 @@ export function CommonLayout() {
         <Outlet />
       </Box>
       {location.pathname !== "/contact" && <Footer />}
+      <CustomerPortalFloatingButton />
     </Box>
   );
 }

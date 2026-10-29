@@ -59,9 +59,7 @@ import {
   getSessionRemainingText,
 } from "../../services/blogApi";
 import type { BlogArticle, BlogStats } from "../../services/blogApi";
-import {
-  fetchCustomerAnalytics,
-} from "../../services/customerApi";
+import { fetchCustomerAnalytics } from "../../services/customerApi";
 import type { AnalyticsData } from "../../services/customerApi";
 import { ROUTE_PATHS } from "../../routes/paths";
 
@@ -96,7 +94,12 @@ export const AdminDashboard: React.FC = () => {
 
   // ── Customer & Traffic Analytics State ───────────────────────
   const [analytics, setAnalytics] = useState<AnalyticsData>({
-    stats: { total_visits: 0, unique_visitors: 0, today_visits: 0, total_customers: 0 },
+    stats: {
+      total_visits: 0,
+      unique_visitors: 0,
+      today_visits: 0,
+      total_customers: 0,
+    },
     customers: [],
     recent_visitors: [],
   });
@@ -141,7 +144,9 @@ export const AdminDashboard: React.FC = () => {
   const loadAnalytics = useCallback(async () => {
     setAnalyticsLoading(true);
     try {
-      const data = await fetchCustomerAnalytics(customerSearch.trim() || undefined);
+      const data = await fetchCustomerAnalytics(
+        customerSearch.trim() || undefined,
+      );
       setAnalytics(data);
     } catch (err: any) {
       setSnackbar({
@@ -362,7 +367,9 @@ export const AdminDashboard: React.FC = () => {
               variant="h4"
               sx={{ fontWeight: 800, letterSpacing: "-0.02em", mb: 0.5 }}
             >
-              {mainTab === "blogs" ? "Blog Article Management" : "Customer & Traffic Analytics"}
+              {mainTab === "blogs"
+                ? "Blog Article Management"
+                : "Customer & Traffic Analytics"}
             </Typography>
             <Typography
               sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.95rem" }}
@@ -396,14 +403,16 @@ export const AdminDashboard: React.FC = () => {
                 to={ROUTE_PATHS.ADMIN_BLOG_CREATE}
                 startIcon={<AddIcon />}
                 sx={{
-                  background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                  background:
+                    "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
                   color: "#ffffff",
                   fontWeight: 700,
                   textTransform: "none",
                   px: 2.5,
                   boxShadow: "0 8px 24px rgba(71, 33, 135, 0.4)",
                   "&:hover": {
-                    background: "linear-gradient(135deg, #a78bfa 0%, #0D3B66 100%)",
+                    background:
+                      "linear-gradient(135deg, #a78bfa 0%, #0D3B66 100%)",
                     boxShadow: "0 12px 30px rgba(127, 208, 255, 0.3)",
                   },
                 }}
@@ -415,7 +424,9 @@ export const AdminDashboard: React.FC = () => {
         </Box>
 
         {/* ── TABS: Blogs vs Customer Traffic ────────────────── */}
-        <Box sx={{ mb: 4, borderBottom: "1px solid rgba(255, 255, 255, 0.08)" }}>
+        <Box
+          sx={{ mb: 4, borderBottom: "1px solid rgba(255, 255, 255, 0.08)" }}
+        >
           <Tabs
             value={mainTab}
             onChange={(_, val) => setMainTab(val)}
@@ -440,7 +451,12 @@ export const AdminDashboard: React.FC = () => {
                   <Chip
                     label={stats.total}
                     size="small"
-                    sx={{ backgroundColor: "rgba(127, 208, 255, 0.15)", color: "#7fd0ff", fontSize: "0.75rem", height: 20 }}
+                    sx={{
+                      backgroundColor: "rgba(127, 208, 255, 0.15)",
+                      color: "#7fd0ff",
+                      fontSize: "0.75rem",
+                      height: 20,
+                    }}
                   />
                 </Box>
               }
@@ -454,7 +470,12 @@ export const AdminDashboard: React.FC = () => {
                   <Chip
                     label={analytics.stats.total_customers}
                     size="small"
-                    sx={{ backgroundColor: "rgba(167, 139, 250, 0.15)", color: "#a78bfa", fontSize: "0.75rem", height: 20 }}
+                    sx={{
+                      backgroundColor: "rgba(167, 139, 250, 0.15)",
+                      color: "#a78bfa",
+                      fontSize: "0.75rem",
+                      height: 20,
+                    }}
                   />
                 </Box>
               }
@@ -490,19 +511,25 @@ export const AdminDashboard: React.FC = () => {
                 {
                   label: "Published",
                   value: stats.published,
-                  icon: <CheckCircleIcon sx={{ fontSize: 26, color: "#34d399" }} />,
+                  icon: (
+                    <CheckCircleIcon sx={{ fontSize: 26, color: "#34d399" }} />
+                  ),
                   accent: "rgba(52, 211, 153, 0.1)",
                 },
                 {
                   label: "Drafts",
                   value: stats.drafts,
-                  icon: <EditNoteIcon sx={{ fontSize: 26, color: "#fbbf24" }} />,
+                  icon: (
+                    <EditNoteIcon sx={{ fontSize: 26, color: "#fbbf24" }} />
+                  ),
                   accent: "rgba(251, 191, 36, 0.1)",
                 },
                 {
                   label: "Total Views",
                   value: stats.total_views.toLocaleString(),
-                  icon: <VisibilityIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
+                  icon: (
+                    <VisibilityIcon sx={{ fontSize: 26, color: "#a78bfa" }} />
+                  ),
                   accent: "rgba(167, 139, 250, 0.1)",
                 },
               ].map((item, idx) => (
@@ -511,7 +538,7 @@ export const AdminDashboard: React.FC = () => {
                   sx={{
                     backgroundColor: "rgba(255, 255, 255, 0.02)",
                     border: "1px solid rgba(255, 255, 255, 0.07)",
-                    borderRadius: 3,
+                    borderRadius: 1,
                     p: 2.5,
                     transition: "transform 0.2s ease, border-color 0.2s ease",
                     "&:hover": {
@@ -541,7 +568,7 @@ export const AdminDashboard: React.FC = () => {
                       sx={{
                         width: 44,
                         height: 44,
-                        borderRadius: 2.5,
+                        borderRadius: 2,
                         backgroundColor: item.accent,
                         display: "flex",
                         alignItems: "center",
@@ -566,7 +593,7 @@ export const AdminDashboard: React.FC = () => {
               sx={{
                 backgroundColor: "rgba(8, 17, 33, 0.6)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: 3.5,
+                borderRadius: 2,
                 p: { xs: 2, sm: 3 },
                 mb: 4,
               }}
@@ -590,7 +617,9 @@ export const AdminDashboard: React.FC = () => {
                     input: {
                       startAdornment: (
                         <InputAdornment position="start">
-                          <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)" }} />
+                          <SearchIcon
+                            sx={{ color: "rgba(255, 255, 255, 0.4)" }}
+                          />
                         </InputAdornment>
                       ),
                     },
@@ -599,10 +628,12 @@ export const AdminDashboard: React.FC = () => {
                     maxWidth: { xs: "100%", md: 450 },
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "rgba(6, 14, 26, 0.7)",
-                      borderRadius: 2.5,
+                      borderRadius: 2,
                       color: "#ffffff",
                       "& fieldset": { borderColor: "rgba(255, 255, 255, 0.1)" },
-                      "&:hover fieldset": { borderColor: "rgba(127, 208, 255, 0.4)" },
+                      "&:hover fieldset": {
+                        borderColor: "rgba(127, 208, 255, 0.4)",
+                      },
                       "&.Mui-focused fieldset": { borderColor: "#7fd0ff" },
                     },
                   }}
@@ -638,22 +669,50 @@ export const AdminDashboard: React.FC = () => {
               sx={{
                 backgroundColor: "rgba(8, 17, 33, 0.7)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: 4,
+                borderRadius: 2,
                 overflow: "hidden",
               }}
             >
               {loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 12 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    py: 12,
+                  }}
+                >
                   <CircularProgress size={44} sx={{ color: "#7fd0ff" }} />
                 </Box>
               ) : blogs.length === 0 ? (
                 <Box sx={{ textAlign: "center", py: 12, px: 3 }}>
-                  <ArticleIcon sx={{ fontSize: 48, color: "rgba(255, 255, 255, 0.2)", mb: 1.5 }} />
-                  <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#ffffff", mb: 0.5 }}>
+                  <ArticleIcon
+                    sx={{
+                      fontSize: 48,
+                      color: "rgba(255, 255, 255, 0.2)",
+                      mb: 1.5,
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: "1.1rem",
+                      color: "#ffffff",
+                      mb: 0.5,
+                    }}
+                  >
                     No articles found
                   </Typography>
-                  <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.9rem", mb: 2.5 }}>
-                    {search ? "Try adjusting your search query." : "Get started by creating your very first dynamic article."}
+                  <Typography
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.5)",
+                      fontSize: "0.9rem",
+                      mb: 2.5,
+                    }}
+                  >
+                    {search
+                      ? "Try adjusting your search query."
+                      : "Get started by creating your very first dynamic article."}
                   </Typography>
                   <Button
                     variant="contained"
@@ -661,7 +720,8 @@ export const AdminDashboard: React.FC = () => {
                     to={ROUTE_PATHS.ADMIN_BLOG_CREATE}
                     startIcon={<AddIcon />}
                     sx={{
-                      background: "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
+                      background:
+                        "linear-gradient(135deg, #7fd0ff 0%, #472187 100%)",
                       color: "#fff",
                       textTransform: "none",
                       fontWeight: 700,
@@ -675,13 +735,65 @@ export const AdminDashboard: React.FC = () => {
                 <TableContainer>
                   <Table sx={{ minWidth: 700 }}>
                     <TableHead>
-                      <TableRow sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>ARTICLE</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>CATEGORY</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>STATUS</TableCell>
-                        <TableCell align="center" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>VIEWS</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>DATE</TableCell>
-                        <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700, fontSize: "0.78rem" }}>ACTIONS</TableCell>
+                      <TableRow
+                        sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                      >
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          ARTICLE
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          CATEGORY
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          STATUS
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          VIEWS
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          DATE
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          ACTIONS
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -690,12 +802,24 @@ export const AdminDashboard: React.FC = () => {
                           key={b.id}
                           hover
                           sx={{
-                            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.02) !important" },
-                            "& td": { borderColor: "rgba(255, 255, 255, 0.06)", py: 2 },
+                            "&:hover": {
+                              backgroundColor:
+                                "rgba(255, 255, 255, 0.02) !important",
+                            },
+                            "& td": {
+                              borderColor: "rgba(255, 255, 255, 0.06)",
+                              py: 2,
+                            },
                           }}
                         >
                           <TableCell>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2,
+                              }}
+                            >
                               {b.cover_image && (
                                 <Box
                                   component="img"
@@ -706,15 +830,30 @@ export const AdminDashboard: React.FC = () => {
                                     height: 52,
                                     borderRadius: 2,
                                     objectFit: "cover",
-                                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                                    border:
+                                      "1px solid rgba(255, 255, 255, 0.1)",
                                   }}
                                 />
                               )}
                               <Box sx={{ maxWidth: 360 }}>
-                                <Typography sx={{ color: "#ffffff", fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.3, mb: 0.3 }}>
+                                <Typography
+                                  sx={{
+                                    color: "#ffffff",
+                                    fontWeight: 600,
+                                    fontSize: "0.95rem",
+                                    lineHeight: 1.3,
+                                    mb: 0.3,
+                                  }}
+                                >
                                   {b.title}
                                 </Typography>
-                                <Typography sx={{ color: "rgba(255, 255, 255, 0.45)", fontSize: "0.78rem", fontFamily: "monospace" }}>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(255, 255, 255, 0.45)",
+                                    fontSize: "0.78rem",
+                                    fontFamily: "monospace",
+                                  }}
+                                >
                                   /blog/{b.slug}
                                 </Typography>
                               </Box>
@@ -735,11 +874,19 @@ export const AdminDashboard: React.FC = () => {
                           </TableCell>
                           <TableCell>
                             <Chip
-                              label={b.status === "published" ? "Published" : "Draft"}
+                              label={
+                                b.status === "published" ? "Published" : "Draft"
+                              }
                               size="small"
                               sx={{
-                                backgroundColor: b.status === "published" ? "rgba(52, 211, 153, 0.15)" : "rgba(251, 191, 36, 0.15)",
-                                color: b.status === "published" ? "#34d399" : "#fbbf24",
+                                backgroundColor:
+                                  b.status === "published"
+                                    ? "rgba(52, 211, 153, 0.15)"
+                                    : "rgba(251, 191, 36, 0.15)",
+                                color:
+                                  b.status === "published"
+                                    ? "#34d399"
+                                    : "#fbbf24",
                                 border: `1px solid ${b.status === "published" ? "rgba(52, 211, 153, 0.3)" : "rgba(251, 191, 36, 0.3)"}`,
                                 fontWeight: 700,
                                 fontSize: "0.75rem",
@@ -747,24 +894,51 @@ export const AdminDashboard: React.FC = () => {
                             />
                           </TableCell>
                           <TableCell align="center">
-                            <Typography sx={{ color: "rgba(255, 255, 255, 0.85)", fontWeight: 600, fontSize: "0.9rem" }}>
+                            <Typography
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.85)",
+                                fontWeight: 600,
+                                fontSize: "0.9rem",
+                              }}
+                            >
                               {(b.views || 0).toLocaleString()}
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.85rem" }}>
-                              {b.published_at ? new Date(b.published_at).toLocaleDateString() : "—"}
+                            <Typography
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.6)",
+                                fontSize: "0.85rem",
+                              }}
+                            >
+                              {b.published_at
+                                ? new Date(b.published_at).toLocaleDateString()
+                                : "—"}
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
-                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "flex-end",
+                                gap: 1,
+                              }}
+                            >
                               <Tooltip title="View live page">
                                 <IconButton
                                   component={RouterLink}
                                   to={`/blog/${b.slug}`}
                                   target="_blank"
                                   size="small"
-                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#7fd0ff", backgroundColor: "rgba(127, 208, 255, 0.1)" } }}
+                                  sx={{
+                                    color: "rgba(255, 255, 255, 0.6)",
+                                    "&:hover": {
+                                      color: "#7fd0ff",
+                                      backgroundColor:
+                                        "rgba(127, 208, 255, 0.1)",
+                                    },
+                                  }}
                                 >
                                   <OpenInNewIcon fontSize="small" />
                                 </IconButton>
@@ -774,7 +948,14 @@ export const AdminDashboard: React.FC = () => {
                                   component={RouterLink}
                                   to={`/admin/blogs/edit/${b.id}`}
                                   size="small"
-                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#fbbf24", backgroundColor: "rgba(251, 191, 36, 0.1)" } }}
+                                  sx={{
+                                    color: "rgba(255, 255, 255, 0.6)",
+                                    "&:hover": {
+                                      color: "#fbbf24",
+                                      backgroundColor:
+                                        "rgba(251, 191, 36, 0.1)",
+                                    },
+                                  }}
                                 >
                                   <EditIcon fontSize="small" />
                                 </IconButton>
@@ -783,7 +964,13 @@ export const AdminDashboard: React.FC = () => {
                                 <IconButton
                                   onClick={() => setDeleteId(b.id)}
                                   size="small"
-                                  sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#f87171", backgroundColor: "rgba(239, 68, 68, 0.1)" } }}
+                                  sx={{
+                                    color: "rgba(255, 255, 255, 0.6)",
+                                    "&:hover": {
+                                      color: "#f87171",
+                                      backgroundColor: "rgba(239, 68, 68, 0.1)",
+                                    },
+                                  }}
                                 >
                                   <DeleteIcon fontSize="small" />
                                 </IconButton>
@@ -822,7 +1009,9 @@ export const AdminDashboard: React.FC = () => {
                 {
                   label: "Total Page Visits",
                   value: analytics.stats.total_visits.toLocaleString(),
-                  icon: <TrendingUpIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />,
+                  icon: (
+                    <TrendingUpIcon sx={{ fontSize: 26, color: "#7fd0ff" }} />
+                  ),
                   accent: "rgba(127, 208, 255, 0.1)",
                 },
                 {
@@ -834,13 +1023,17 @@ export const AdminDashboard: React.FC = () => {
                 {
                   label: "Registered Customers",
                   value: analytics.stats.total_customers.toLocaleString(),
-                  icon: <PeopleAltIcon sx={{ fontSize: 26, color: "#a78bfa" }} />,
+                  icon: (
+                    <PeopleAltIcon sx={{ fontSize: 26, color: "#a78bfa" }} />
+                  ),
                   accent: "rgba(167, 139, 250, 0.1)",
                 },
                 {
                   label: "Visits Today",
                   value: analytics.stats.today_visits.toLocaleString(),
-                  icon: <AccessTimeIcon sx={{ fontSize: 26, color: "#fbbf24" }} />,
+                  icon: (
+                    <AccessTimeIcon sx={{ fontSize: 26, color: "#fbbf24" }} />
+                  ),
                   accent: "rgba(251, 191, 36, 0.1)",
                 },
               ].map((item, idx) => (
@@ -849,19 +1042,32 @@ export const AdminDashboard: React.FC = () => {
                   sx={{
                     backgroundColor: "rgba(255, 255, 255, 0.02)",
                     border: "1px solid rgba(255, 255, 255, 0.07)",
-                    borderRadius: 3,
+                    borderRadius: 2,
                     p: 2.5,
                   }}
                 >
-                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
-                    <Typography sx={{ color: "rgba(255, 255, 255, 0.65)", fontSize: "0.875rem", fontWeight: 600 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      mb: 1.5,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: "rgba(255, 255, 255, 0.65)",
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                      }}
+                    >
                       {item.label}
                     </Typography>
                     <Box
                       sx={{
                         width: 44,
                         height: 44,
-                        borderRadius: 2.5,
+                        borderRadius: 2,
                         backgroundColor: item.accent,
                         display: "flex",
                         alignItems: "center",
@@ -871,7 +1077,10 @@ export const AdminDashboard: React.FC = () => {
                       {item.icon}
                     </Box>
                   </Box>
-                  <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
+                  >
                     {item.value}
                   </Typography>
                 </Card>
@@ -883,18 +1092,33 @@ export const AdminDashboard: React.FC = () => {
               sx={{
                 backgroundColor: "rgba(8, 17, 33, 0.7)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: 4,
+                borderRadius: 2,
                 overflow: "hidden",
                 mb: 4,
               }}
             >
-              <Box sx={{ p: 3, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, justifyContent: "space-between", alignItems: { xs: "stretch", sm: "center" } }}>
+              <Box
+                sx={{
+                  p: 3,
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  gap: 2,
+                  justifyContent: "space-between",
+                  alignItems: { xs: "stretch", sm: "center" },
+                }}
+              >
                 <Box>
                   <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
                     Customer Leads & Accounts ({analytics.customers.length})
                   </Typography>
-                  <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.85rem" }}>
-                    Visitors who signed in or connected through the website popup
+                  <Typography
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.5)",
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    Visitors who signed in or connected through the website
+                    popup
                   </Typography>
                 </Box>
                 <TextField
@@ -906,7 +1130,12 @@ export const AdminDashboard: React.FC = () => {
                     input: {
                       startAdornment: (
                         <InputAdornment position="start">
-                          <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)", fontSize: 20 }} />
+                          <SearchIcon
+                            sx={{
+                              color: "rgba(255, 255, 255, 0.4)",
+                              fontSize: 20,
+                            }}
+                          />
                         </InputAdornment>
                       ),
                     },
@@ -915,7 +1144,7 @@ export const AdminDashboard: React.FC = () => {
                     width: { xs: "100%", sm: 340 },
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "rgba(6, 14, 26, 0.7)",
-                      borderRadius: 2.5,
+                      borderRadius: 2,
                       color: "#fff",
                       "& fieldset": { borderColor: "rgba(255, 255, 255, 0.1)" },
                     },
@@ -928,33 +1157,100 @@ export const AdminDashboard: React.FC = () => {
                   <CircularProgress size={36} sx={{ color: "#7fd0ff" }} />
                 </Box>
               ) : analytics.customers.length === 0 ? (
-                <Box sx={{ textAlign: "center", py: 8, color: "rgba(255, 255, 255, 0.5)" }}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    py: 8,
+                    color: "rgba(255, 255, 255, 0.5)",
+                  }}
+                >
                   <PeopleAltIcon sx={{ fontSize: 40, opacity: 0.3, mb: 1 }} />
                   <Typography>No customers registered yet.</Typography>
                 </Box>
               ) : (
                 <TableContainer>
                   <Table sx={{ minWidth: 700 }}>
-                    <TableHead sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+                    <TableHead
+                      sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                    >
                       <TableRow>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>CUSTOMER</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>COMPANY & PHONE</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>INTEREST</TableCell>
-                        <TableCell align="center" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>VISITS</TableCell>
-                        <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>LAST ACTIVE</TableCell>
-                        <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>ACTION</TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          CUSTOMER
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          COMPANY & PHONE
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          INTEREST
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          VISITS
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          LAST ACTIVE
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            color: "rgba(255, 255, 255, 0.5)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          ACTION
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {analytics.customers.map((c) => (
-                        <TableRow key={c.id} hover sx={{ "& td": { borderColor: "rgba(255, 255, 255, 0.06)", py: 1.8 } }}>
+                        <TableRow
+                          key={c.id}
+                          hover
+                          sx={{
+                            "& td": {
+                              borderColor: "rgba(255, 255, 255, 0.06)",
+                              py: 1.8,
+                            },
+                          }}
+                        >
                           <TableCell>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1.5,
+                              }}
+                            >
                               <Box
                                 sx={{
                                   width: 36,
                                   height: 36,
-                                  borderRadius: "50%",
+                                  borderRadius: 2,
                                   backgroundColor: "rgba(127, 208, 255, 0.15)",
                                   color: "#7fd0ff",
                                   display: "flex",
@@ -967,20 +1263,38 @@ export const AdminDashboard: React.FC = () => {
                                 {c.name.charAt(0).toUpperCase()}
                               </Box>
                               <Box>
-                                <Typography sx={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem" }}>
+                                <Typography
+                                  sx={{
+                                    color: "#fff",
+                                    fontWeight: 600,
+                                    fontSize: "0.9rem",
+                                  }}
+                                >
                                   {c.name}
                                 </Typography>
-                                <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.8rem" }}>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(255, 255, 255, 0.5)",
+                                    fontSize: "0.8rem",
+                                  }}
+                                >
                                   {c.email}
                                 </Typography>
                               </Box>
                             </Box>
                           </TableCell>
                           <TableCell>
-                            <Typography sx={{ color: "#fff", fontSize: "0.85rem" }}>
+                            <Typography
+                              sx={{ color: "#fff", fontSize: "0.85rem" }}
+                            >
                               {c.company || "—"}
                             </Typography>
-                            <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.78rem" }}>
+                            <Typography
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.5)",
+                                fontSize: "0.78rem",
+                              }}
+                            >
                               {c.phone || "No phone"}
                             </Typography>
                           </TableCell>
@@ -988,24 +1302,45 @@ export const AdminDashboard: React.FC = () => {
                             <Chip
                               label={c.interests || "General"}
                               size="small"
-                              sx={{ backgroundColor: "rgba(167, 139, 250, 0.12)", color: "#a78bfa", fontSize: "0.75rem" }}
+                              sx={{
+                                backgroundColor: "rgba(167, 139, 250, 0.12)",
+                                color: "#a78bfa",
+                                fontSize: "0.75rem",
+                              }}
                             />
                           </TableCell>
                           <TableCell align="center">
                             <Chip
                               label={`${c.visits_count} visits`}
                               size="small"
-                              sx={{ backgroundColor: "rgba(52, 211, 153, 0.12)", color: "#34d399", fontWeight: 700, fontSize: "0.75rem" }}
+                              sx={{
+                                backgroundColor: "rgba(52, 211, 153, 0.12)",
+                                color: "#34d399",
+                                fontWeight: 700,
+                                fontSize: "0.75rem",
+                              }}
                             />
                           </TableCell>
                           <TableCell>
-                            <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.82rem" }}>
+                            <Typography
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.6)",
+                                fontSize: "0.82rem",
+                              }}
+                            >
                               {new Date(c.last_active).toLocaleString()}
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
                             <Tooltip title="Copy Email">
-                              <IconButton size="small" onClick={() => handleCopy(c.email, "Email")} sx={{ color: "rgba(255, 255, 255, 0.6)", "&:hover": { color: "#7fd0ff" } }}>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleCopy(c.email, "Email")}
+                                sx={{
+                                  color: "rgba(255, 255, 255, 0.6)",
+                                  "&:hover": { color: "#7fd0ff" },
+                                }}
+                              >
                                 <ContentCopyIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
@@ -1023,7 +1358,7 @@ export const AdminDashboard: React.FC = () => {
               sx={{
                 backgroundColor: "rgba(8, 17, 33, 0.7)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: 4,
+                borderRadius: 2,
                 overflow: "hidden",
               }}
             >
@@ -1031,26 +1366,76 @@ export const AdminDashboard: React.FC = () => {
                 <Typography sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
                   Live Visitor Activity Stream (Recent 25 Visits)
                 </Typography>
-                <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.85rem" }}>
+                <Typography
+                  sx={{
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontSize: "0.85rem",
+                  }}
+                >
                   Real-time page views across your public pages
                 </Typography>
               </Box>
 
               <TableContainer>
                 <Table size="small">
-                  <TableHead sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+                  <TableHead
+                    sx={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                  >
                     <TableRow>
-                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>PAGE URL</TableCell>
-                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>DEVICE</TableCell>
-                      <TableCell sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>IP ADDRESS</TableCell>
-                      <TableCell align="right" sx={{ color: "rgba(255, 255, 255, 0.5)", fontWeight: 700 }}>VISITED AT</TableCell>
+                      <TableCell
+                        sx={{
+                          color: "rgba(255, 255, 255, 0.5)",
+                          fontWeight: 700,
+                        }}
+                      >
+                        PAGE URL
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          color: "rgba(255, 255, 255, 0.5)",
+                          fontWeight: 700,
+                        }}
+                      >
+                        DEVICE
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          color: "rgba(255, 255, 255, 0.5)",
+                          fontWeight: 700,
+                        }}
+                      >
+                        IP ADDRESS
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          color: "rgba(255, 255, 255, 0.5)",
+                          fontWeight: 700,
+                        }}
+                      >
+                        VISITED AT
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {analytics.recent_visitors.map((log) => (
-                      <TableRow key={log.id} sx={{ "& td": { borderColor: "rgba(255, 255, 255, 0.05)", py: 1.2 } }}>
+                      <TableRow
+                        key={log.id}
+                        sx={{
+                          "& td": {
+                            borderColor: "rgba(255, 255, 255, 0.05)",
+                            py: 1.2,
+                          },
+                        }}
+                      >
                         <TableCell>
-                          <Typography sx={{ color: "#7fd0ff", fontFamily: "monospace", fontSize: "0.85rem" }}>
+                          <Typography
+                            sx={{
+                              color: "#7fd0ff",
+                              fontFamily: "monospace",
+                              fontSize: "0.85rem",
+                            }}
+                          >
                             {log.page_url}
                           </Typography>
                         </TableCell>
@@ -1061,19 +1446,40 @@ export const AdminDashboard: React.FC = () => {
                             sx={{
                               fontSize: "0.72rem",
                               textTransform: "capitalize",
-                              backgroundColor: log.device_type === "mobile" ? "rgba(244, 114, 182, 0.15)" : "rgba(127, 208, 255, 0.15)",
-                              color: log.device_type === "mobile" ? "#f472b6" : "#7fd0ff",
+                              backgroundColor:
+                                log.device_type === "mobile"
+                                  ? "rgba(244, 114, 182, 0.15)"
+                                  : "rgba(127, 208, 255, 0.15)",
+                              color:
+                                log.device_type === "mobile"
+                                  ? "#f472b6"
+                                  : "#7fd0ff",
                             }}
                           />
                         </TableCell>
                         <TableCell>
-                          <Typography sx={{ color: "rgba(255, 255, 255, 0.6)", fontFamily: "monospace", fontSize: "0.8rem" }}>
+                          <Typography
+                            sx={{
+                              color: "rgba(255, 255, 255, 0.6)",
+                              fontFamily: "monospace",
+                              fontSize: "0.8rem",
+                            }}
+                          >
                             {log.ip_address}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <Typography sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.8rem" }}>
-                            {new Date(log.visited_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                          <Typography
+                            sx={{
+                              color: "rgba(255, 255, 255, 0.5)",
+                              fontSize: "0.8rem",
+                            }}
+                          >
+                            {new Date(log.visited_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })}
                           </Typography>
                         </TableCell>
                       </TableRow>
@@ -1095,7 +1501,7 @@ export const AdminDashboard: React.FC = () => {
             sx: {
               backgroundColor: "#081121",
               border: "1px solid rgba(239, 68, 68, 0.3)",
-              borderRadius: 3,
+              borderRadius: 1,
               color: "#fff",
               p: 1,
             },
@@ -1125,7 +1531,7 @@ export const AdminDashboard: React.FC = () => {
             disabled={deleting}
             variant="contained"
             color="error"
-            sx={{ textTransform: "none", fontWeight: 700, borderRadius: 2 }}
+            sx={{ textTransform: "none", fontWeight: 700, borderRadius: 1 }}
           >
             {deleting ? (
               <CircularProgress size={20} sx={{ color: "#fff" }} />

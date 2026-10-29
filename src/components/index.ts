@@ -1,6 +1,7 @@
 export { CommonLayout } from "./CommonLayout";
 export { Footer } from "./Footer";
 export { Header } from "./Header";
+export { CustomerPortalFloatingButton } from "./CustomerPortalFloatingButton";
 export { FooterLinkGroup, FooterNewsletter, FooterSocialLinks } from "./footer/index";
 
 // Icon Library
