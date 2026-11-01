@@ -10,6 +10,12 @@ require_once __DIR__ . '/auth-middleware.php';
 // Verify superadmin token
 $admin = verifyAdmin($conn);
 
+// Auto-migrate: check if author_designation column exists in blogs table
+$colCheck = $conn->query("SHOW COLUMNS FROM `blogs` LIKE 'author_designation'");
+if ($colCheck && $colCheck->num_rows === 0) {
+    @$conn->query("ALTER TABLE `blogs` ADD COLUMN `author_designation` VARCHAR(150) NULL DEFAULT 'AksharSync Engineering Specialist' AFTER `author_name`");
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? null;
 
@@ -71,7 +77,7 @@ if ($method === 'GET') {
         $where[] = "(title LIKE '%$sEscaped%' OR category LIKE '%$sEscaped%' OR tags LIKE '%$sEscaped%')";
     }
 
-    $sql = 'SELECT id, title, slug, cover_image, category, status, views, read_time, author_name, published_at, created_at, updated_at FROM blogs';
+    $sql = 'SELECT id, title, slug, cover_image, category, status, views, read_time, author_name, author_designation, published_at, created_at, updated_at FROM blogs';
     if (!empty($where)) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
     }
@@ -138,7 +144,8 @@ if ($method === 'PUT' || ($method === 'POST' && $action === 'update')) {
     $category = trim($data['category'] ?? 'Lifecycle & Automation');
     $tags = trim($data['tags'] ?? '');
     $cover_image = trim($data['cover_image'] ?? '');
-    $author_name = trim($data['author_name'] ?? 'AksharSync Team');
+    $author_name = trim($data['author_name'] ?? 'AksharSync Specialist');
+    $author_designation = trim($data['author_designation'] ?? 'AksharSync Engineering Specialist');
     $author_avatar = trim($data['author_avatar'] ?? '');
     $read_time = trim($data['read_time'] ?? '5 min read');
     $status = in_array($data['status'] ?? '', ['draft', 'published', 'archived']) ? $data['status'] : 'published';
@@ -158,14 +165,14 @@ if ($method === 'PUT' || ($method === 'POST' && $action === 'update')) {
     $stmt = $conn->prepare('
         UPDATE blogs SET 
             title = ?, slug = ?, excerpt = ?, content = ?, cover_image = ?,
-            category = ?, tags = ?, author_name = ?, author_avatar = ?,
+            category = ?, tags = ?, author_name = ?, author_designation = ?, author_avatar = ?,
             read_time = ?, status = ?, seo_title = ?, seo_description = ?
         WHERE id = ?
     ');
     $stmt->bind_param(
-        'sssssssssssssi',
+        'ssssssssssssssi',
         $title, $slug, $excerpt, $content, $cover_image,
-        $category, $tags, $author_name, $author_avatar,
+        $category, $tags, $author_name, $author_designation, $author_avatar,
         $read_time, $status, $seo_title, $seo_description,
         $id
     );
@@ -189,7 +196,8 @@ if ($method === 'POST') {
     $category = trim($data['category'] ?? 'Lifecycle & Automation');
     $tags = trim($data['tags'] ?? '');
     $cover_image = trim($data['cover_image'] ?? '');
-    $author_name = trim($data['author_name'] ?? 'AksharSync Team');
+    $author_name = trim($data['author_name'] ?? 'AksharSync Specialist');
+    $author_designation = trim($data['author_designation'] ?? 'AksharSync Engineering Specialist');
     $author_avatar = trim($data['author_avatar'] ?? '');
     $read_time = trim($data['read_time'] ?? '5 min read');
     $status = in_array($data['status'] ?? '', ['draft', 'published', 'archived']) ? $data['status'] : 'published';
@@ -219,14 +227,14 @@ if ($method === 'POST') {
     $stmt = $conn->prepare('
         INSERT INTO blogs (
             title, slug, excerpt, content, cover_image,
-            category, tags, author_name, author_avatar,
+            category, tags, author_name, author_designation, author_avatar,
             read_time, status, seo_title, seo_description, published_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     ');
     $stmt->bind_param(
-        'sssssssssssss',
+        'ssssssssssssss',
         $title, $slug, $excerpt, $content, $cover_image,
-        $category, $tags, $author_name, $author_avatar,
+        $category, $tags, $author_name, $author_designation, $author_avatar,
         $read_time, $status, $seo_title, $seo_description
     );
     

@@ -847,15 +847,28 @@ export const AdminDashboard: React.FC = () => {
                                 >
                                   {b.title}
                                 </Typography>
-                                <Typography
-                                  sx={{
-                                    color: "rgba(255, 255, 255, 0.45)",
-                                    fontSize: "0.78rem",
-                                    fontFamily: "monospace",
-                                  }}
-                                >
-                                  /blog/{b.slug}
-                                </Typography>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                                  <Typography
+                                    sx={{
+                                      color: "rgba(255, 255, 255, 0.45)",
+                                      fontSize: "0.78rem",
+                                      fontFamily: "monospace",
+                                    }}
+                                  >
+                                    /blog/{b.slug}
+                                  </Typography>
+                                  {b.author_name && (
+                                    <Typography
+                                      sx={{
+                                        color: "rgba(127, 208, 255, 0.75)",
+                                        fontSize: "0.76rem",
+                                      }}
+                                    >
+                                      • By {b.author_name}
+                                      {b.author_designation ? ` (${b.author_designation})` : ""}
+                                    </Typography>
+                                  )}
+                                </Box>
                               </Box>
                             </Box>
                           </TableCell>

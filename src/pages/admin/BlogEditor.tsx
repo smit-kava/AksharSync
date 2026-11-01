@@ -29,6 +29,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Avatar,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
@@ -87,6 +88,7 @@ export const BlogEditor: React.FC = () => {
       category: 'Lifecycle & Automation',
       tags: 'Klaviyo, Automation, Retention',
       author_name: 'AksharSync Specialist',
+      author_designation: 'AksharSync Engineering Specialist',
       author_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
       read_time: '5 min read',
       status: 'published',
@@ -98,6 +100,9 @@ export const BlogEditor: React.FC = () => {
   const watchedTitle = watch('title');
   const watchedContent = watch('content');
   const watchedCoverImage = watch('cover_image');
+  const watchedAuthorName = watch('author_name');
+  const watchedAuthorDesignation = watch('author_designation');
+  const watchedAuthorAvatar = watch('author_avatar');
 
   // Slug generator helper
   const slugify = (text: string) => {
@@ -140,6 +145,7 @@ export const BlogEditor: React.FC = () => {
         setValue('category', blog.category || 'Lifecycle & Automation');
         setValue('tags', blog.tags || '');
         setValue('author_name', blog.author_name || 'AksharSync Specialist');
+        setValue('author_designation', blog.author_designation || 'AksharSync Engineering Specialist');
         setValue('author_avatar', blog.author_avatar || '');
         setValue('read_time', blog.read_time || '5 min read');
         setValue('status', blog.status || 'published');
@@ -521,6 +527,41 @@ export const BlogEditor: React.FC = () => {
                       lineHeight: 1.8,
                     }}
                   >
+                    {/* Live Author Badge Preview */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        pb: 2.5,
+                        mb: 3,
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                      }}
+                    >
+                      <Avatar
+                        src={watchedAuthorAvatar}
+                        alt={watchedAuthorName}
+                        sx={{
+                          width: 44,
+                          height: 44,
+                          border: '2px solid rgba(127, 208, 255, 0.4)',
+                          bgcolor: 'rgba(127, 208, 255, 0.15)',
+                          color: '#7fd0ff',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {watchedAuthorName ? watchedAuthorName.trim().charAt(0).toUpperCase() : 'A'}
+                      </Avatar>
+                      <Box>
+                        <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '0.98rem' }}>
+                          {watchedAuthorName || 'AksharSync Specialist'}
+                        </Typography>
+                        <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.82rem' }}>
+                          {watchedAuthorDesignation || 'AksharSync Engineering Specialist'}
+                        </Typography>
+                      </Box>
+                    </Box>
+
                     {watchedContent ? (
                       <Box
                         sx={{
@@ -850,13 +891,15 @@ export const BlogEditor: React.FC = () => {
 
                 <Box sx={{ mb: 2 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', mb: 0.5, fontSize: '0.85rem' }}>
-                    Author Name
+                    Author Name *
                   </Typography>
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="AksharSync Specialist"
+                    placeholder="e.g. Anand Gohel"
                     {...register('author_name', { required: 'Author name is required' })}
+                    error={Boolean(errors.author_name)}
+                    helperText={errors.author_name?.message}
                     sx={{
                       '& .MuiOutlinedInput-root': {
                         backgroundColor: 'rgba(6, 14, 26, 0.8)',
@@ -866,6 +909,29 @@ export const BlogEditor: React.FC = () => {
                       },
                     }}
                   />
+                </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', mb: 0.5, fontSize: '0.85rem' }}>
+                    Author Designation / Role
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    placeholder="e.g. AksharSync Engineering Specialist"
+                    {...register('author_designation')}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: 'rgba(6, 14, 26, 0.8)',
+                        color: '#fff',
+                        borderRadius: 1.5,
+                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
+                      },
+                    }}
+                  />
+                  <Typography sx={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.72rem', mt: 0.5 }}>
+                    Displayed directly beneath author name across article cards and detail pages
+                  </Typography>
                 </Box>
 
                 <Box>

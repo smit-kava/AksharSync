@@ -381,7 +381,7 @@ export const BlogDetailPage: React.FC = () => {
                     fontSize: "0.82rem",
                   }}
                 >
-                  AksharSync Engineering Specialist
+                  {blog.author_designation || "AksharSync Engineering Specialist"}
                 </Typography>
               </Box>
             </Box>
@@ -760,10 +760,20 @@ export const BlogDetailPage: React.FC = () => {
                       color: "#fff",
                       fontWeight: 800,
                       fontSize: "1.1rem",
-                      mb: 0.5,
+                      mb: 0.3,
                     }}
                   >
                     {blog.author_name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "#7fd0ff",
+                      fontSize: "0.85rem",
+                      fontWeight: 600,
+                      mb: 1,
+                    }}
+                  >
+                    {blog.author_designation || "AksharSync Engineering Specialist"}
                   </Typography>
                   <Typography
                     sx={{

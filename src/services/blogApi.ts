@@ -15,6 +15,7 @@ export interface BlogArticle {
   category: string;
   tags?: string;
   author_name: string;
+  author_designation?: string;
   author_avatar?: string;
   read_time: string;
   status: 'draft' | 'published' | 'archived';
@@ -49,6 +50,7 @@ export interface BlogFormData {
   category: string;
   tags: string;
   author_name: string;
+  author_designation?: string;
   author_avatar: string;
   read_time: string;
   status: 'draft' | 'published' | 'archived';

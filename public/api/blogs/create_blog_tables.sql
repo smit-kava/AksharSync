@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `blogs` (
     `category` VARCHAR(100) NOT NULL DEFAULT 'Lifecycle & Automation',
     `tags` VARCHAR(255) NULL,
     `author_name` VARCHAR(100) NOT NULL DEFAULT 'AksharSync Team',
+    `author_designation` VARCHAR(150) NULL DEFAULT 'AksharSync Engineering Specialist',
     `author_avatar` TEXT NULL,
     `read_time` VARCHAR(30) NOT NULL DEFAULT '5 min read',
     `status` ENUM(

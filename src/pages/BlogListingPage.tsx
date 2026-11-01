@@ -485,6 +485,9 @@ export const BlogListingPage: React.FC = () => {
                           fontSize: "0.78rem",
                         }}
                       >
+                        {featuredArticle.author_designation
+                          ? `${featuredArticle.author_designation} • `
+                          : ""}
                         {new Date(
                           featuredArticle.published_at,
                         ).toLocaleDateString(undefined, {
@@ -773,15 +776,29 @@ export const BlogListingPage: React.FC = () => {
                             border: "1px solid rgba(127, 208, 255, 0.3)",
                           }}
                         />
-                        <Typography
-                          sx={{
-                            color: "rgba(255, 255, 255, 0.8)",
-                            fontSize: "0.8rem",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {article.author_name}
-                        </Typography>
+                        <Box>
+                          <Typography
+                            sx={{
+                              color: "rgba(255, 255, 255, 0.85)",
+                              fontSize: "0.8rem",
+                              fontWeight: 600,
+                              lineHeight: 1.2,
+                            }}
+                          >
+                            {article.author_name}
+                          </Typography>
+                          {article.author_designation && (
+                            <Typography
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.45)",
+                                fontSize: "0.7rem",
+                                lineHeight: 1.2,
+                              }}
+                            >
+                              {article.author_designation}
+                            </Typography>
+                          )}
+                        </Box>
                       </Box>
 
                       <Box

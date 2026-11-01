@@ -6,6 +6,12 @@
 
 require_once __DIR__ . '/db.php';
 
+// Auto-migrate: check if author_designation column exists in blogs table
+$colCheck = $conn->query("SHOW COLUMNS FROM `blogs` LIKE 'author_designation'");
+if ($colCheck && $colCheck->num_rows === 0) {
+    @$conn->query("ALTER TABLE `blogs` ADD COLUMN `author_designation` VARCHAR(150) NULL DEFAULT 'AksharSync Engineering Specialist' AFTER `author_name`");
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 if ($method !== 'GET') {
     http_response_code(405);
@@ -39,7 +45,7 @@ if (!empty($slug)) {
 
     // Fetch related articles
     $relatedStmt = $conn->prepare('
-        SELECT id, title, slug, excerpt, cover_image, category, author_name, read_time, published_at 
+        SELECT id, title, slug, excerpt, cover_image, category, author_name, author_designation, read_time, published_at 
         FROM blogs 
         WHERE status = "published" AND category = ? AND id != ? 
         ORDER BY published_at DESC 
@@ -95,7 +101,7 @@ $totalRow = $countRes ? $countRes->fetch_assoc() : ['total' => 0];
 $total = (int)($totalRow['total'] ?? 0);
 
 // Fetch paginated blogs
-$query = "SELECT id, title, slug, excerpt, cover_image, category, tags, author_name, author_avatar, read_time, views, published_at, created_at 
+$query = "SELECT id, title, slug, excerpt, cover_image, category, tags, author_name, author_designation, author_avatar, read_time, views, published_at, created_at 
           FROM blogs 
           WHERE $whereSql 
           ORDER BY published_at DESC 
